@@ -1,69 +1,13 @@
-import { useRef, useState, useEffect } from 'react'
 import { Button } from '@heroui/react'
 import { ArrowDown } from '@gravity-ui/icons'
-import LiquidGlass from 'liquid-glass-react'
 import { motion } from 'motion/react'
 import { useNavigate } from 'react-router-dom'
 
-function ShieldBadge({ isDesktop, containerRef }) {
-  const inner = (
-    <div className="flex items-center justify-center rounded-2xl border border-accent/10 bg-white/[0.02] p-3">
-      <img src="/logo.png" alt="" className="h-12 w-12 object-contain md:h-14 md:w-14" />
-    </div>
-  )
-
-  if (!isDesktop) {
-    return <div className="rounded-2xl border border-accent/10 bg-surface/40 p-5 backdrop-blur-xl">{inner}</div>
-  }
-
-  return (
-    <LiquidGlass cornerRadius={20} blurAmount={0.07} saturation={140} displacementScale={50} elasticity={0.2} aberrationIntensity={2} mouseContainer={containerRef} padding="16px">
-      {inner}
-    </LiquidGlass>
-  )
-}
-
-function StatsRibbon({ isDesktop, containerRef }) {
-  const stats = [
-    { value: '14', label: 'Серверов', accent: true },
-    { value: '50M+', label: 'Пользователей' },
-    { value: '0', label: 'Логов' },
-  ]
-
-  const inner = (
-    <div className="grid grid-cols-3 divide-x divide-white/[0.05] rounded-2xl border border-white/[0.06] bg-white/[0.02] px-2 py-4 text-center md:px-6 md:py-5">
-      {stats.map((s) => (
-        <div key={s.label}>
-          <p className={`font-heading text-xl font-bold md:text-2xl ${s.accent ? 'text-accent' : 'text-foreground'}`}>{s.value}</p>
-          <p className="mt-0.5 text-[11px] text-muted md:text-xs">{s.label}</p>
-        </div>
-      ))}
-    </div>
-  )
-
-  if (!isDesktop) return inner
-
-  return (
-    <LiquidGlass cornerRadius={16} blurAmount={0.05} saturation={125} displacementScale={40} elasticity={0.1} aberrationIntensity={1.5} mouseContainer={containerRef}>
-      {inner}
-    </LiquidGlass>
-  )
-}
-
 export default function Hero() {
-  const sectionRef = useRef(null)
   const navigate = useNavigate()
-  const [isDesktop, setIsDesktop] = useState(false)
-
-  useEffect(() => {
-    const check = () => setIsDesktop(window.innerWidth >= 768)
-    check()
-    window.addEventListener('resize', check)
-    return () => window.removeEventListener('resize', check)
-  }, [])
 
   return (
-    <section ref={sectionRef} className="relative z-10 flex min-h-[100svh] flex-col items-center justify-center px-5 pt-20 pb-12 md:px-6 md:pt-24 md:pb-16">
+    <section className="relative z-10 flex min-h-[100svh] flex-col items-center justify-center px-5 pt-20 pb-12 md:px-6 md:pt-24 md:pb-16">
       <div className="mx-auto flex w-full max-w-5xl flex-col items-center">
         {/* Badge */}
         <motion.div
@@ -72,7 +16,13 @@ export default function Hero() {
           transition={{ duration: 0.7, ease: [0.32, 0.72, 0, 1] }}
           className="mb-8"
         >
-          <ShieldBadge isDesktop={isDesktop} containerRef={sectionRef} />
+          <div className="rounded-2xl border border-accent/12 bg-surface/40 p-5 backdrop-blur-xl">
+            <img
+              src="/logo.png"
+              alt="EIFAVPN"
+              className="h-14 w-14 object-contain drop-shadow-[0_0_16px_oklch(0.80_0.155_180/30%)] md:h-16 md:w-16"
+            />
+          </div>
         </motion.div>
 
         {/* Headline */}
@@ -132,7 +82,20 @@ export default function Hero() {
           transition={{ duration: 0.7, delay: 0.55, ease: [0.32, 0.72, 0, 1] }}
           className="mt-14 w-full max-w-xl md:mt-16"
         >
-          <StatsRibbon isDesktop={isDesktop} containerRef={sectionRef} />
+          <div className="grid grid-cols-3 divide-x divide-white/[0.05] rounded-2xl border border-white/[0.06] bg-surface/40 px-2 py-4 text-center backdrop-blur-xl md:px-6 md:py-5">
+            <div>
+              <p className="font-heading text-xl font-bold text-accent md:text-2xl">14</p>
+              <p className="mt-0.5 text-[11px] text-muted md:text-xs">Серверов</p>
+            </div>
+            <div>
+              <p className="font-heading text-xl font-bold text-foreground md:text-2xl">50M+</p>
+              <p className="mt-0.5 text-[11px] text-muted md:text-xs">Пользователей</p>
+            </div>
+            <div>
+              <p className="font-heading text-xl font-bold text-foreground md:text-2xl">0</p>
+              <p className="mt-0.5 text-[11px] text-muted md:text-xs">Логов</p>
+            </div>
+          </div>
         </motion.div>
       </div>
 
