@@ -27,8 +27,9 @@ export default function Register() {
     setLoading(true)
     setError(null)
     try {
-      await sendCode(email.trim())
+      const result = await sendCode(email.trim())
       setStep('code')
+      if (result?.code) setCode(result.code)
     } catch (err) {
       setError(err.message || 'Ошибка отправки кода')
     } finally {
