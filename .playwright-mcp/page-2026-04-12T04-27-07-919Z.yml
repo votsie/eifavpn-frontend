@@ -1,0 +1,167 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - img [ref=e6]
+      - navigation [ref=e10]:
+        - generic [ref=e11]:
+          - img [ref=e13]
+          - generic [ref=e15]: GlassVPN
+        - generic [ref=e16]:
+          - link "Возможности" [ref=e17] [cursor=pointer]:
+            - /url: "#features"
+          - link "Тарифы" [ref=e18] [cursor=pointer]:
+            - /url: "#plans"
+          - link "Поддержка" [ref=e19] [cursor=pointer]:
+            - /url: "#"
+        - button "Подключить" [ref=e20] [cursor=pointer]
+  - main [ref=e21]:
+    - generic [ref=e22]:
+      - generic [ref=e24]:
+        - img [ref=e25]
+        - img [ref=e30]
+      - heading "Интернет без границ" [level=1] [ref=e34]:
+        - text: Интернет без
+        - text: границ
+      - paragraph [ref=e35]:
+        - text: Молниеносный VPN с военным шифрованием.
+        - text: Ваши данные — только ваши.
+      - generic [ref=e36]:
+        - button "Начать бесплатно" [ref=e37] [cursor=pointer]
+        - button "Узнать больше" [ref=e38] [cursor=pointer]
+      - img [ref=e40]
+      - generic [ref=e43]:
+        - img [ref=e44]
+        - generic [ref=e48]:
+          - generic [ref=e49]:
+            - paragraph [ref=e50]: 100+
+            - paragraph [ref=e51]: Серверов
+          - generic [ref=e52]:
+            - paragraph [ref=e53]: 50M+
+            - paragraph [ref=e54]: Пользователей
+          - generic [ref=e55]:
+            - paragraph [ref=e56]: "0"
+            - paragraph [ref=e57]: Логов
+    - generic [ref=e59]:
+      - generic [ref=e60]:
+        - generic [ref=e61]: Возможности
+        - heading "Защита без компромиссов" [level=2] [ref=e62]
+        - paragraph [ref=e63]: Всё что нужно для безопасного и свободного интернета
+      - generic [ref=e64]:
+        - generic [ref=e65]:
+          - img [ref=e67]
+          - heading "Молниеносная скорость" [level=3] [ref=e69]
+          - paragraph [ref=e70]: Протокол WireGuard обеспечивает до 10 Гбит/с. Стримьте, играйте, работайте без задержек.
+        - generic [ref=e71]:
+          - img [ref=e73]
+          - heading "AES-256 шифрование" [level=3] [ref=e75]
+          - paragraph [ref=e76]: Военный стандарт защиты данных. Даже провайдер не видит ваш трафик.
+        - generic [ref=e77]:
+          - img [ref=e79]
+          - heading "Нулевые логи" [level=3] [ref=e81]
+          - paragraph [ref=e82]: Строгая политика no-logs. Мы не храним, не отслеживаем, не продаём ваши данные.
+        - generic [ref=e83]:
+          - img [ref=e85]
+          - heading "100+ локаций" [level=3] [ref=e87]
+          - paragraph [ref=e88]: Серверы в 60 странах. Обходите блокировки и получайте контент из любой точки мира.
+        - generic [ref=e89]:
+          - img [ref=e91]
+          - heading "Kill Switch" [level=3] [ref=e93]
+          - paragraph [ref=e94]: Автоматическое отключение при обрыве VPN. Ни один байт не уйдёт без защиты.
+        - generic [ref=e95]:
+          - img [ref=e97]
+          - heading "Все устройства" [level=3] [ref=e99]
+          - paragraph [ref=e100]: Windows, macOS, iOS, Android, Linux, роутеры. Один аккаунт — до 6 устройств.
+    - generic [ref=e102]:
+      - generic [ref=e103]:
+        - generic [ref=e104]: Тарифы
+        - heading "Простые и честные цены" [level=2] [ref=e105]
+        - paragraph [ref=e106]: Без скрытых платежей. Отмена в любой момент.
+      - generic [ref=e107]:
+        - generic [ref=e109]:
+          - generic [ref=e110]:
+            - heading "Free" [level=3] [ref=e112]
+            - paragraph [ref=e113]: Попробуйте без обязательств
+          - generic [ref=e116]: Бесплатно
+          - list [ref=e117]:
+            - listitem [ref=e118]:
+              - img [ref=e119]
+              - generic [ref=e121]: 1 устройство
+            - listitem [ref=e122]:
+              - img [ref=e123]
+              - generic [ref=e125]: 3 локации
+            - listitem [ref=e126]:
+              - img [ref=e127]
+              - generic [ref=e129]: 500 МБ/день
+            - listitem [ref=e130]:
+              - img [ref=e131]
+              - generic [ref=e133]: Базовая скорость
+          - button "Начать бесплатно" [ref=e134] [cursor=pointer]
+        - generic [ref=e136]:
+          - generic [ref=e137]:
+            - generic [ref=e138]:
+              - heading "Pro" [level=3] [ref=e139]
+              - generic [ref=e141]: Популярный
+            - paragraph [ref=e142]: Для ежедневного использования
+          - generic [ref=e144]:
+            - generic [ref=e145]: ₽299
+            - generic [ref=e146]: /мес
+          - list [ref=e147]:
+            - listitem [ref=e148]:
+              - img [ref=e149]
+              - generic [ref=e151]: 6 устройств
+            - listitem [ref=e152]:
+              - img [ref=e153]
+              - generic [ref=e155]: 100+ локаций
+            - listitem [ref=e156]:
+              - img [ref=e157]
+              - generic [ref=e159]: Безлимит трафика
+            - listitem [ref=e160]:
+              - img [ref=e161]
+              - generic [ref=e163]: Макс. скорость
+            - listitem [ref=e164]:
+              - img [ref=e165]
+              - generic [ref=e167]: Kill Switch
+            - listitem [ref=e168]:
+              - img [ref=e169]
+              - generic [ref=e171]: Ad-блокер
+          - button "Подключить Pro" [ref=e172] [cursor=pointer]
+        - generic [ref=e174]:
+          - generic [ref=e175]:
+            - heading "Team" [level=3] [ref=e177]
+            - paragraph [ref=e178]: Для команд и бизнеса
+          - generic [ref=e180]:
+            - generic [ref=e181]: ₽799
+            - generic [ref=e182]: /мес
+          - list [ref=e183]:
+            - listitem [ref=e184]:
+              - img [ref=e185]
+              - generic [ref=e187]: 25 устройств
+            - listitem [ref=e188]:
+              - img [ref=e189]
+              - generic [ref=e191]: 100+ локаций
+            - listitem [ref=e192]:
+              - img [ref=e193]
+              - generic [ref=e195]: Безлимит трафика
+            - listitem [ref=e196]:
+              - img [ref=e197]
+              - generic [ref=e199]: Выделенный IP
+            - listitem [ref=e200]:
+              - img [ref=e201]
+              - generic [ref=e203]: Приоритет поддержка
+            - listitem [ref=e204]:
+              - img [ref=e205]
+              - generic [ref=e207]: Админ-панель
+          - button "Выбрать Team" [ref=e208] [cursor=pointer]
+  - contentinfo [ref=e209]:
+    - generic [ref=e211]:
+      - generic [ref=e212]:
+        - img [ref=e213]
+        - generic [ref=e215]: GlassVPN
+      - generic [ref=e216]:
+        - link "Политика" [ref=e217] [cursor=pointer]:
+          - /url: "#"
+        - link "Условия" [ref=e218] [cursor=pointer]:
+          - /url: "#"
+        - link "Контакты" [ref=e219] [cursor=pointer]:
+          - /url: "#"
+      - paragraph [ref=e220]: © 2026 GlassVPN. Все права защищены.

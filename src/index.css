@@ -1,0 +1,162 @@
+@import "tailwindcss";
+@import "@heroui/styles";
+
+/* ── EIFAVPN Dark Cyan/Teal Theme ─────────────────────── */
+@layer base {
+  [data-theme="glassvpn-dark"] {
+    color-scheme: dark;
+
+    --white: oklch(100% 0 0);
+    --black: oklch(0% 0 0);
+    --snow: oklch(0.9911 0 0);
+    --eclipse: oklch(0.2103 0.0059 285.89);
+
+    --spacing: 0.25rem;
+    --border-width: 1px;
+    --field-border-width: 1px;
+    --disabled-opacity: 0.4;
+    --ring-offset-width: 2px;
+    --cursor-interactive: pointer;
+    --cursor-disabled: not-allowed;
+
+    --radius: 1rem;
+    --field-radius: calc(var(--radius) * 1.5);
+
+    /* Base — deep dark with teal undertone */
+    --background: oklch(0.09 0.012 195);
+    --foreground: oklch(0.93 0.006 190);
+
+    /* Surface — dark teal */
+    --surface: oklch(0.14 0.020 192);
+    --surface-foreground: var(--foreground);
+
+    /* Overlay */
+    --overlay: oklch(0.12 0.016 195);
+    --overlay-foreground: var(--foreground);
+
+    --muted: oklch(0.55 0.035 190);
+    --scrollbar: oklch(0.32 0.028 190);
+
+    --default: oklch(0.19 0.020 192);
+    --default-foreground: var(--snow);
+
+    /* Bright cyan accent — matches logo glow */
+    --accent: oklch(0.80 0.155 180);
+    --accent-foreground: oklch(0.08 0.018 195);
+
+    /* Fields */
+    --field-background: oklch(0.15 0.016 192);
+    --field-foreground: var(--foreground);
+    --field-placeholder: var(--muted);
+    --field-border: oklch(0.26 0.038 190);
+
+    /* Status */
+    --success: oklch(0.80 0.155 180);
+    --success-foreground: var(--eclipse);
+    --warning: oklch(0.82 0.14 76);
+    --warning-foreground: var(--eclipse);
+    --danger: oklch(0.62 0.22 25);
+    --danger-foreground: var(--snow);
+
+    /* Segment */
+    --segment: oklch(0.17 0.016 192);
+    --segment-foreground: var(--foreground);
+
+    /* Misc */
+    --border: oklch(0.28 0.04 190 / 30%);
+    --separator: oklch(0.20 0.028 192);
+    --focus: var(--accent);
+    --link: var(--accent);
+    --backdrop: oklch(0 0 0 / 70%);
+
+    /* Shadows — cyan glow */
+    --surface-shadow: 0 0 0 0 transparent;
+    --overlay-shadow: 0 4px 32px 0 oklch(0.5 0.12 180 / 8%);
+    --field-shadow: 0 0 0 0 transparent;
+
+    --skeleton-animation: shimmer;
+  }
+}
+
+/* ── Typography ───────────────────────────────────────── */
+@theme inline {
+  --font-heading: 'Manrope', system-ui, sans-serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Glow utilities ───────────────────────────────────── */
+.glow-cyan {
+  box-shadow:
+    0 0 24px oklch(0.80 0.155 180 / 20%),
+    0 0 64px oklch(0.80 0.155 180 / 7%);
+}
+
+.glow-cyan-lg {
+  box-shadow:
+    0 0 40px oklch(0.80 0.155 180 / 28%),
+    0 0 100px oklch(0.80 0.155 180 / 12%),
+    0 0 160px oklch(0.80 0.155 180 / 5%);
+}
+
+.text-glow {
+  text-shadow: 0 0 24px oklch(0.80 0.155 180 / 40%);
+}
+
+/* ── Scrollbar ────────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: oklch(0.32 0.04 190 / 40%);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.42 0.06 185 / 60%);
+}
+
+/* ── Animations ───────────────────────────────────────── */
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(2.8); opacity: 0; }
+}
+.pulse-ring { animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.float { animation: float 4s ease-in-out infinite; }
+
+@keyframes orb-drift-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(80px, -40px) scale(1.1); }
+  50% { transform: translate(-30px, 60px) scale(0.95); }
+  75% { transform: translate(-70px, -20px) scale(1.05); }
+}
+
+@keyframes orb-drift-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-60px, 50px) scale(1.08); }
+  66% { transform: translate(50px, -30px) scale(0.92); }
+}
+
+@keyframes orb-drift-3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  20% { transform: translate(40px, 30px) scale(1.05); }
+  40% { transform: translate(-50px, -40px) scale(0.97); }
+  60% { transform: translate(30px, -60px) scale(1.1); }
+  80% { transform: translate(-40px, 20px) scale(0.93); }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.8; }
+}

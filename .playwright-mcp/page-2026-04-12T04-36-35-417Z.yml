@@ -1,0 +1,192 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - navigation [ref=e5]:
+      - generic [ref=e6]:
+        - img [ref=e8]
+        - generic [ref=e10]: GlassVPN
+      - generic [ref=e11]:
+        - link "Возможности" [ref=e12] [cursor=pointer]:
+          - /url: "#features"
+        - link "Тарифы" [ref=e13] [cursor=pointer]:
+          - /url: "#plans"
+        - link "Поддержка" [ref=e14] [cursor=pointer]:
+          - /url: "#"
+      - button "Подключить" [ref=e15] [cursor=pointer]
+  - main [ref=e16]:
+    - generic [ref=e17]:
+      - img [ref=e20]
+      - heading "Интернет без границ" [level=1] [ref=e24]:
+        - text: Интернет без
+        - text: границ
+      - paragraph [ref=e25]:
+        - text: Молниеносный VPN с военным шифрованием.
+        - text: Ваши данные — только ваши.
+      - generic [ref=e26]:
+        - button "Начать бесплатно" [ref=e27] [cursor=pointer]
+        - button "Узнать больше" [ref=e28] [cursor=pointer]
+      - img [ref=e30]
+      - generic [ref=e33]:
+        - generic [ref=e34]:
+          - paragraph [ref=e35]: 100+
+          - paragraph [ref=e36]: Серверов
+        - generic [ref=e37]:
+          - paragraph [ref=e38]: 50M+
+          - paragraph [ref=e39]: Пользователей
+        - generic [ref=e40]:
+          - paragraph [ref=e41]: "0"
+          - paragraph [ref=e42]: Логов
+    - generic [ref=e44]:
+      - generic [ref=e45]:
+        - generic [ref=e46]: Возможности
+        - heading "Защита без компромиссов" [level=2] [ref=e47]
+        - paragraph [ref=e48]: Всё что нужно для безопасного и свободного интернета
+      - generic [ref=e49]:
+        - generic [ref=e50]:
+          - img [ref=e52]
+          - heading "Молниеносная скорость" [level=3] [ref=e54]
+          - paragraph [ref=e55]: Протокол WireGuard обеспечивает до 10 Гбит/с. Стримьте, играйте, работайте без задержек.
+        - generic [ref=e56]:
+          - img [ref=e58]
+          - heading "AES-256 шифрование" [level=3] [ref=e60]
+          - paragraph [ref=e61]: Военный стандарт защиты данных. Даже провайдер не видит ваш трафик.
+        - generic [ref=e62]:
+          - img [ref=e64]
+          - heading "Нулевые логи" [level=3] [ref=e66]
+          - paragraph [ref=e67]: Строгая политика no-logs. Мы не храним, не отслеживаем, не продаём ваши данные.
+        - generic [ref=e68]:
+          - img [ref=e70]
+          - heading "100+ локаций" [level=3] [ref=e72]
+          - paragraph [ref=e73]: Серверы в 60 странах. Обходите блокировки и получайте контент из любой точки мира.
+        - generic [ref=e74]:
+          - img [ref=e76]
+          - heading "Kill Switch" [level=3] [ref=e78]
+          - paragraph [ref=e79]: Автоматическое отключение при обрыве VPN. Ни один байт не уйдёт без защиты.
+        - generic [ref=e80]:
+          - img [ref=e82]
+          - heading "Все устройства" [level=3] [ref=e84]
+          - paragraph [ref=e85]: Windows, macOS, iOS, Android, Linux, роутеры. Один аккаунт — до 6 устройств.
+    - generic [ref=e87]:
+      - generic [ref=e88]:
+        - generic [ref=e89]: Тарифы
+        - heading "Простые и честные цены" [level=2] [ref=e90]
+        - paragraph [ref=e91]: Чем дольше период — тем выгоднее. Отмена в любой момент.
+      - generic [ref=e93]:
+        - button "1 мес" [ref=e94]
+        - button "3 мес" [ref=e95]
+        - button "6 мес -20%" [ref=e96]:
+          - text: 6 мес
+          - generic [ref=e97]: "-20%"
+        - button "12 мес" [active] [ref=e212]
+      - generic [ref=e100]:
+        - generic [ref=e102]:
+          - generic [ref=e103]:
+            - heading "Standard" [level=3] [ref=e105]
+            - paragraph [ref=e106]: Базовая защита для повседневного использования
+          - generic [ref=e107]:
+            - generic [ref=e108]:
+              - generic [ref=e213]: ₽45
+              - generic [ref=e110]: /мес
+            - generic [ref=e214]:
+              - generic [ref=e215]: ₽69/мес
+              - generic [ref=e216]: −35%
+            - paragraph [ref=e217]:
+              - text: "Итого за 12 мес:"
+              - generic [ref=e218]: ₽540
+              - generic [ref=e219]: (экономия ₽288)
+          - list [ref=e111]:
+            - listitem [ref=e112]:
+              - img [ref=e113]
+              - generic [ref=e115]: 7 серверов
+            - listitem [ref=e116]:
+              - img [ref=e117]
+              - generic [ref=e119]: До 3 устройств
+            - listitem [ref=e120]:
+              - img [ref=e121]
+              - generic [ref=e123]: Шифрование AES-256
+            - listitem [ref=e124]:
+              - img [ref=e125]
+              - generic [ref=e127]: Блокировщик рекламы
+            - listitem [ref=e128]:
+              - img [ref=e129]
+              - generic [ref=e131]: Торренты (P2P)
+          - button "Выбрать Standard" [ref=e132] [cursor=pointer]
+        - generic [ref=e134]:
+          - generic [ref=e135]:
+            - generic [ref=e136]:
+              - heading "Pro" [level=3] [ref=e137]
+              - generic [ref=e139]: Популярный
+            - paragraph [ref=e140]: Расширенная защита с блокировкой рекламы
+          - generic [ref=e141]:
+            - generic [ref=e142]:
+              - generic [ref=e220]: ₽65
+              - generic [ref=e144]: /мес
+            - generic [ref=e221]:
+              - generic [ref=e222]: ₽99/мес
+              - generic [ref=e223]: −34%
+            - paragraph [ref=e224]:
+              - text: "Итого за 12 мес:"
+              - generic [ref=e225]: ₽780
+              - generic [ref=e226]: (экономия ₽408)
+          - list [ref=e145]:
+            - listitem [ref=e146]:
+              - img [ref=e147]
+              - generic [ref=e149]: 10 серверов
+            - listitem [ref=e150]:
+              - img [ref=e151]
+              - generic [ref=e153]: До 4 устройств
+            - listitem [ref=e154]:
+              - img [ref=e155]
+              - generic [ref=e157]: Шифрование AES-256
+            - listitem [ref=e158]:
+              - img [ref=e159]
+              - generic [ref=e161]: Блокировщик рекламы
+            - listitem [ref=e162]:
+              - img [ref=e163]
+              - generic [ref=e165]: Торренты (P2P)
+          - button "Подключить Pro" [ref=e166] [cursor=pointer]
+        - generic [ref=e168]:
+          - generic [ref=e169]:
+            - heading "Max" [level=3] [ref=e171]
+            - paragraph [ref=e172]: Максимальная свобода без ограничений
+          - generic [ref=e173]:
+            - generic [ref=e174]:
+              - generic [ref=e227]: ₽99
+              - generic [ref=e176]: /мес
+            - generic [ref=e228]:
+              - generic [ref=e229]: ₽149/мес
+              - generic [ref=e230]: −34%
+            - paragraph [ref=e231]:
+              - text: "Итого за 12 мес:"
+              - generic [ref=e232]: ₽1188
+              - generic [ref=e233]: (экономия ₽600)
+          - list [ref=e177]:
+            - listitem [ref=e178]:
+              - img [ref=e179]
+              - generic [ref=e181]: 14 серверов
+            - listitem [ref=e182]:
+              - img [ref=e183]
+              - generic [ref=e185]: До 6 устройств
+            - listitem [ref=e186]:
+              - img [ref=e187]
+              - generic [ref=e189]: Шифрование AES-256
+            - listitem [ref=e190]:
+              - img [ref=e191]
+              - generic [ref=e193]: Блокировщик рекламы
+            - listitem [ref=e194]:
+              - img [ref=e195]
+              - generic [ref=e197]: Торренты (P2P)
+          - button "Выбрать Max" [ref=e198] [cursor=pointer]
+      - paragraph [ref=e199]: 7 дней бесплатного пробного периода на всех тарифах. Возврат средств в течение 30 дней.
+  - contentinfo [ref=e200]:
+    - generic [ref=e202]:
+      - generic [ref=e203]:
+        - img [ref=e204]
+        - generic [ref=e206]: GlassVPN
+      - generic [ref=e207]:
+        - link "Политика" [ref=e208] [cursor=pointer]:
+          - /url: "#"
+        - link "Условия" [ref=e209] [cursor=pointer]:
+          - /url: "#"
+        - link "Контакты" [ref=e210] [cursor=pointer]:
+          - /url: "#"
+      - paragraph [ref=e211]: © 2026 GlassVPN. Все права защищены.

@@ -1,0 +1,19 @@
+- generic [ref=e3]:
+  - generic:
+    - img
+  - generic [ref=e5]:
+    - generic [ref=e6]:
+      - img "EIFAVPN" [ref=e7]
+      - heading "Личный кабинет" [level=1] [ref=e8]
+      - paragraph [ref=e9]: Войдите с помощью ID подписки или email
+    - generic [ref=e10]:
+      - button "Войти через Google" [ref=e12] [cursor=pointer]:
+        - img
+        - text: Войти через Google
+      - generic [ref=e14]:
+        - separator [ref=e15]
+        - generic [ref=e16]: или
+        - separator [ref=e17]
+      - generic [ref=e18]:
+        - textbox "your@email.com или ID из письма" [ref=e19]
+        - button "Войти" [ref=e20] [cursor=pointer]

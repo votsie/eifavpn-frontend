@@ -1,0 +1,16 @@
+- generic [ref=e224]:
+  - generic:
+    - img
+  - generic [ref=e226]:
+    - generic [ref=e227]:
+      - img "EIFAVPN" [ref=e228]
+      - heading "Личный кабинет" [level=1] [ref=e229]
+      - paragraph [ref=e230]: Войдите с помощью ID подписки или email
+    - generic [ref=e231]:
+      - generic [ref=e232]:
+        - tablist [ref=e234]:
+          - tab "ID подписки" [selected] [ref=e235] [cursor=pointer]: ID подписки
+          - tab "Email" [ref=e237] [cursor=pointer]
+        - tabpanel "ID подписки" [ref=e238]:
+          - textbox "Введите ID из письма или бота" [ref=e239]
+      - button "Войти" [ref=e240] [cursor=pointer]
