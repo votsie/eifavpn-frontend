@@ -17,16 +17,17 @@ function hasTokens() {
 }
 
 export const useAuthStore = create((set, get) => {
-  // Wire up auto-logout on 401
   setOnUnauthorized(() => {
     clearTokens()
-    set({ user: null, isAuthenticated: false })
+    set({ user: null, isAuthenticated: false, isLoading: false, initialized: true })
   })
 
   return {
     user: null,
-    isLoading: false,
+    // Start loading if tokens exist — prevents flash redirect to login
+    isLoading: hasTokens(),
     isAuthenticated: false,
+    initialized: !hasTokens(),
     error: null,
 
     login: async ({ email, password }) => {
@@ -34,7 +35,7 @@ export const useAuthStore = create((set, get) => {
       try {
         const data = await authApi.login({ email, password })
         saveTokens(data.tokens)
-        set({ user: data.user, isAuthenticated: true, isLoading: false })
+        set({ user: data.user, isAuthenticated: true, isLoading: false, initialized: true })
         return true
       } catch (err) {
         set({ error: err.data?.error || err.message, isLoading: false })
@@ -42,40 +43,39 @@ export const useAuthStore = create((set, get) => {
       }
     },
 
-    // Called after OAuth redirect returns with tokens in URL params
     loginWithTokens: async (access, refresh) => {
       saveTokens({ access, refresh })
       set({ isLoading: true })
       try {
         const user = await authApi.getMe()
-        set({ user, isAuthenticated: true, isLoading: false })
+        set({ user, isAuthenticated: true, isLoading: false, initialized: true })
         return true
       } catch {
         clearTokens()
-        set({ isAuthenticated: false, isLoading: false })
+        set({ isAuthenticated: false, isLoading: false, initialized: true })
         return false
       }
     },
 
-    // Called after Telegram JS SDK returns tokens from POST
     loginWithData: (user, tokens) => {
       saveTokens(tokens)
-      set({ user, isAuthenticated: true })
+      set({ user, isAuthenticated: true, initialized: true })
     },
 
     fetchMe: async () => {
       if (!hasTokens()) {
-        set({ isAuthenticated: false })
+        set({ isAuthenticated: false, isLoading: false, initialized: true })
         return false
       }
       set({ isLoading: true })
       try {
         const user = await authApi.getMe()
-        set({ user, isAuthenticated: true, isLoading: false })
+        set({ user, isAuthenticated: true, isLoading: false, initialized: true })
         return true
       } catch {
-        clearTokens()
-        set({ user: null, isAuthenticated: false, isLoading: false })
+        // Don't clear tokens here — apiFetch already tried refresh
+        // Only clear if refresh also failed (onUnauthorized handles that)
+        set({ user: null, isAuthenticated: false, isLoading: false, initialized: true })
         return false
       }
     },
@@ -84,7 +84,7 @@ export const useAuthStore = create((set, get) => {
       const refresh = localStorage.getItem('eifavpn_refresh')
       await authApi.logout(refresh)
       clearTokens()
-      set({ user: null, isAuthenticated: false, error: null })
+      set({ user: null, isAuthenticated: false, error: null, initialized: true })
     },
 
     clearError: () => set({ error: null }),

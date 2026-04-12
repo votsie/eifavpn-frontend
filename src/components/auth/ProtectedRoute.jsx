@@ -4,16 +4,18 @@ import { useAuthStore } from '../../stores/authStore'
 import { Spinner } from '@heroui/react'
 
 export default function ProtectedRoute({ children }) {
-  const { isAuthenticated, isLoading, fetchMe } = useAuthStore()
+  const { isAuthenticated, isLoading, initialized, fetchMe } = useAuthStore()
   const location = useLocation()
 
   useEffect(() => {
-    if (!isAuthenticated && !isLoading) {
+    // On first load, if we have tokens but haven't fetched user yet
+    if (!initialized || (!isAuthenticated && !isLoading)) {
       fetchMe()
     }
-  }, [])
+  }, [initialized])
 
-  if (isLoading) {
+  // Still loading (fetching user data or refreshing token)
+  if (isLoading || !initialized) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <Spinner size="lg" color="current" className="text-accent" />
@@ -21,6 +23,7 @@ export default function ProtectedRoute({ children }) {
     )
   }
 
+  // Not authenticated after initialization complete
   if (!isAuthenticated) {
     return <Navigate to="/cabinet/login" state={{ from: location }} replace />
   }
