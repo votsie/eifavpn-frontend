@@ -9,8 +9,8 @@ function ShieldBadge({ isDesktop, containerRef }) {
   const inner = (
     <div className="relative flex items-center justify-center rounded-2xl border border-accent/10 bg-white/[0.02] p-3">
       <img src="/logo.png" alt="" className="h-12 w-12 object-contain md:h-14 md:w-14" />
-      <div className="pulse-ring absolute inset-0 rounded-full border-2 border-accent/20" />
-      <div className="pulse-ring absolute inset-0 rounded-full border-2 border-accent/10" style={{ animationDelay: '0.7s' }} />
+      <div className="pulse-ring absolute left-1/2 top-1/2 h-16 w-16 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-accent/20 md:h-20 md:w-20" />
+      <div className="pulse-ring absolute left-1/2 top-1/2 h-16 w-16 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-accent/10 md:h-20 md:w-20" style={{ animationDelay: '0.7s' }} />
     </div>
   )
 
@@ -132,7 +132,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.55, ease: [0.32, 0.72, 0, 1] }}
-          className="mt-14 w-full max-w-lg md:mt-16"
+          className="mt-14 w-full max-w-xl md:mt-16"
         >
           <StatsRibbon isDesktop={isDesktop} containerRef={sectionRef} />
         </motion.div>

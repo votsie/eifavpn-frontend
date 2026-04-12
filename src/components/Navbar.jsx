@@ -7,7 +7,7 @@ function NavContent() {
   const navigate = useNavigate()
 
   return (
-    <nav className="flex items-center justify-between rounded-2xl border border-white/[0.06] bg-white/[0.03] px-5 py-2.5 backdrop-blur-xl md:px-6 md:py-3">
+    <nav className="flex items-center justify-between gap-4 rounded-2xl border border-white/[0.06] bg-white/[0.03] px-5 py-2.5 backdrop-blur-xl md:gap-8 md:px-6 md:py-3">
       <a href="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-80">
         <img src="/logo.png" alt="EIFAVPN" className="h-8 w-8 object-contain" />
         <span className="font-heading text-[17px] font-bold tracking-tight text-foreground">
