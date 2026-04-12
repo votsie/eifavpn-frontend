@@ -27,22 +27,21 @@ function TelegramAppInner() {
       return
     }
 
-    // No initData — not running in Telegram
-    if (!initData) {
-      // Wait a bit for Telegram SDK to initialize
+    // Try raw Telegram WebApp initData if hook didn't pick it up
+    const rawInitData = initData || window.Telegram?.WebApp?.initData
+
+    if (!rawInitData) {
       const timer = setTimeout(() => {
         if (!window.Telegram?.WebApp?.initData) {
-          // Not in Telegram — redirect to normal login
           navigate('/cabinet/login', { replace: true })
         }
-      }, 2000)
+      }, 3000)
       return () => clearTimeout(timer)
     }
 
-    // Have initData — authenticate
-    if (initData && !authenticating) {
+    if (rawInitData && !authenticating) {
       setAuthenticating(true)
-      telegramWebAppAuth(initData)
+      telegramWebAppAuth(rawInitData)
         .then((data) => {
           if (data.tokens && data.user) {
             loginWithData(data.user, data.tokens)
