@@ -33,3 +33,10 @@ export function logout(refresh) {
     body: JSON.stringify({ refresh }),
   }).catch(() => {})
 }
+
+export function changePassword({ old_password, new_password }) {
+  return apiFetch('/auth/change-password/', {
+    method: 'POST',
+    body: JSON.stringify({ old_password, new_password }),
+  })
+}

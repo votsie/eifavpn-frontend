@@ -1,8 +1,423 @@
+import { useState } from 'react'
+import { Button, Input, Chip } from '@heroui/react'
+import { Copy, Pencil } from '@gravity-ui/icons'
+import { motion } from 'motion/react'
+import { useAuthStore } from '../../stores/authStore'
+import { updateProfile, changePassword } from '../../api/auth'
+import { getMySubscription } from '../../api/subscriptions'
+import { useEffect } from 'react'
+
 export default function Settings() {
+  const { user, fetchMe } = useAuthStore()
+
+  // Profile editing
+  const [editingProfile, setEditingProfile] = useState(false)
+  const [firstName, setFirstName] = useState(user?.first_name || '')
+  const [avatarUrl, setAvatarUrl] = useState(user?.avatar_url || '')
+  const [profileLoading, setProfileLoading] = useState(false)
+  const [profileMsg, setProfileMsg] = useState(null)
+
+  // Password
+  const [oldPassword, setOldPassword] = useState('')
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [pwdLoading, setPwdLoading] = useState(false)
+  const [pwdMsg, setPwdMsg] = useState(null)
+
+  // Subscription URL
+  const [subUrl, setSubUrl] = useState('')
+  const [copiedSub, setCopiedSub] = useState(false)
+  const [copiedRef, setCopiedRef] = useState(false)
+
+  useEffect(() => {
+    getMySubscription()
+      .then((data) => {
+        if (data?.subscription?.subscription_url) {
+          setSubUrl(data.subscription.subscription_url)
+        }
+      })
+      .catch(() => {})
+  }, [])
+
+  useEffect(() => {
+    if (user) {
+      setFirstName(user.first_name || '')
+      setAvatarUrl(user.avatar_url || '')
+      if (user.subscription_url && !subUrl) {
+        setSubUrl(user.subscription_url)
+      }
+    }
+  }, [user])
+
+  async function handleSaveProfile() {
+    setProfileLoading(true)
+    setProfileMsg(null)
+    try {
+      await updateProfile({ first_name: firstName, avatar_url: avatarUrl })
+      await fetchMe()
+      setProfileMsg({ type: 'success', text: 'Профиль обновлён' })
+      setEditingProfile(false)
+    } catch (err) {
+      setProfileMsg({ type: 'error', text: err.message || 'Ошибка сохранения' })
+    } finally {
+      setProfileLoading(false)
+    }
+  }
+
+  async function handleChangePassword() {
+    setPwdMsg(null)
+
+    if (newPassword.length < 6) {
+      setPwdMsg({ type: 'error', text: 'Пароль должен быть не менее 6 символов' })
+      return
+    }
+    if (newPassword !== confirmPassword) {
+      setPwdMsg({ type: 'error', text: 'Пароли не совпадают' })
+      return
+    }
+
+    setPwdLoading(true)
+    try {
+      await changePassword({ old_password: oldPassword, new_password: newPassword })
+      setPwdMsg({ type: 'success', text: 'Пароль изменён' })
+      setOldPassword('')
+      setNewPassword('')
+      setConfirmPassword('')
+    } catch (err) {
+      setPwdMsg({ type: 'error', text: err.message || 'Ошибка смены пароля' })
+    } finally {
+      setPwdLoading(false)
+    }
+  }
+
+  function copyToClipboard(text, setCopiedFn) {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopiedFn(true)
+      setTimeout(() => setCopiedFn(false), 2000)
+    })
+  }
+
   return (
-    <div>
+    <div className="mx-auto max-w-3xl space-y-5">
       <h1 className="font-heading text-2xl font-bold text-foreground">Настройки</h1>
-      <p className="mt-2 text-muted">Управление аккаунтом и подпиской.</p>
+
+      {/* Profile section */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="rounded-2xl border border-white/[0.06] bg-surface/40 p-5"
+      >
+        <div className="flex items-center justify-between">
+          <p className="text-sm font-semibold text-foreground">Профиль</p>
+          {!editingProfile && (
+            <Button
+              size="sm"
+              variant="outline"
+              startContent={<Pencil className="h-3.5 w-3.5" />}
+              onPress={() => setEditingProfile(true)}
+            >
+              Изменить
+            </Button>
+          )}
+        </div>
+
+        <div className="mt-4 space-y-4">
+          {/* Avatar */}
+          <div className="flex items-center gap-4">
+            <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-full bg-accent/15">
+              {avatarUrl ? (
+                <img
+                  src={avatarUrl}
+                  alt="Аватар"
+                  className="h-full w-full object-cover"
+                  onError={(e) => {
+                    e.target.style.display = 'none'
+                  }}
+                />
+              ) : (
+                <span className="text-xl font-bold text-accent">
+                  {(user?.first_name || user?.email || '?')[0].toUpperCase()}
+                </span>
+              )}
+            </div>
+            <div className="min-w-0 flex-1">
+              {editingProfile ? (
+                <Input
+                  label="URL аватара"
+                  placeholder="https://..."
+                  value={avatarUrl}
+                  onValueChange={setAvatarUrl}
+                  size="sm"
+                  classNames={{ inputWrapper: 'border-white/[0.06] bg-surface/40' }}
+                />
+              ) : (
+                <p className="text-xs text-muted">
+                  {avatarUrl || 'Аватар не установлен'}
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* Name */}
+          <div>
+            <p className="mb-1 text-[11px] font-medium uppercase tracking-wider text-muted">Имя</p>
+            {editingProfile ? (
+              <Input
+                placeholder="Ваше имя"
+                value={firstName}
+                onValueChange={setFirstName}
+                size="sm"
+                classNames={{ inputWrapper: 'border-white/[0.06] bg-surface/40' }}
+              />
+            ) : (
+              <p className="text-sm text-foreground">{user?.first_name || 'Не указано'}</p>
+            )}
+          </div>
+
+          {/* Email (read-only) */}
+          <div>
+            <p className="mb-1 text-[11px] font-medium uppercase tracking-wider text-muted">Email</p>
+            <p className="text-sm text-foreground">{user?.email}</p>
+          </div>
+
+          {/* Save/Cancel buttons */}
+          {editingProfile && (
+            <div className="flex gap-2">
+              <Button
+                size="sm"
+                className="glow-cyan font-semibold"
+                onPress={handleSaveProfile}
+                isPending={profileLoading}
+              >
+                Сохранить
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onPress={() => {
+                  setEditingProfile(false)
+                  setFirstName(user?.first_name || '')
+                  setAvatarUrl(user?.avatar_url || '')
+                }}
+              >
+                Отмена
+              </Button>
+            </div>
+          )}
+
+          {profileMsg && (
+            <p className={`text-sm ${profileMsg.type === 'success' ? 'text-accent' : 'text-danger'}`}>
+              {profileMsg.text}
+            </p>
+          )}
+        </div>
+      </motion.div>
+
+      {/* Linked accounts */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.05 }}
+        className="rounded-2xl border border-white/[0.06] bg-surface/40 p-5"
+      >
+        <p className="mb-3 text-sm font-semibold text-foreground">Привязанные аккаунты</p>
+        <div className="space-y-3">
+          <div className="flex items-center justify-between rounded-xl border border-white/[0.04] bg-black/10 px-4 py-3">
+            <div className="flex items-center gap-3">
+              <span className="text-xl">
+                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
+                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
+                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                </svg>
+              </span>
+              <div>
+                <p className="text-sm font-medium text-foreground">Google</p>
+                <p className="text-[11px] text-muted">
+                  {user?.google_id ? 'Привязан' : 'Не привязан'}
+                </p>
+              </div>
+            </div>
+            <Chip
+              size="sm"
+              className={
+                user?.google_id
+                  ? 'bg-accent/15 text-[10px] font-semibold text-accent'
+                  : 'bg-default text-[10px] text-muted'
+              }
+            >
+              {user?.google_id ? 'Активен' : 'Нет'}
+            </Chip>
+          </div>
+
+          <div className="flex items-center justify-between rounded-xl border border-white/[0.04] bg-black/10 px-4 py-3">
+            <div className="flex items-center gap-3">
+              <span className="text-xl">
+                <svg viewBox="0 0 24 24" className="h-5 w-5 text-[#26A5E4]" fill="currentColor">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+                </svg>
+              </span>
+              <div>
+                <p className="text-sm font-medium text-foreground">Telegram</p>
+                <p className="text-[11px] text-muted">
+                  {user?.telegram_id ? `ID: ${user.telegram_id}` : 'Не привязан'}
+                </p>
+              </div>
+            </div>
+            <Chip
+              size="sm"
+              className={
+                user?.telegram_id
+                  ? 'bg-accent/15 text-[10px] font-semibold text-accent'
+                  : 'bg-default text-[10px] text-muted'
+              }
+            >
+              {user?.telegram_id ? 'Активен' : 'Нет'}
+            </Chip>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Subscription URL */}
+      {subUrl && (
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="rounded-2xl border border-white/[0.06] bg-surface/40 p-5"
+        >
+          <p className="mb-2 text-[11px] font-medium uppercase tracking-wider text-muted">
+            URL подписки
+          </p>
+          <div className="flex items-center gap-2">
+            <code className="flex-1 truncate rounded-lg bg-black/20 px-3 py-2 font-mono text-xs text-accent">
+              {subUrl}
+            </code>
+            <Button
+              size="sm"
+              variant={copiedSub ? undefined : 'outline'}
+              className={copiedSub ? 'bg-accent text-accent-foreground' : ''}
+              onPress={() => copyToClipboard(subUrl, setCopiedSub)}
+              startContent={<Copy className="h-3.5 w-3.5" />}
+            >
+              {copiedSub ? 'Скопировано!' : 'Копировать'}
+            </Button>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Referral code */}
+      {user?.referral_code && (
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.12 }}
+          className="rounded-2xl border border-white/[0.06] bg-surface/40 p-5"
+        >
+          <p className="mb-2 text-[11px] font-medium uppercase tracking-wider text-muted">
+            Реферальный код
+          </p>
+          <div className="flex items-center gap-2">
+            <code className="flex-1 rounded-lg bg-black/20 px-3 py-2 font-mono text-sm font-bold tracking-widest text-accent">
+              {user.referral_code}
+            </code>
+            <Button
+              size="sm"
+              variant={copiedRef ? undefined : 'outline'}
+              className={copiedRef ? 'bg-accent text-accent-foreground' : ''}
+              onPress={() =>
+                copyToClipboard(
+                  `https://eifavpn.ru/register?ref=${user.referral_code}`,
+                  setCopiedRef,
+                )
+              }
+              startContent={<Copy className="h-3.5 w-3.5" />}
+            >
+              {copiedRef ? 'Скопировано!' : 'Ссылка'}
+            </Button>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Change password */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.15 }}
+        className="rounded-2xl border border-white/[0.06] bg-surface/40 p-5"
+      >
+        <p className="mb-4 text-sm font-semibold text-foreground">Сменить пароль</p>
+        <div className="space-y-3">
+          <Input
+            type="password"
+            label="Текущий пароль"
+            placeholder="Введите текущий пароль"
+            value={oldPassword}
+            onValueChange={setOldPassword}
+            size="sm"
+            classNames={{ inputWrapper: 'border-white/[0.06] bg-surface/40' }}
+          />
+          <Input
+            type="password"
+            label="Новый пароль"
+            placeholder="Минимум 6 символов"
+            value={newPassword}
+            onValueChange={setNewPassword}
+            size="sm"
+            classNames={{ inputWrapper: 'border-white/[0.06] bg-surface/40' }}
+          />
+          <Input
+            type="password"
+            label="Подтвердите пароль"
+            placeholder="Повторите новый пароль"
+            value={confirmPassword}
+            onValueChange={setConfirmPassword}
+            size="sm"
+            classNames={{ inputWrapper: 'border-white/[0.06] bg-surface/40' }}
+          />
+          <Button
+            size="sm"
+            variant="outline"
+            onPress={handleChangePassword}
+            isPending={pwdLoading}
+            isDisabled={!newPassword || !confirmPassword}
+          >
+            Сменить пароль
+          </Button>
+          {pwdMsg && (
+            <p className={`text-sm ${pwdMsg.type === 'success' ? 'text-accent' : 'text-danger'}`}>
+              {pwdMsg.text}
+            </p>
+          )}
+        </div>
+      </motion.div>
+
+      {/* Danger zone */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="rounded-2xl border border-danger/20 bg-danger/[0.04] p-5"
+      >
+        <p className="mb-2 text-sm font-semibold text-danger">Опасная зона</p>
+        <p className="mb-3 text-[13px] text-muted">
+          Удаление аккаунта необратимо. Все данные, включая подписку и историю, будут потеряны.
+        </p>
+        <Button
+          size="sm"
+          color="danger"
+          variant="outline"
+          onPress={() => {
+            if (window.confirm('Вы уверены, что хотите удалить аккаунт? Это действие необратимо.')) {
+              // TODO: implement delete account endpoint when backend is ready
+              alert('Для удаления аккаунта обратитесь в поддержку: @eifavpn_support')
+            }
+          }}
+        >
+          Удалить аккаунт
+        </Button>
+      </motion.div>
     </div>
   )
 }
