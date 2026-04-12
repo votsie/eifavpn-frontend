@@ -75,8 +75,15 @@ const PLATFORM_MAP = {
 
 function isTg() { return !!window.Telegram?.WebApp?.initData }
 function extLink(url, ext) {
-  const full = ext ? window.location.origin + url : url
-  isTg() ? window.Telegram.WebApp.openLink(full) : window.open(full, '_blank')
+  // For Telegram Mini App: must use https:// URLs, open in external browser
+  let full = url
+  if (ext) full = window.location.origin + url
+  if (!full.startsWith('http')) full = window.location.origin + full
+  if (isTg()) {
+    window.Telegram.WebApp.openLink(full)
+  } else {
+    window.open(full, '_blank')
+  }
 }
 
 export default function ConnectModal({ isOpen, onClose, subscriptionUrl }) {
@@ -87,9 +94,14 @@ export default function ConnectModal({ isOpen, onClose, subscriptionUrl }) {
   function reset() { setStep('choice'); setDevice(null); setPlatform(null) }
   function close() { reset(); onClose() }
   function connect() {
-    const url = `happ://add/${subscriptionUrl}`
-    isTg() ? window.Telegram.WebApp.openLink(url) : (window.location.href = url)
-    setTimeout(() => window.open(`/connect?url=${encodeURIComponent(subscriptionUrl)}`, '_blank'), 1500)
+    // Always open our /connect page which handles happ:// redirect
+    // Telegram Mini App can't open happ:// directly — must go through browser page
+    const connectPage = `${window.location.origin}/connect?url=${encodeURIComponent(subscriptionUrl)}`
+    if (isTg()) {
+      window.Telegram.WebApp.openLink(connectPage)
+    } else {
+      window.open(connectPage, '_blank')
+    }
   }
 
   if (!isOpen) return null
