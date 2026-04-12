@@ -1,22 +1,20 @@
 
 export default function Footer() {
   return (
-    <footer className="relative z-10 border-t border-border/30 px-6 py-12">
+    <footer className="relative z-10 border-t border-white/[0.04] px-5 py-10 md:px-6 md:py-12">
       <div className="mx-auto max-w-5xl">
-        <div className="flex flex-col items-center gap-6 md:flex-row md:justify-between">
-          <div className="flex items-center gap-2">
+        <div className="flex flex-col items-center gap-5 md:flex-row md:justify-between">
+          <a href="/" className="flex items-center gap-2 transition-opacity hover:opacity-80">
             <img src="/logo.png" alt="EIFAVPN" className="h-6 w-6 object-contain" />
-            <span className="font-heading text-lg font-bold text-foreground">
-              EIFAVPN
-            </span>
-          </div>
-          <div className="flex gap-8 text-sm text-muted">
+            <span className="font-heading text-[15px] font-bold text-foreground">EIFAVPN</span>
+          </a>
+          <div className="flex gap-6 text-[13px] text-muted/70">
             <a href="#" className="transition-colors hover:text-foreground">Политика</a>
             <a href="#" className="transition-colors hover:text-foreground">Условия</a>
-            <a href="#" className="transition-colors hover:text-foreground">Контакты</a>
+            <a href="mailto:support@eifavpn.ru" className="transition-colors hover:text-foreground">Поддержка</a>
           </div>
-          <p className="text-xs text-muted/60">
-            &copy; 2026 EIFAVPN. Все права защищены.
+          <p className="text-[11px] text-muted/40">
+            &copy; 2026 EIFAVPN
           </p>
         </div>
       </div>

@@ -5,30 +5,45 @@ import LiquidGlass from 'liquid-glass-react'
 
 function NavContent() {
   const navigate = useNavigate()
+
   return (
-    <nav className="flex items-center justify-between rounded-[18px] border border-white/[0.08] bg-white/[0.04] px-4 py-2.5 md:px-6 md:py-3">
-      <div className="flex items-center gap-2">
+    <nav className="flex items-center justify-between rounded-2xl border border-white/[0.06] bg-white/[0.03] px-5 py-2.5 backdrop-blur-xl md:px-6 md:py-3">
+      <a href="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-80">
         <img src="/logo.png" alt="EIFAVPN" className="h-8 w-8 object-contain" />
-        <span className="font-heading text-lg font-bold tracking-tight text-foreground">
+        <span className="font-heading text-[17px] font-bold tracking-tight text-foreground">
           EIFAVPN
         </span>
-      </div>
+      </a>
 
-      <div className="hidden items-center gap-8 md:flex">
-        <a href="#features" className="text-sm font-medium text-muted transition-colors hover:text-foreground">
+      <div className="hidden items-center gap-7 md:flex">
+        <a href="#features" className="text-[13px] font-medium text-muted/80 transition-colors hover:text-foreground">
           Возможности
         </a>
-        <a href="#plans" className="text-sm font-medium text-muted transition-colors hover:text-foreground">
+        <a href="#plans" className="text-[13px] font-medium text-muted/80 transition-colors hover:text-foreground">
           Тарифы
         </a>
-        <a href="#" className="text-sm font-medium text-muted transition-colors hover:text-foreground">
+        <a href="#faq" className="text-[13px] font-medium text-muted/80 transition-colors hover:text-foreground">
           Поддержка
         </a>
       </div>
 
-      <Button size="sm" className="font-semibold" onPress={() => navigate('/cabinet')}>
-        Личный кабинет
-      </Button>
+      <div className="flex items-center gap-3">
+        <Button
+          size="sm"
+          variant="outline"
+          className="hidden text-[13px] font-medium md:flex"
+          onPress={() => navigate('/cabinet/login')}
+        >
+          Войти
+        </Button>
+        <Button
+          size="sm"
+          className="text-[13px] font-semibold"
+          onPress={() => navigate('/register')}
+        >
+          Начать
+        </Button>
+      </div>
     </nav>
   )
 }
@@ -45,27 +60,22 @@ export default function Navbar() {
   }, [])
 
   return (
-    <header
-      ref={containerRef}
-      className="fixed top-0 left-0 right-0 z-50 px-3 pt-3 md:px-6 md:pt-4"
-    >
+    <header ref={containerRef} className="fixed top-0 left-0 right-0 z-50 px-4 pt-3 md:px-6 md:pt-4">
       <div className="mx-auto max-w-5xl">
         {isDesktop ? (
           <LiquidGlass
-            cornerRadius={18}
-            blurAmount={0.07}
-            saturation={135}
-            displacementScale={50}
-            elasticity={0.18}
-            aberrationIntensity={3}
+            cornerRadius={16}
+            blurAmount={0.06}
+            saturation={130}
+            displacementScale={45}
+            elasticity={0.15}
+            aberrationIntensity={2}
             mouseContainer={containerRef}
           >
             <NavContent />
           </LiquidGlass>
         ) : (
-          <div className="backdrop-blur-xl">
-            <NavContent />
-          </div>
+          <NavContent />
         )}
       </div>
     </header>
