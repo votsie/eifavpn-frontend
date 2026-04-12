@@ -14,3 +14,14 @@ export function purchase({ plan, period, payment_method }) {
 export function getMySubscription() {
   return apiFetch('/subscriptions/my/')
 }
+
+export function activateTrial() {
+  return apiFetch('/subscriptions/trial/', { method: 'POST' })
+}
+
+export function purchaseTrialUpgrade(payment_method = 'stars') {
+  return apiFetch('/subscriptions/trial-upgrade/', {
+    method: 'POST',
+    body: JSON.stringify({ payment_method }),
+  })
+}
