@@ -4,12 +4,12 @@ import { useAuthStore } from '../../stores/authStore'
 import { Spinner } from '@heroui/react'
 
 export default function ProtectedRoute({ children }) {
-  const { isAuthenticated, isLoading, restoreSession } = useAuthStore()
+  const { isAuthenticated, isLoading, fetchMe } = useAuthStore()
   const location = useLocation()
 
   useEffect(() => {
     if (!isAuthenticated && !isLoading) {
-      restoreSession()
+      fetchMe()
     }
   }, [])
 

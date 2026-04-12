@@ -4,9 +4,9 @@ import CabinetLayout from './layouts/CabinetLayout'
 import ProtectedRoute from './components/auth/ProtectedRoute'
 import Landing from './pages/Landing'
 import Login from './pages/Login'
+import Register from './pages/Register'
 import NotFound from './pages/NotFound'
 
-// Cabinet pages (lazy-loaded stubs for now)
 import Overview from './pages/cabinet/Overview'
 import Servers from './pages/cabinet/Servers'
 import Devices from './pages/cabinet/Devices'
@@ -24,6 +24,7 @@ export default function App() {
 
       {/* Auth */}
       <Route path="/cabinet/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
 
       {/* Cabinet (protected) */}
       <Route

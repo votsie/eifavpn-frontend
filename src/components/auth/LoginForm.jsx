@@ -1,24 +1,26 @@
 import { useState, useEffect } from 'react'
 import { Button, Input, Separator } from '@heroui/react'
 import { useAuthStore } from '../../stores/authStore'
-import { useNavigate, useLocation, useSearchParams } from 'react-router-dom'
-import TelegramWidget from './TelegramWidget'
+import { useNavigate, useLocation, useSearchParams, Link } from 'react-router-dom'
 
 export default function LoginForm() {
-  const [value, setValue] = useState('')
-  const { loginByShortUuid, loginByEmail, isLoading, error, clearError } = useAuthStore()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const { login, loginWithTokens, isLoading, error, clearError } = useAuthStore()
   const navigate = useNavigate()
   const location = useLocation()
   const [searchParams] = useSearchParams()
 
   const from = location.state?.from?.pathname || '/cabinet/overview'
 
-  // Handle OAuth callback
+  // Handle OAuth callback (Google/Telegram redirect with JWT tokens)
   useEffect(() => {
     const auth = searchParams.get('auth')
-    const shortUuid = searchParams.get('shortUuid')
-    if (auth && shortUuid) {
-      loginByShortUuid(shortUuid).then((success) => {
+    const access = searchParams.get('access')
+    const refresh = searchParams.get('refresh')
+
+    if (auth && access && refresh) {
+      loginWithTokens(access, refresh).then((success) => {
         if (success) navigate(from, { replace: true })
       })
     }
@@ -26,37 +28,25 @@ export default function LoginForm() {
 
   async function handleSubmit(e) {
     e.preventDefault()
-    if (!value.trim()) return
-    const isEmail = value.includes('@')
-    const success = isEmail
-      ? await loginByEmail(value.trim())
-      : await loginByShortUuid(value.trim())
+    if (!email.trim() || !password.trim()) return
+    const success = await login({ email: email.trim(), password })
     if (success) navigate(from, { replace: true })
   }
 
   // Error messages
   const oauthError = searchParams.get('error')
-  const oauthEmail = searchParams.get('email')
-  const oauthTelegram = searchParams.get('telegram')
-
   let errorMessage = null
   if (oauthError === 'not_found') {
-    errorMessage = oauthEmail
-      ? `Подписка с email ${oauthEmail} не найдена`
-      : oauthTelegram
-        ? `Подписка с Telegram @${oauthTelegram} не найдена`
-        : 'Подписка не найдена'
+    errorMessage = 'Аккаунт не найден'
   } else if (oauthError) {
     errorMessage = 'Ошибка авторизации. Попробуйте ещё раз.'
-  } else if (error === 'API error 404') {
-    errorMessage = 'Подписка не найдена. Проверьте данные.'
   } else if (error) {
     errorMessage = error
   }
 
   return (
     <div className="flex w-full flex-col gap-3">
-      {/* OAuth buttons — same height, same width, same style */}
+      {/* OAuth buttons */}
       <Button
         fullWidth
         size="lg"
@@ -74,7 +64,19 @@ export default function LoginForm() {
         Войти через Google
       </Button>
 
-      <TelegramWidget />
+      <Button
+        fullWidth
+        size="lg"
+        variant="outline"
+        className="h-12 text-[14px] font-medium"
+        onPress={() => { window.location.href = '/api/auth/telegram/' }}
+        isDisabled={isLoading}
+      >
+        <svg className="h-[18px] w-[18px] shrink-0" viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z" fill="#29B6F6"/>
+        </svg>
+        Войти через Telegram
+      </Button>
 
       {/* Divider */}
       <div className="flex items-center gap-4 py-1">
@@ -83,19 +85,25 @@ export default function LoginForm() {
         <Separator className="flex-1" />
       </div>
 
-      {/* Email / ID form */}
+      {/* Email + password form */}
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <Input
-          label="Email или ID подписки"
+          label="Email"
+          type="email"
           placeholder="your@email.com"
-          value={value}
-          onChange={(e) => {
-            setValue(e.target.value)
-            if (errorMessage) clearError()
-          }}
+          value={email}
+          onChange={(e) => { setEmail(e.target.value); if (error) clearError() }}
           isInvalid={!!errorMessage}
           size="lg"
-          className="w-full"
+        />
+        <Input
+          label="Пароль"
+          type="password"
+          placeholder="••••••"
+          value={password}
+          onChange={(e) => { setPassword(e.target.value); if (error) clearError() }}
+          isInvalid={!!errorMessage}
+          size="lg"
         />
 
         {errorMessage && (
@@ -112,6 +120,13 @@ export default function LoginForm() {
           Войти
         </Button>
       </form>
+
+      <p className="mt-1 text-center text-[13px] text-muted">
+        Нет аккаунта?{' '}
+        <Link to="/register" className="font-medium text-accent transition-colors hover:text-accent/80">
+          Зарегистрироваться
+        </Link>
+      </p>
     </div>
   )
 }
