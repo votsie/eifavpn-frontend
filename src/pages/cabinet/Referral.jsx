@@ -3,7 +3,7 @@ import { Button, Chip, Spinner } from '@heroui/react'
 import { Copy } from '@gravity-ui/icons'
 import { motion } from 'motion/react'
 import { useAuthStore } from '../../stores/authStore'
-import { getReferralInfo, getReferralList } from '../../api/referrals'
+import { getReferralInfo, getReferralList, prepareShare } from '../../api/referrals'
 
 function StatCard({ label, value, sub, accent }) {
   return (
@@ -17,12 +17,25 @@ function StatCard({ label, value, sub, accent }) {
   )
 }
 
+function isTelegramWebApp() {
+  return !!window.Telegram?.WebApp?.initData
+}
+
+function getTgVersion() {
+  try {
+    return parseFloat(window.Telegram?.WebApp?.version || '0')
+  } catch {
+    return 0
+  }
+}
+
 export default function Referral() {
   const { user } = useAuthStore()
   const [info, setInfo] = useState(null)
   const [list, setList] = useState([])
   const [loading, setLoading] = useState(true)
   const [copied, setCopied] = useState(false)
+  const [shareLoading, setShareLoading] = useState(false)
 
   useEffect(() => {
     Promise.all([
@@ -44,6 +57,57 @@ export default function Referral() {
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     })
+  }
+
+  async function handleShare() {
+    const isTg = isTelegramWebApp()
+    const version = getTgVersion()
+
+    if (isTg && version >= 8.0) {
+      // Use savePreparedInlineMessage + shareMessage
+      setShareLoading(true)
+      try {
+        const result = await prepareShare()
+        if (result?.id) {
+          window.Telegram.WebApp.shareMessage(result.id, (ok) => {
+            if (!ok) {
+              // Fallback to switchInlineQuery
+              try {
+                window.Telegram.WebApp.switchInlineQuery('ref_' + referralCode, ['users', 'groups'])
+              } catch {
+                handleCopy()
+              }
+            }
+          })
+        } else {
+          // Fallback
+          try {
+            window.Telegram.WebApp.switchInlineQuery('ref_' + referralCode, ['users', 'groups'])
+          } catch {
+            handleCopy()
+          }
+        }
+      } catch {
+        // Fallback to switchInlineQuery
+        try {
+          window.Telegram.WebApp.switchInlineQuery('ref_' + referralCode, ['users', 'groups'])
+        } catch {
+          handleCopy()
+        }
+      } finally {
+        setShareLoading(false)
+      }
+    } else if (isTg) {
+      // Older Telegram version — use switchInlineQuery
+      try {
+        window.Telegram.WebApp.switchInlineQuery('ref_' + referralCode, ['users', 'groups'])
+      } catch {
+        handleCopy()
+      }
+    } else {
+      // Not in Telegram — just copy
+      handleCopy()
+    }
   }
 
   if (loading) {
@@ -96,6 +160,14 @@ export default function Referral() {
               startContent={<Copy className="h-3.5 w-3.5" />}
             >
               {copied ? 'Скопировано!' : 'Копировать'}
+            </Button>
+            <Button
+              size="sm"
+              className="glow-cyan font-semibold"
+              onPress={handleShare}
+              isPending={shareLoading}
+            >
+              Поделиться
             </Button>
           </div>
         </div>

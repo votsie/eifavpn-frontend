@@ -2,9 +2,7 @@ import { useState, useEffect, useMemo } from 'react'
 import { Input, Chip, Spinner } from '@heroui/react'
 import { Magnifier } from '@gravity-ui/icons'
 import { motion } from 'motion/react'
-import { useServersStore } from '../../stores/serversStore'
-import { getMySubscription } from '../../api/subscriptions'
-import { usePolling } from '../../hooks/usePolling'
+import { getMySubscription, getAccessibleNodes } from '../../api/subscriptions'
 
 const COUNTRY_FLAGS = {
   russia: '\u{1F1F7}\u{1F1FA}', ru: '\u{1F1F7}\u{1F1FA}', '\u{420}\u{43e}\u{441}\u{441}\u{438}\u{44f}': '\u{1F1F7}\u{1F1FA}',
@@ -70,23 +68,35 @@ function getCountryName(name) {
 }
 
 export default function Servers() {
-  const { nodes, hosts, isLoading, fetchAll } = useServersStore()
+  const [nodes, setNodes] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [lastNodeUuid, setLastNodeUuid] = useState(null)
 
-  // Fetch subscription to get last connected node
   useEffect(() => {
-    getMySubscription()
-      .then((data) => {
-        if (data?.subscription?.remnawave?.last_node_uuid) {
-          setLastNodeUuid(data.subscription.remnawave.last_node_uuid)
-        }
-      })
-      .catch(() => {})
-  }, [])
+    async function load() {
+      try {
+        const data = await getMySubscription()
+        const sub = data?.subscription
+        const uuid = sub?.remnawave?.uuid || sub?.remnawave_uuid
 
-  // Auto-refresh every 30s
-  usePolling(fetchAll, 30000)
+        if (sub?.remnawave?.last_node_uuid) {
+          setLastNodeUuid(sub.remnawave.last_node_uuid)
+        }
+
+        if (uuid) {
+          const result = await getAccessibleNodes(uuid)
+          const nodeList = result?.response || result?.nodes || result
+          setNodes(Array.isArray(nodeList) ? nodeList : [])
+        }
+      } catch {
+        setNodes([])
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    load()
+  }, [])
 
   // Build server list from nodes
   const servers = useMemo(() => {
@@ -94,12 +104,7 @@ export default function Servers() {
 
     return nodes.map((node) => {
       const remark = node.name || node.remark || ''
-      // Find matching host for extra info
-      const matchingHost = Array.isArray(hosts)
-        ? hosts.find((h) => h.inboundUuid === node.uuid || (h.remark && remark.includes(h.remark)))
-        : null
-
-      const displayName = matchingHost?.remark || remark
+      const displayName = remark
       const flag = getFlag(displayName)
       const country = getCountryName(displayName)
 
@@ -113,7 +118,7 @@ export default function Servers() {
         isCurrentNode: lastNodeUuid && node.uuid === lastNodeUuid,
       }
     })
-  }, [nodes, hosts, lastNodeUuid])
+  }, [nodes, lastNodeUuid])
 
   const filtered = useMemo(() => {
     if (!search.trim()) return servers
@@ -207,11 +212,6 @@ export default function Servers() {
           </p>
         </div>
       )}
-
-      {/* Auto-refresh notice */}
-      <p className="text-center text-[11px] text-muted/50">
-        Данные обновляются автоматически каждые 30 секунд
-      </p>
     </div>
   )
 }

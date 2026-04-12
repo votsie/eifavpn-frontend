@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Button, Chip, Spinner } from '@heroui/react'
 import { motion } from 'motion/react'
-import { getMySubscription } from '../../api/subscriptions'
+import { getMySubscription, getHwidDevices } from '../../api/subscriptions'
 import { useNavigate } from 'react-router-dom'
 
 function DeviceIcon({ filled }) {
@@ -20,14 +20,44 @@ function DeviceIcon({ filled }) {
   )
 }
 
+function truncateHwid(hwid) {
+  if (!hwid) return '---'
+  if (hwid.length <= 12) return hwid
+  return hwid.slice(0, 6) + '...' + hwid.slice(-4)
+}
+
+function formatDate(iso) {
+  if (!iso) return '---'
+  return new Date(iso).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' })
+}
+
 export default function Devices() {
   const navigate = useNavigate()
   const [sub, setSub] = useState(null)
+  const [devices, setDevices] = useState([])
   const [loading, setLoading] = useState(true)
+  const [devicesLoading, setDevicesLoading] = useState(false)
 
   useEffect(() => {
     getMySubscription()
-      .then((data) => setSub(data?.subscription))
+      .then(async (data) => {
+        const subscription = data?.subscription
+        setSub(subscription)
+
+        const uuid = subscription?.remnawave?.uuid || subscription?.remnawave_uuid
+        if (uuid) {
+          setDevicesLoading(true)
+          try {
+            const result = await getHwidDevices(uuid)
+            const deviceList = result?.response || result?.devices || result
+            setDevices(Array.isArray(deviceList) ? deviceList : [])
+          } catch {
+            setDevices([])
+          } finally {
+            setDevicesLoading(false)
+          }
+        }
+      })
       .catch(() => {})
       .finally(() => setLoading(false))
   }, [])
@@ -77,7 +107,7 @@ export default function Devices() {
                     <span className="text-accent">Безлимит</span>
                   ) : (
                     <>
-                      {effectiveLimit}{' '}
+                      {devices.length} / {effectiveLimit}{' '}
                       <span className="text-lg font-normal text-muted">устройств</span>
                     </>
                   )}
@@ -98,7 +128,7 @@ export default function Devices() {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: i * 0.08 }}
                   >
-                    <DeviceIcon filled={true} />
+                    <DeviceIcon filled={i < devices.length} />
                   </motion.div>
                 ))}
               </div>
@@ -106,14 +136,14 @@ export default function Devices() {
 
             {isUnlimited && (
               <div className="mt-6 flex flex-wrap gap-3">
-                {Array.from({ length: 6 }).map((_, i) => (
+                {Array.from({ length: Math.max(6, devices.length) }).map((_, i) => (
                   <motion.div
                     key={i}
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: i * 0.08 }}
                   >
-                    <DeviceIcon filled={true} />
+                    <DeviceIcon filled={i < devices.length} />
                   </motion.div>
                 ))}
                 <div className="flex items-center">
@@ -123,11 +153,59 @@ export default function Devices() {
             )}
           </motion.div>
 
-          {/* Plan comparison */}
+          {/* Connected devices list */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
+            className="glass-card rounded-2xl border border-white/[0.06] bg-surface/40 p-4 md:p-5"
+          >
+            <p className="mb-3 text-sm font-semibold text-foreground">
+              Подключённые устройства
+            </p>
+
+            {devicesLoading ? (
+              <div className="flex items-center justify-center py-6">
+                <Spinner size="sm" />
+              </div>
+            ) : devices.length === 0 ? (
+              <p className="py-4 text-center text-sm text-muted">
+                Нет подключённых устройств
+              </p>
+            ) : (
+              <div className="space-y-2">
+                {devices.map((device, i) => (
+                  <motion.div
+                    key={device.id || device.hwid || i}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.05 }}
+                    className="flex items-center justify-between rounded-xl border border-white/[0.04] bg-black/10 px-4 py-3"
+                  >
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-medium text-foreground">
+                        {device.deviceName || device.device_name || device.remark || `Устройство ${i + 1}`}
+                      </p>
+                      <p className="mt-0.5 font-mono text-[11px] text-muted">
+                        HWID: {truncateHwid(device.hwid || device.hwidHash || device.hwid_hash)}
+                      </p>
+                    </div>
+                    <div className="ml-3 shrink-0 text-right">
+                      <p className="text-[11px] text-muted">
+                        {formatDate(device.firstConnectedAt || device.first_connected_at || device.createdAt || device.created_at)}
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </motion.div>
+
+          {/* Plan comparison */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
             className="glass-card rounded-2xl border border-white/[0.06] bg-surface/40 p-4 md:p-5"
           >
             <p className="mb-3 text-sm font-semibold text-foreground">Лимиты по тарифам</p>
@@ -157,7 +235,7 @@ export default function Devices() {
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
+            transition={{ delay: 0.3 }}
             className="glass-card-accent rounded-2xl border border-accent/10 bg-accent/[0.04] p-4 md:p-5"
           >
             <p className="mb-2 text-sm font-semibold text-foreground">

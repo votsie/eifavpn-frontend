@@ -9,6 +9,8 @@ import NotFound from './pages/NotFound'
 import Terms from './pages/Terms'
 import TelegramApp from './pages/TelegramApp'
 
+import Download from './pages/Download'
+import ConnectPage from './pages/Connect'
 import Overview from './pages/cabinet/Overview'
 import Servers from './pages/cabinet/Servers'
 import Devices from './pages/cabinet/Devices'
@@ -30,6 +32,8 @@ export default function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/terms" element={<Terms />} />
       <Route path="/app" element={<TelegramApp />} />
+      <Route path="/download/:platform" element={<Download />} />
+      <Route path="/connect" element={<ConnectPage />} />
 
       {/* Cabinet (protected) */}
       <Route

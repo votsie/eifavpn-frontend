@@ -4,6 +4,7 @@ import { useAuthStore } from '../../stores/authStore'
 import { getMySubscription, activateTrial, purchaseTrialUpgrade } from '../../api/subscriptions'
 import { useNavigate } from 'react-router-dom'
 import StatusBadge from '../../components/cabinet/StatusBadge'
+import ConnectModal from '../../components/cabinet/ConnectModal'
 import { motion } from 'motion/react'
 
 function formatBytes(bytes) {
@@ -46,6 +47,7 @@ export default function Overview() {
   const [loading, setLoading] = useState(true)
   const [trialLoading, setTrialLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [showConnect, setShowConnect] = useState(false)
 
   useEffect(() => {
     loadData()
@@ -152,9 +154,16 @@ export default function Overview() {
                 {isExpired ? `Истекла ${formatDate(sub.expires_at)}` : `Активна до ${formatDate(sub.expires_at)}`}
               </p>
             </div>
-            <Button size="sm" variant={isExpired ? undefined : 'outline'} className={isExpired ? 'glow-cyan font-semibold' : ''} onPress={() => navigate('/cabinet/purchase')}>
-              {isExpired ? 'Продлить' : 'Сменить план'}
-            </Button>
+            <div className="flex gap-2">
+              {sub.subscription_url && !isExpired && (
+                <Button size="sm" className="glow-cyan font-semibold" onPress={() => setShowConnect(true)}>
+                  Подключиться
+                </Button>
+              )}
+              <Button size="sm" variant={isExpired ? undefined : 'outline'} className={isExpired ? 'glow-cyan font-semibold' : ''} onPress={() => navigate('/cabinet/purchase')}>
+                {isExpired ? 'Продлить' : 'Сменить план'}
+              </Button>
+            </div>
           </div>
 
           {/* Stats grid */}
@@ -278,6 +287,14 @@ export default function Overview() {
             Выбрать тариф
           </Button>
         </div>
+      )}
+
+      {sub?.subscription_url && (
+        <ConnectModal
+          isOpen={showConnect}
+          onClose={() => setShowConnect(false)}
+          subscriptionUrl={sub.subscription_url}
+        />
       )}
     </div>
   )

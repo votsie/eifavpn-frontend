@@ -25,3 +25,11 @@ export function purchaseTrialUpgrade(payment_method = 'stars') {
     body: JSON.stringify({ payment_method }),
   })
 }
+
+export function getHwidDevices(uuid) {
+  return apiFetch(`/proxy/hwid-user-devices/by-user/${uuid}`)
+}
+
+export function getAccessibleNodes(uuid) {
+  return apiFetch(`/proxy/users/${uuid}/accessible-nodes`)
+}

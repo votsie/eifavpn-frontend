@@ -7,3 +7,7 @@ export function getReferralInfo() {
 export function getReferralList() {
   return apiFetch('/referral/list/')
 }
+
+export function prepareShare() {
+  return apiFetch('/referral/prepare-share/', { method: 'POST' })
+}
