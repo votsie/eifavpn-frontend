@@ -1,5 +1,21 @@
 import { apiFetch } from './client'
 
+export function sendCode(email) {
+  return apiFetch('/auth/send-code/', {
+    method: 'POST',
+    body: JSON.stringify({ email }),
+    skipAuth: true,
+  })
+}
+
+export function verifyCode({ email, code, password, name, referral_code }) {
+  return apiFetch('/auth/verify-code/', {
+    method: 'POST',
+    body: JSON.stringify({ email, code, password, name, referral_code }),
+    skipAuth: true,
+  })
+}
+
 export function register({ email, password, name, referral_code }) {
   return apiFetch('/auth/register/', {
     method: 'POST',

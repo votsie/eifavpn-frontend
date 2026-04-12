@@ -2,23 +2,27 @@ import { useState, useEffect } from 'react'
 import { Button, Input, Separator } from '@heroui/react'
 import { useAuthStore } from '../../stores/authStore'
 import { useNavigate, useLocation, useSearchParams, Link } from 'react-router-dom'
+import { sendCode, verifyCode } from '../../api/auth'
 
 export default function LoginForm() {
+  const [step, setStep] = useState('email') // 'email' | 'code'
   const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const { login, loginWithTokens, isLoading, error, clearError } = useAuthStore()
+  const [code, setCode] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const [codeSent, setCodeSent] = useState(false)
+  const { loginWithTokens, loginWithData } = useAuthStore()
   const navigate = useNavigate()
   const location = useLocation()
   const [searchParams] = useSearchParams()
 
   const from = location.state?.from?.pathname || '/cabinet/overview'
 
-  // Handle OAuth callback (Google/Telegram redirect with JWT tokens)
+  // Handle OAuth callback
   useEffect(() => {
     const auth = searchParams.get('auth')
     const access = searchParams.get('access')
     const refresh = searchParams.get('refresh')
-
     if (auth && access && refresh) {
       loginWithTokens(access, refresh).then((success) => {
         if (success) navigate(from, { replace: true })
@@ -26,34 +30,69 @@ export default function LoginForm() {
     }
   }, [searchParams])
 
-  async function handleSubmit(e) {
+  // OAuth error
+  const oauthError = searchParams.get('error')
+  useEffect(() => {
+    if (oauthError === 'not_found') setError('Аккаунт не найден')
+    else if (oauthError) setError('Ошибка авторизации')
+  }, [oauthError])
+
+  async function handleSendCode(e) {
     e.preventDefault()
-    if (!email.trim() || !password.trim()) return
-    const success = await login({ email: email.trim(), password })
-    if (success) navigate(from, { replace: true })
+    if (!email.trim()) return
+    setLoading(true)
+    setError(null)
+    try {
+      await sendCode(email.trim())
+      setStep('code')
+      setCodeSent(true)
+    } catch (err) {
+      setError(err.message || 'Ошибка отправки кода')
+    } finally {
+      setLoading(false)
+    }
   }
 
-  // Error messages
-  const oauthError = searchParams.get('error')
-  let errorMessage = null
-  if (oauthError === 'not_found') {
-    errorMessage = 'Аккаунт не найден'
-  } else if (oauthError) {
-    errorMessage = 'Ошибка авторизации. Попробуйте ещё раз.'
-  } else if (error) {
-    errorMessage = error
+  async function handleVerifyCode(e) {
+    e.preventDefault()
+    if (!code.trim()) return
+    setLoading(true)
+    setError(null)
+    try {
+      const data = await verifyCode({ email: email.trim(), code: code.trim() })
+      if (data.tokens) {
+        loginWithData(data.user, data.tokens)
+        navigate(from, { replace: true })
+      }
+    } catch (err) {
+      setError(err.message || 'Неверный код')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  async function handleResend() {
+    setLoading(true)
+    setError(null)
+    try {
+      await sendCode(email.trim())
+      setError(null)
+      setCodeSent(true)
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
     <div className="flex w-full flex-col gap-3">
-      {/* OAuth buttons */}
+      {/* OAuth */}
       <Button
-        fullWidth
-        size="lg"
-        variant="outline"
+        fullWidth size="lg" variant="outline"
         className="h-12 text-[14px] font-medium"
         onPress={() => { window.location.href = '/api/auth/google/' }}
-        isDisabled={isLoading}
+        isDisabled={loading}
       >
         <svg className="h-[18px] w-[18px] shrink-0" viewBox="0 0 24 24">
           <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/>
@@ -65,12 +104,10 @@ export default function LoginForm() {
       </Button>
 
       <Button
-        fullWidth
-        size="lg"
-        variant="outline"
+        fullWidth size="lg" variant="outline"
         className="h-12 text-[14px] font-medium"
         onPress={() => { window.location.href = '/api/auth/telegram/' }}
-        isDisabled={isLoading}
+        isDisabled={loading}
       >
         <svg className="h-[18px] w-[18px] shrink-0" viewBox="0 0 24 24">
           <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z" fill="#29B6F6"/>
@@ -78,48 +115,73 @@ export default function LoginForm() {
         Войти через Telegram
       </Button>
 
-      {/* Divider */}
       <div className="flex items-center gap-4 py-1">
         <Separator className="flex-1" />
-        <span className="text-[11px] font-medium uppercase tracking-wider text-muted/60">или</span>
+        <span className="text-[11px] font-medium uppercase tracking-wider text-muted/60">или по email</span>
         <Separator className="flex-1" />
       </div>
 
-      {/* Email + password form */}
-      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-        <Input
-          label="Email"
-          type="email"
-          placeholder="your@email.com"
-          value={email}
-          onChange={(e) => { setEmail(e.target.value); if (error) clearError() }}
-          isInvalid={!!errorMessage}
-          size="lg"
-        />
-        <Input
-          label="Пароль"
-          type="password"
-          placeholder="••••••"
-          value={password}
-          onChange={(e) => { setPassword(e.target.value); if (error) clearError() }}
-          isInvalid={!!errorMessage}
-          size="lg"
-        />
+      {/* Step 1: Email */}
+      {step === 'email' && (
+        <form onSubmit={handleSendCode} className="flex flex-col gap-3">
+          <Input
+            label="Email"
+            type="email"
+            placeholder="your@email.com"
+            value={email}
+            onChange={(e) => { setEmail(e.target.value); setError(null) }}
+            isInvalid={!!error}
+            size="lg"
+          />
+          {error && <p className="text-[13px] text-danger">{error}</p>}
+          <Button
+            type="submit" fullWidth size="lg"
+            isPending={loading}
+            className="glow-cyan h-12 text-[14px] font-semibold"
+          >
+            Получить код
+          </Button>
+        </form>
+      )}
 
-        {errorMessage && (
-          <p className="text-[13px] text-danger">{errorMessage}</p>
-        )}
-
-        <Button
-          type="submit"
-          fullWidth
-          size="lg"
-          isPending={isLoading}
-          className="glow-cyan h-12 text-[14px] font-semibold"
-        >
-          Войти
-        </Button>
-      </form>
+      {/* Step 2: Code verification */}
+      {step === 'code' && (
+        <form onSubmit={handleVerifyCode} className="flex flex-col gap-3">
+          <p className="text-center text-[13px] text-muted">
+            Код отправлен на <span className="font-medium text-accent">{email}</span>
+          </p>
+          <Input
+            label="Код из письма"
+            placeholder="123456"
+            value={code}
+            onChange={(e) => { setCode(e.target.value.replace(/\D/g, '').slice(0, 6)); setError(null) }}
+            isInvalid={!!error}
+            size="lg"
+            maxLength={6}
+            className="text-center"
+            style={{ letterSpacing: '0.3em' }}
+          />
+          {error && <p className="text-[13px] text-danger">{error}</p>}
+          <Button
+            type="submit" fullWidth size="lg"
+            isPending={loading}
+            isDisabled={code.length < 6}
+            className="glow-cyan h-12 text-[14px] font-semibold"
+          >
+            Подтвердить
+          </Button>
+          <div className="flex items-center justify-between">
+            <button type="button" onClick={() => { setStep('email'); setCode(''); setError(null) }}
+              className="text-[13px] text-muted transition-colors hover:text-foreground">
+              ← Другой email
+            </button>
+            <button type="button" onClick={handleResend}
+              className="text-[13px] text-accent transition-colors hover:text-accent/80">
+              Отправить снова
+            </button>
+          </div>
+        </form>
+      )}
 
       <p className="mt-1 text-center text-[13px] text-muted">
         Нет аккаунта?{' '}
