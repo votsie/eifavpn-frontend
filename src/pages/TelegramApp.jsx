@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { WebAppProvider, useInitData, useWebApp } from '@vkruglikov/react-telegram-web-app'
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../stores/authStore'
@@ -9,54 +9,64 @@ function TelegramAppInner() {
   const [initDataUnsafe, initData] = useInitData()
   const webApp = useWebApp()
   const navigate = useNavigate()
-  const { loginWithData, isAuthenticated } = useAuthStore()
+  const { loginWithData, loginWithTokens, isAuthenticated, fetchMe } = useAuthStore()
   const [error, setError] = useState(null)
-  const [authenticating, setAuthenticating] = useState(false)
+  const authStarted = useRef(false)
 
+  // Expand mini app
   useEffect(() => {
-    // Expand the mini app to full height
-    if (webApp?.expand) {
-      webApp.expand()
-    }
+    if (webApp?.expand) webApp.expand()
+    if (webApp?.ready) webApp.ready()
   }, [webApp])
 
   useEffect(() => {
-    // Already authenticated — go straight to cabinet
-    if (isAuthenticated) {
-      navigate('/cabinet/overview', { replace: true })
-      return
-    }
+    if (authStarted.current) return
+    authStarted.current = true
 
-    // Try raw Telegram WebApp initData if hook didn't pick it up
-    const rawInitData = initData || window.Telegram?.WebApp?.initData
-
-    if (!rawInitData) {
-      const timer = setTimeout(() => {
-        if (!window.Telegram?.WebApp?.initData) {
-          navigate('/cabinet/login', { replace: true })
+    async function auth() {
+      // Step 1: Check if we already have valid tokens in localStorage
+      const hasTokens = !!localStorage.getItem('eifavpn_access')
+      if (hasTokens) {
+        const ok = await fetchMe()
+        if (ok) {
+          navigate('/cabinet/overview', { replace: true })
+          return
         }
-      }, 3000)
-      return () => clearTimeout(timer)
+        // Tokens expired — continue to Telegram auth
+      }
+
+      // Step 2: Authenticate via Telegram initData
+      const rawInitData = initData || window.Telegram?.WebApp?.initData
+      if (!rawInitData) {
+        // Wait for SDK
+        await new Promise(r => setTimeout(r, 1500))
+        const retry = window.Telegram?.WebApp?.initData
+        if (!retry) {
+          navigate('/cabinet/login', { replace: true })
+          return
+        }
+        await doTelegramAuth(retry)
+      } else {
+        await doTelegramAuth(rawInitData)
+      }
     }
 
-    if (rawInitData && !authenticating) {
-      setAuthenticating(true)
-      telegramWebAppAuth(rawInitData)
-        .then((data) => {
-          if (data.tokens && data.user) {
-            loginWithData(data.user, data.tokens)
-            // Signal to Telegram that we're ready
-            if (webApp?.ready) webApp.ready()
-            navigate('/cabinet/overview', { replace: true })
-          } else {
-            setError('Не удалось авторизоваться')
-          }
-        })
-        .catch((err) => {
-          setError(err.message || 'Ошибка авторизации')
-        })
+    async function doTelegramAuth(data) {
+      try {
+        const result = await telegramWebAppAuth(data)
+        if (result.tokens && result.user) {
+          loginWithData(result.user, result.tokens)
+          navigate('/cabinet/overview', { replace: true })
+        } else {
+          setError('Не удалось авторизоваться')
+        }
+      } catch (err) {
+        setError(err.message || 'Ошибка авторизации')
+      }
     }
-  }, [initData, isAuthenticated])
+
+    auth()
+  }, [])
 
   if (error) {
     return (
@@ -64,7 +74,7 @@ function TelegramAppInner() {
         <img src="/logo.png" alt="EIFAVPN" className="h-14 w-14 object-contain" />
         <p className="text-sm text-danger">{error}</p>
         <button
-          onClick={() => navigate('/cabinet/login', { replace: true })}
+          onClick={() => { window.location.href = '/cabinet/login' }}
           className="text-sm text-accent underline"
         >
           Войти через браузер
