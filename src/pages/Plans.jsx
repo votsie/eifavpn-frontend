@@ -204,7 +204,7 @@ export default function Plans() {
                     size="lg"
                     variant={plan.popular ? undefined : 'outline'}
                     className={`text-[14px] font-semibold ${plan.popular ? 'shadow-[0_0_16px_oklch(0.80_0.155_180/16%)]' : ''}`}
-                    onPress={() => navigate('/register')}
+                    onPress={() => navigate(`/register?plan=${plan.id}`)}
                   >
                     {plan.popular ? 'Подключить Pro' : `Выбрать ${plan.name}`}
                   </Button>

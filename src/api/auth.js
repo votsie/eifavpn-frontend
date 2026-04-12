@@ -40,3 +40,10 @@ export function changePassword({ old_password, new_password }) {
     body: JSON.stringify({ old_password, new_password }),
   })
 }
+
+export function deleteAccount(password) {
+  return apiFetch('/auth/delete-account/', {
+    method: 'POST',
+    body: JSON.stringify({ password }),
+  })
+}

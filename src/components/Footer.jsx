@@ -9,8 +9,8 @@ export default function Footer() {
             <span className="font-heading text-[15px] font-bold text-foreground">EIFAVPN</span>
           </a>
           <div className="flex gap-6 text-[13px] text-muted/70">
-            <a href="#" className="transition-colors hover:text-foreground">Политика</a>
-            <a href="#" className="transition-colors hover:text-foreground">Условия</a>
+            <a href="/terms" className="transition-colors hover:text-foreground">Политика</a>
+            <a href="/terms" className="transition-colors hover:text-foreground">Условия</a>
             <a href="mailto:support@eifavpn.ru" className="transition-colors hover:text-foreground">Поддержка</a>
           </div>
           <p className="text-[11px] text-muted/40">

@@ -47,7 +47,7 @@ export default function Login() {
           {/* Footer */}
           <p className="mt-6 text-center text-[11px] leading-relaxed text-muted/50">
             Нажимая «Войти», вы соглашаетесь с{' '}
-            <a href="#" className="text-muted/70 underline decoration-muted/30 underline-offset-2 transition-colors hover:text-foreground">
+            <a href="/terms" className="text-muted/70 underline decoration-muted/30 underline-offset-2 transition-colors hover:text-foreground">
               условиями использования
             </a>
           </p>

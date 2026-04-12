@@ -6,6 +6,7 @@ import Landing from './pages/Landing'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import NotFound from './pages/NotFound'
+import Terms from './pages/Terms'
 
 import Overview from './pages/cabinet/Overview'
 import Servers from './pages/cabinet/Servers'
@@ -23,9 +24,10 @@ export default function App() {
         <Route index element={<Landing />} />
       </Route>
 
-      {/* Auth */}
+      {/* Auth + Legal */}
       <Route path="/cabinet/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/terms" element={<Terms />} />
 
       {/* Cabinet (protected) */}
       <Route

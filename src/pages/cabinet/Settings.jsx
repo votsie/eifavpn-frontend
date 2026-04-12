@@ -3,12 +3,14 @@ import { Button, Input, Chip } from '@heroui/react'
 import { Copy, Pencil } from '@gravity-ui/icons'
 import { motion } from 'motion/react'
 import { useAuthStore } from '../../stores/authStore'
-import { updateProfile, changePassword } from '../../api/auth'
+import { updateProfile, changePassword, deleteAccount } from '../../api/auth'
+import { useNavigate } from 'react-router-dom'
 import { getMySubscription } from '../../api/subscriptions'
 import { useEffect } from 'react'
 
 export default function Settings() {
-  const { user, fetchMe } = useAuthStore()
+  const { user, fetchMe, logout } = useAuthStore()
+  const navigate = useNavigate()
 
   // Profile editing
   const [editingProfile, setEditingProfile] = useState(false)
@@ -408,10 +410,19 @@ export default function Settings() {
           size="sm"
           color="danger"
           variant="outline"
-          onPress={() => {
-            if (window.confirm('Вы уверены, что хотите удалить аккаунт? Это действие необратимо.')) {
-              // TODO: implement delete account endpoint when backend is ready
-              alert('Для удаления аккаунта обратитесь в поддержку: @eifavpn_support')
+          onPress={async () => {
+            const confirmed = window.confirm('Вы уверены, что хотите удалить аккаунт? Все данные и подписка будут удалены. Это действие необратимо.')
+            if (!confirmed) return
+            const password = user?.has_usable_password !== false
+              ? window.prompt('Введите пароль для подтверждения:')
+              : ''
+            if (password === null) return
+            try {
+              await deleteAccount(password)
+              await logout()
+              navigate('/')
+            } catch (err) {
+              alert(err.message || 'Ошибка удаления аккаунта')
             }
           }}
         >
