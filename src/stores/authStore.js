@@ -29,19 +29,6 @@ export const useAuthStore = create((set, get) => {
     isAuthenticated: false,
     error: null,
 
-    register: async ({ email, password, name, referral_code }) => {
-      set({ isLoading: true, error: null })
-      try {
-        const data = await authApi.register({ email, password, name, referral_code })
-        saveTokens(data.tokens)
-        set({ user: data.user, isAuthenticated: true, isLoading: false })
-        return true
-      } catch (err) {
-        set({ error: err.data?.email?.[0] || err.message, isLoading: false })
-        return false
-      }
-    },
-
     login: async ({ email, password }) => {
       set({ isLoading: true, error: null })
       try {
