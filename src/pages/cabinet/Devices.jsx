@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Button, Chip, Spinner } from '@heroui/react'
 import { motion } from 'motion/react'
 import { getMySubscription, getHwidDevices } from '../../api/subscriptions'
+import { useAuthStore } from '../../stores/authStore'
 import { useNavigate } from 'react-router-dom'
 
 function DeviceIcon({ filled }) {
@@ -32,6 +33,7 @@ function formatDate(iso) {
 }
 
 export default function Devices() {
+  const { user } = useAuthStore()
   const navigate = useNavigate()
   const [sub, setSub] = useState(null)
   const [devices, setDevices] = useState([])
@@ -44,7 +46,7 @@ export default function Devices() {
         const subscription = data?.subscription
         setSub(subscription)
 
-        const uuid = subscription?.remnawave?.uuid || subscription?.remnawave_uuid
+        const uuid = user?.remnawave_uuid
         if (uuid) {
           setDevicesLoading(true)
           try {

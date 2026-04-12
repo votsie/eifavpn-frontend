@@ -3,6 +3,7 @@ import { Input, Chip, Spinner } from '@heroui/react'
 import { Magnifier } from '@gravity-ui/icons'
 import { motion } from 'motion/react'
 import { getMySubscription, getAccessibleNodes } from '../../api/subscriptions'
+import { useAuthStore } from '../../stores/authStore'
 
 const COUNTRY_FLAGS = {
   russia: '\u{1F1F7}\u{1F1FA}', ru: '\u{1F1F7}\u{1F1FA}', '\u{420}\u{43e}\u{441}\u{441}\u{438}\u{44f}': '\u{1F1F7}\u{1F1FA}',
@@ -68,6 +69,7 @@ function getCountryName(name) {
 }
 
 export default function Servers() {
+  const { user } = useAuthStore()
   const [nodes, setNodes] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [search, setSearch] = useState('')
@@ -76,10 +78,12 @@ export default function Servers() {
   useEffect(() => {
     async function load() {
       try {
+        // Get remnawave_uuid from user profile (not subscription)
+        const uuid = user?.remnawave_uuid
+
+        // Also get last connected node from subscription data
         const data = await getMySubscription()
         const sub = data?.subscription
-        const uuid = sub?.remnawave?.uuid || sub?.remnawave_uuid
-
         if (sub?.remnawave?.last_node_uuid) {
           setLastNodeUuid(sub.remnawave.last_node_uuid)
         }
@@ -96,7 +100,7 @@ export default function Servers() {
       }
     }
     load()
-  }, [])
+  }, [user])
 
   // Build server list from nodes
   const servers = useMemo(() => {
