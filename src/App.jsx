@@ -13,6 +13,7 @@ import Devices from './pages/cabinet/Devices'
 import Referral from './pages/cabinet/Referral'
 import Settings from './pages/cabinet/Settings'
 import Guide from './pages/cabinet/Guide'
+import Purchase from './pages/cabinet/Purchase'
 
 export default function App() {
   return (
@@ -40,6 +41,7 @@ export default function App() {
         <Route path="servers" element={<Servers />} />
         <Route path="devices" element={<Devices />} />
         <Route path="referral" element={<Referral />} />
+        <Route path="purchase" element={<Purchase />} />
         <Route path="settings" element={<Settings />} />
         <Route path="guide" element={<Guide />} />
       </Route>

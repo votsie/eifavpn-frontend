@@ -6,10 +6,12 @@ import {
   Persons,
   Gear,
   CircleQuestion,
+  ShoppingCart,
 } from '@gravity-ui/icons'
 
 const links = [
   { to: '/cabinet/overview', icon: LayoutList, label: 'Обзор' },
+  { to: '/cabinet/purchase', icon: ShoppingCart, label: 'Тарифы' },
   { to: '/cabinet/servers', icon: Globe, label: 'Серверы' },
   { to: '/cabinet/devices', icon: Smartphone, label: 'Устройства' },
   { to: '/cabinet/referral', icon: Persons, label: 'Рефералы' },
