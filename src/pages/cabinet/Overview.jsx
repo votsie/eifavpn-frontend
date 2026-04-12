@@ -31,10 +31,10 @@ function daysLeft(iso) {
 
 function StatCard({ label, value, sub, accent }) {
   return (
-    <div className="glass-card rounded-xl border border-white/[0.05] bg-surface/30 p-4">
-      <p className="text-xs font-medium uppercase tracking-wider text-muted md:text-[11px]">{label}</p>
-      <p className={`font-heading mt-1 text-2xl font-bold md:text-xl ${accent ? 'text-accent' : 'text-foreground'}`}>{value}</p>
-      {sub && <p className="mt-0.5 text-xs text-muted md:text-[11px]">{sub}</p>}
+    <div className="glass-card min-w-0 overflow-hidden rounded-xl border border-white/[0.05] bg-surface/30 p-3 md:p-4">
+      <p className="truncate text-[10px] font-medium uppercase tracking-wider text-muted md:text-[11px]">{label}</p>
+      <p className={`font-heading mt-1 truncate text-lg font-bold md:text-xl ${accent ? 'text-accent' : 'text-foreground'}`}>{value}</p>
+      {sub && <p className="mt-0.5 truncate text-[10px] text-muted md:text-[11px]">{sub}</p>}
     </div>
   )
 }
@@ -158,7 +158,7 @@ export default function Overview() {
           </div>
 
           {/* Stats grid */}
-          <div className="grid grid-cols-2 gap-2 md:gap-3 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-2 overflow-hidden md:gap-3 lg:grid-cols-4">
             <StatCard
               label="Осталось"
               value={isExpired ? 'Истекла' : `${days} дн.`}
