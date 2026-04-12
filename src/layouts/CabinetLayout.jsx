@@ -18,7 +18,7 @@ export default function CabinetLayout() {
       {/* Main content */}
       <div className={`relative z-10 flex flex-1 flex-col ${!isTg ? 'md:ml-60' : ''}`}>
         {!isTg && <Topbar />}
-        <main className={`flex-1 px-4 pb-24 pt-4 ${!isTg ? 'md:px-8 md:pb-8 md:pt-6' : ''}`}>
+        <main className={`flex-1 overflow-x-hidden px-3 pb-24 pt-4 ${!isTg ? 'md:px-8 md:pb-8 md:pt-6' : ''}`}>
           <Outlet />
         </main>
       </div>

@@ -134,7 +134,7 @@ export default function Guide() {
   const platform = PLATFORMS.find((p) => p.id === selectedPlatform) || PLATFORMS[0]
 
   return (
-    <div className="mx-auto max-w-3xl space-y-3 px-3 md:space-y-5 md:px-0">
+    <div className="mx-auto max-w-3xl w-full space-y-3 overflow-hidden md:space-y-5">
       <h1 className="font-heading text-2xl font-bold text-foreground">Инструкция</h1>
       <p className="text-sm text-muted">Как подключиться к EIFAVPN на вашем устройстве</p>
 

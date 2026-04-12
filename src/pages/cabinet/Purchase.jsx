@@ -82,7 +82,7 @@ export default function Purchase() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl px-3 md:px-0">
+    <div className="mx-auto max-w-4xl w-full overflow-hidden">
       <h1 className="font-heading mb-2 text-2xl font-bold text-foreground">Выбрать тариф</h1>
       <p className="mb-6 text-sm text-muted md:mb-8">Выберите план, период и способ оплаты</p>
 

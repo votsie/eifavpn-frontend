@@ -100,7 +100,7 @@ export default function Settings() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl space-y-3 px-3 md:space-y-5 md:px-0">
+    <div className="mx-auto max-w-3xl w-full space-y-3 overflow-hidden md:space-y-5">
       <h1 className="font-heading text-2xl font-bold text-foreground">Настройки</h1>
 
       {/* Profile section */}
