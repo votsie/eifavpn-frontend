@@ -7,6 +7,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import NotFound from './pages/NotFound'
 import Terms from './pages/Terms'
+import TelegramApp from './pages/TelegramApp'
 
 import Overview from './pages/cabinet/Overview'
 import Servers from './pages/cabinet/Servers'
@@ -28,6 +29,7 @@ export default function App() {
       <Route path="/cabinet/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/terms" element={<Terms />} />
+      <Route path="/app" element={<TelegramApp />} />
 
       {/* Cabinet (protected) */}
       <Route
