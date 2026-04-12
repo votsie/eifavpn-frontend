@@ -7,12 +7,12 @@ import { getReferralInfo, getReferralList } from '../../api/referrals'
 
 function StatCard({ label, value, sub, accent }) {
   return (
-    <div className="rounded-xl border border-white/[0.05] bg-surface/30 p-4">
-      <p className="text-[11px] font-medium uppercase tracking-wider text-muted">{label}</p>
-      <p className={`font-heading mt-1 text-xl font-bold ${accent ? 'text-accent' : 'text-foreground'}`}>
+    <div className="glass-card rounded-xl border border-white/[0.05] bg-surface/30 p-4">
+      <p className="text-xs font-medium uppercase tracking-wider text-muted md:text-[11px]">{label}</p>
+      <p className={`font-heading mt-1 text-2xl font-bold md:text-xl ${accent ? 'text-accent' : 'text-foreground'}`}>
         {value}
       </p>
-      {sub && <p className="mt-0.5 text-[11px] text-muted">{sub}</p>}
+      {sub && <p className="mt-0.5 text-xs text-muted md:text-[11px]">{sub}</p>}
     </div>
   )
 }
@@ -55,14 +55,14 @@ export default function Referral() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl space-y-5">
+    <div className="mx-auto max-w-3xl space-y-3 px-3 md:space-y-5 md:px-0">
       <h1 className="font-heading text-2xl font-bold text-foreground">Реферальная программа</h1>
 
       {/* Referral link card */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        className="rounded-2xl border border-accent/20 bg-gradient-to-r from-accent/[0.08] to-surface/60 p-6"
+        className="glass-card-accent rounded-2xl border border-accent/20 bg-gradient-to-r from-accent/[0.08] to-surface/60 p-5 md:p-6"
       >
         <p className="text-lg font-bold text-foreground">Приглашайте друзей</p>
         <p className="mt-1 text-sm text-muted">
@@ -127,7 +127,7 @@ export default function Referral() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15 }}
-        className="rounded-2xl border border-white/[0.06] bg-surface/40 p-5"
+        className="glass-card rounded-2xl border border-white/[0.06] bg-surface/40 p-4 md:p-5"
       >
         <p className="mb-3 text-sm font-semibold text-foreground">Как это работает?</p>
         <div className="space-y-3">
@@ -166,7 +166,7 @@ export default function Referral() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="rounded-2xl border border-white/[0.06] bg-surface/40 p-5"
+        className="glass-card rounded-2xl border border-white/[0.06] bg-surface/40 p-4 md:p-5"
       >
         <p className="mb-3 text-sm font-semibold text-foreground">Приглашённые пользователи</p>
 
@@ -179,7 +179,7 @@ export default function Referral() {
             {list.map((ref, i) => (
               <div
                 key={i}
-                className="flex items-center justify-between rounded-xl border border-white/[0.04] bg-black/10 px-4 py-3"
+                className="glass-card flex min-h-11 items-center justify-between rounded-xl border border-white/[0.04] bg-black/10 px-4 py-3"
               >
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium text-foreground">{ref.email}</p>

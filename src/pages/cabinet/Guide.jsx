@@ -134,7 +134,7 @@ export default function Guide() {
   const platform = PLATFORMS.find((p) => p.id === selectedPlatform) || PLATFORMS[0]
 
   return (
-    <div className="mx-auto max-w-3xl space-y-5">
+    <div className="mx-auto max-w-3xl space-y-3 px-3 md:space-y-5 md:px-0">
       <h1 className="font-heading text-2xl font-bold text-foreground">Инструкция</h1>
       <p className="text-sm text-muted">Как подключиться к EIFAVPN на вашем устройстве</p>
 
@@ -143,7 +143,7 @@ export default function Guide() {
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-2xl border border-accent/20 bg-gradient-to-r from-accent/[0.08] to-surface/60 p-5"
+          className="glass-card-accent rounded-2xl border border-accent/20 bg-gradient-to-r from-accent/[0.08] to-surface/60 p-4 md:p-5"
         >
           <p className="mb-2 text-[11px] font-medium uppercase tracking-wider text-muted">
             Ваш URL подписки
@@ -200,7 +200,7 @@ export default function Guide() {
         initial={{ opacity: 0, x: 12 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.2 }}
-        className="rounded-2xl border border-white/[0.06] bg-surface/40 p-5"
+        className="glass-card rounded-2xl border border-white/[0.06] bg-surface/40 p-4 md:p-5"
       >
         {/* App info */}
         <div className="mb-5 flex items-center justify-between">
@@ -255,7 +255,7 @@ export default function Guide() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
-          className="rounded-2xl border border-white/[0.06] bg-surface/40 p-5"
+          className="glass-card rounded-2xl border border-white/[0.06] bg-surface/40 p-4 md:p-5"
         >
           <p className="mb-4 text-center text-sm font-semibold text-foreground">
             Или отсканируйте QR-код
@@ -269,7 +269,7 @@ export default function Guide() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="rounded-2xl border border-accent/10 bg-accent/[0.04] p-5"
+        className="glass-card-accent rounded-2xl border border-accent/10 bg-accent/[0.04] p-4 md:p-5"
       >
         <p className="mb-2 text-sm font-semibold text-foreground">Полезные советы</p>
         <div className="space-y-2 text-[13px] text-muted">

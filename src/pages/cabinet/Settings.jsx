@@ -100,14 +100,14 @@ export default function Settings() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl space-y-5">
+    <div className="mx-auto max-w-3xl space-y-3 px-3 md:space-y-5 md:px-0">
       <h1 className="font-heading text-2xl font-bold text-foreground">Настройки</h1>
 
       {/* Profile section */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        className="rounded-2xl border border-white/[0.06] bg-surface/40 p-5"
+        className="glass-card rounded-2xl border border-white/[0.06] bg-surface/40 p-4 md:p-5"
       >
         <div className="flex items-center justify-between">
           <p className="text-sm font-semibold text-foreground">Профиль</p>
@@ -220,7 +220,7 @@ export default function Settings() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.05 }}
-        className="rounded-2xl border border-white/[0.06] bg-surface/40 p-5"
+        className="glass-card rounded-2xl border border-white/[0.06] bg-surface/40 p-4 md:p-5"
       >
         <p className="mb-3 text-sm font-semibold text-foreground">Привязанные аккаунты</p>
         <div className="space-y-3">
@@ -287,9 +287,9 @@ export default function Settings() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="rounded-2xl border border-white/[0.06] bg-surface/40 p-5"
+          className="glass-card rounded-2xl border border-white/[0.06] bg-surface/40 p-4 md:p-5"
         >
-          <p className="mb-2 text-[11px] font-medium uppercase tracking-wider text-muted">
+          <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted md:text-[11px]">
             URL подписки
           </p>
           <div className="flex items-center gap-2">
@@ -315,9 +315,9 @@ export default function Settings() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.12 }}
-          className="rounded-2xl border border-white/[0.06] bg-surface/40 p-5"
+          className="glass-card rounded-2xl border border-white/[0.06] bg-surface/40 p-4 md:p-5"
         >
-          <p className="mb-2 text-[11px] font-medium uppercase tracking-wider text-muted">
+          <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted md:text-[11px]">
             Реферальный код
           </p>
           <div className="flex items-center gap-2">
@@ -347,7 +347,7 @@ export default function Settings() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15 }}
-        className="rounded-2xl border border-white/[0.06] bg-surface/40 p-5"
+        className="glass-card rounded-2xl border border-white/[0.06] bg-surface/40 p-4 md:p-5"
       >
         <p className="mb-4 text-sm font-semibold text-foreground">Сменить пароль</p>
         <div className="space-y-3">

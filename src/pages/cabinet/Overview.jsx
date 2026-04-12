@@ -31,10 +31,10 @@ function daysLeft(iso) {
 
 function StatCard({ label, value, sub, accent }) {
   return (
-    <div className="rounded-xl border border-white/[0.05] bg-surface/30 p-4">
-      <p className="text-[11px] font-medium uppercase tracking-wider text-muted">{label}</p>
-      <p className={`font-heading mt-1 text-xl font-bold ${accent ? 'text-accent' : 'text-foreground'}`}>{value}</p>
-      {sub && <p className="mt-0.5 text-[11px] text-muted">{sub}</p>}
+    <div className="glass-card rounded-xl border border-white/[0.05] bg-surface/30 p-4">
+      <p className="text-xs font-medium uppercase tracking-wider text-muted md:text-[11px]">{label}</p>
+      <p className={`font-heading mt-1 text-2xl font-bold md:text-xl ${accent ? 'text-accent' : 'text-foreground'}`}>{value}</p>
+      {sub && <p className="mt-0.5 text-xs text-muted md:text-[11px]">{sub}</p>}
     </div>
   )
 }
@@ -101,13 +101,13 @@ export default function Overview() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl space-y-5">
+    <div className="mx-auto max-w-3xl space-y-3 px-3 md:space-y-5 md:px-0">
       <h1 className="font-heading text-2xl font-bold text-foreground">Обзор</h1>
 
       {/* Trial banner */}
       {canTrial && (
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-          className="overflow-hidden rounded-2xl border border-accent/20 bg-gradient-to-r from-accent/[0.08] to-surface/60 p-6">
+          className="glass-card-accent overflow-hidden rounded-2xl border border-accent/20 bg-gradient-to-r from-accent/[0.08] to-surface/60 p-5 md:p-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-lg font-bold text-foreground">Попробуйте MAX бесплатно!</p>
@@ -124,7 +124,7 @@ export default function Overview() {
       {/* Trial upgrade banner */}
       {canTrialUpgrade && (
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-          className="overflow-hidden rounded-2xl border border-warning/20 bg-gradient-to-r from-warning/[0.06] to-surface/60 p-6">
+          className="glass-card-accent overflow-hidden rounded-2xl border border-warning/20 bg-gradient-to-r from-warning/[0.06] to-surface/60 p-5 md:p-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-lg font-bold text-foreground">Специальное предложение!</p>
@@ -139,9 +139,9 @@ export default function Overview() {
 
       {/* Subscription card */}
       {hasSub && (
-        <div className="space-y-4">
+        <div className="space-y-3 md:space-y-4">
           {/* Header */}
-          <div className="flex flex-wrap items-start justify-between gap-3 rounded-2xl border border-white/[0.06] bg-surface/40 p-5">
+          <div className="glass-card flex flex-wrap items-start justify-between gap-3 rounded-2xl border border-white/[0.06] bg-surface/40 p-4 md:p-5">
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="font-heading text-xl font-bold text-foreground">{sub.plan_name}</h2>
@@ -158,7 +158,7 @@ export default function Overview() {
           </div>
 
           {/* Stats grid */}
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-2 sm:grid-cols-2 md:gap-3 lg:grid-cols-4">
             <StatCard
               label="Осталось"
               value={isExpired ? 'Истекла' : `${days} дн.`}
@@ -182,7 +182,7 @@ export default function Overview() {
           </div>
 
           {/* Traffic */}
-          <div className="rounded-2xl border border-white/[0.06] bg-surface/40 p-5">
+          <div className="glass-card rounded-2xl border border-white/[0.06] bg-surface/40 p-4 md:p-5">
             <div className="flex items-center justify-between">
               <p className="text-sm font-semibold text-foreground">Трафик</p>
               <p className="text-sm text-muted">
@@ -220,7 +220,7 @@ export default function Overview() {
           </div>
 
           {/* Connection info */}
-          <div className="rounded-2xl border border-white/[0.06] bg-surface/40 p-5">
+          <div className="glass-card rounded-2xl border border-white/[0.06] bg-surface/40 p-4 md:p-5">
             <p className="mb-3 text-sm font-semibold text-foreground">Подключение</p>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               <div>
@@ -252,13 +252,13 @@ export default function Overview() {
 
           {/* Subscription URL */}
           {sub.subscription_url && !isExpired && (
-            <div className="rounded-2xl border border-white/[0.06] bg-surface/40 p-5">
-              <p className="mb-2 text-[11px] font-medium uppercase tracking-wider text-muted">URL подписки</p>
+            <div className="glass-card-accent rounded-2xl border border-white/[0.06] bg-surface/40 p-4 md:p-5">
+              <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted md:text-[11px]">URL подписки</p>
               <div className="flex items-center gap-2">
-                <code className="flex-1 truncate rounded-lg bg-black/20 px-3 py-2 font-mono text-xs text-accent">
+                <code className="min-h-11 flex-1 truncate rounded-lg bg-black/20 px-3 py-2 font-mono text-xs text-accent">
                   {sub.subscription_url}
                 </code>
-                <Button size="sm" variant="outline" onPress={() => navigator.clipboard.writeText(sub.subscription_url)}>
+                <Button size="sm" variant="outline" className="min-h-11" onPress={() => navigator.clipboard.writeText(sub.subscription_url)}>
                   Копировать
                 </Button>
               </div>
@@ -272,7 +272,7 @@ export default function Overview() {
 
       {/* No subscription */}
       {!hasSub && !canTrial && !canTrialUpgrade && (
-        <div className="rounded-2xl border border-white/[0.06] bg-surface/40 p-6 text-center">
+        <div className="glass-card rounded-2xl border border-white/[0.06] bg-surface/40 p-5 text-center md:p-6">
           <p className="text-muted">У вас нет активной подписки</p>
           <Button className="glow-cyan mt-4 font-semibold" onPress={() => navigate('/cabinet/purchase')}>
             Выбрать тариф

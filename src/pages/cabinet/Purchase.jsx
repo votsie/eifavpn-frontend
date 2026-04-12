@@ -82,22 +82,22 @@ export default function Purchase() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div className="mx-auto max-w-4xl px-3 md:px-0">
       <h1 className="font-heading mb-2 text-2xl font-bold text-foreground">Выбрать тариф</h1>
-      <p className="mb-8 text-sm text-muted">Выберите план, период и способ оплаты</p>
+      <p className="mb-6 text-sm text-muted md:mb-8">Выберите план, период и способ оплаты</p>
 
       {/* Step 1: Plan selection */}
-      <div className="mb-8">
+      <div className="mb-6 md:mb-8">
         <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted">1. Тариф</h2>
         <div className="grid gap-3 sm:grid-cols-3">
           {plans.map((plan) => (
             <button
               key={plan.id}
               onClick={() => setSelectedPlan(plan.id)}
-              className={`relative rounded-2xl border p-5 text-left transition-all duration-200 ${
+              className={`relative min-h-11 rounded-2xl border p-4 text-left transition-all duration-200 md:p-5 ${
                 selectedPlan === plan.id
-                  ? 'border-accent/30 bg-accent/[0.06] shadow-[0_0_20px_oklch(0.80_0.155_180/12%)]'
-                  : 'border-white/[0.06] bg-surface/40 hover:border-white/[0.1]'
+                  ? 'glass-card-accent border-accent/30 bg-accent/[0.06] shadow-[0_0_20px_oklch(0.80_0.155_180/12%)]'
+                  : 'glass-card border-white/[0.06] bg-surface/40 hover:border-white/[0.1]'
               }`}
             >
               {plan.id === 'pro' && (
@@ -129,14 +129,14 @@ export default function Purchase() {
       </div>
 
       {/* Step 2: Period */}
-      <div className="mb-8">
+      <div className="mb-6 md:mb-8">
         <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted">2. Период</h2>
-        <div className="inline-flex items-center gap-1 rounded-2xl border border-white/[0.06] bg-surface/40 p-1.5">
+        <div className="glass-card inline-flex items-center gap-1 rounded-2xl border border-white/[0.06] bg-surface/40 p-1.5">
           {PERIODS.map((p) => (
             <button
               key={p.id}
               onClick={() => setPeriod(p.id)}
-              className={`relative rounded-xl px-5 py-2.5 text-sm font-medium transition-all duration-200 ${
+              className={`relative min-h-11 rounded-xl px-5 py-2.5 text-sm font-medium transition-all duration-200 ${
                 period === p.id
                   ? 'bg-accent text-accent-foreground shadow-[0_0_16px_oklch(0.80_0.155_180/18%)]'
                   : 'text-muted hover:text-foreground'
@@ -154,17 +154,17 @@ export default function Purchase() {
       </div>
 
       {/* Step 3: Payment method */}
-      <div className="mb-8">
+      <div className="mb-6 md:mb-8">
         <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted">3. Оплата</h2>
         <div className="grid gap-3 sm:grid-cols-3">
           {PAYMENT_METHODS.map((m) => (
             <button
               key={m.id}
               onClick={() => setPaymentMethod(m.id)}
-              className={`rounded-2xl border p-4 text-left transition-all duration-200 ${
+              className={`min-h-11 rounded-2xl border p-4 text-left transition-all duration-200 ${
                 paymentMethod === m.id
-                  ? 'border-accent/30 bg-accent/[0.06]'
-                  : 'border-white/[0.06] bg-surface/40 hover:border-white/[0.1]'
+                  ? 'glass-card-accent border-accent/30 bg-accent/[0.06]'
+                  : 'glass-card border-white/[0.06] bg-surface/40 hover:border-white/[0.1]'
               }`}
             >
               <span className="text-2xl">{m.icon}</span>
@@ -176,7 +176,7 @@ export default function Purchase() {
       </div>
 
       {/* Summary + Pay */}
-      <div className="rounded-2xl border border-white/[0.08] bg-surface/50 p-6 backdrop-blur-sm">
+      <div className="glass-card-accent rounded-2xl border border-white/[0.08] bg-surface/50 p-5 backdrop-blur-sm md:p-6">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="text-sm text-muted">Итого</p>

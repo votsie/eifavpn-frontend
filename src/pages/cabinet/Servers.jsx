@@ -124,7 +124,7 @@ export default function Servers() {
   }, [servers, search])
 
   return (
-    <div className="mx-auto max-w-3xl space-y-5">
+    <div className="mx-auto max-w-3xl space-y-3 px-3 md:space-y-5 md:px-0">
       <h1 className="font-heading text-2xl font-bold text-foreground">Серверы</h1>
 
       {/* Search */}
@@ -134,7 +134,7 @@ export default function Servers() {
         onValueChange={setSearch}
         startContent={<Magnifier className="h-4 w-4 text-muted" />}
         classNames={{
-          inputWrapper: 'border-white/[0.06] bg-surface/40',
+          inputWrapper: 'glass-card border-white/[0.06] bg-surface/40',
         }}
       />
 
@@ -156,8 +156,8 @@ export default function Servers() {
               transition={{ delay: i * 0.04 }}
               className={`relative rounded-2xl border p-4 transition-all ${
                 server.isCurrentNode
-                  ? 'border-accent/30 bg-accent/[0.06] shadow-[0_0_20px_oklch(0.80_0.155_180/12%)]'
-                  : 'border-white/[0.06] bg-surface/40'
+                  ? 'glass-card-accent border-accent/30 bg-accent/[0.06] shadow-[0_0_20px_oklch(0.80_0.155_180/12%)]'
+                  : 'glass-card border-white/[0.06] bg-surface/40'
               }`}
             >
               {server.isCurrentNode && (
@@ -201,7 +201,7 @@ export default function Servers() {
 
       {/* Empty state */}
       {!isLoading && filtered.length === 0 && (
-        <div className="rounded-2xl border border-white/[0.06] bg-surface/40 p-8 text-center">
+        <div className="glass-card rounded-2xl border border-white/[0.06] bg-surface/40 p-8 text-center">
           <p className="text-muted">
             {search ? 'Серверы не найдены по вашему запросу' : 'Нет доступных серверов'}
           </p>

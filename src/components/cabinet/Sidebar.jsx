@@ -40,19 +40,28 @@ function SidebarLink({ to, icon: Icon, label }) {
 export default function Sidebar({ mobile = false }) {
   if (mobile) {
     return (
-      <nav className="fixed bottom-0 left-0 right-0 z-50 flex border-t border-white/[0.06] bg-surface/80 backdrop-blur-xl md:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 flex rounded-t-2xl border-t border-white/[0.08] bg-surface/85 backdrop-blur-2xl md:hidden"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
         {links.slice(0, 5).map((link) => (
           <NavLink
             key={link.to}
             to={link.to}
             className={({ isActive }) =>
-              `flex flex-1 flex-col items-center gap-1 py-2.5 text-[10px] font-medium transition-colors ${
-                isActive ? 'text-accent' : 'text-muted'
+              `flex flex-1 flex-col items-center gap-0.5 pb-1.5 pt-2.5 text-[10px] font-medium transition-all duration-200 ${
+                isActive ? 'text-accent' : 'text-muted/70'
               }`
             }
           >
-            <link.icon className="h-5 w-5" />
-            {link.label}
+            {({ isActive }) => (
+              <>
+                <div className={`flex h-7 w-7 items-center justify-center rounded-xl transition-all duration-200 ${
+                  isActive ? 'bg-accent/12 shadow-[0_0_12px_oklch(0.80_0.155_180/15%)]' : ''
+                }`}>
+                  <link.icon className="h-[18px] w-[18px]" />
+                </div>
+                <span className="mt-0.5">{link.label}</span>
+              </>
+            )}
           </NavLink>
         ))}
       </nav>

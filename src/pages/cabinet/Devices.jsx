@@ -46,11 +46,11 @@ export default function Devices() {
   const isUnlimited = hwidLimit === 0
 
   return (
-    <div className="mx-auto max-w-3xl space-y-5">
+    <div className="mx-auto max-w-3xl space-y-3 px-3 md:space-y-5 md:px-0">
       <h1 className="font-heading text-2xl font-bold text-foreground">Устройства</h1>
 
       {!sub ? (
-        <div className="rounded-2xl border border-white/[0.06] bg-surface/40 p-6 text-center">
+        <div className="glass-card rounded-2xl border border-white/[0.06] bg-surface/40 p-5 text-center md:p-6">
           <p className="text-muted">У вас нет активной подписки</p>
           <Button
             className="glow-cyan mt-4 font-semibold"
@@ -65,11 +65,11 @@ export default function Devices() {
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-2xl border border-white/[0.06] bg-surface/40 p-6"
+            className="glass-card rounded-2xl border border-white/[0.06] bg-surface/40 p-5 md:p-6"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-[11px] font-medium uppercase tracking-wider text-muted">
+                <p className="text-xs font-medium uppercase tracking-wider text-muted md:text-[11px]">
                   Лимит устройств
                 </p>
                 <p className="font-heading mt-1 text-3xl font-bold text-foreground">
@@ -128,7 +128,7 @@ export default function Devices() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="rounded-2xl border border-white/[0.06] bg-surface/40 p-5"
+            className="glass-card rounded-2xl border border-white/[0.06] bg-surface/40 p-4 md:p-5"
           >
             <p className="mb-3 text-sm font-semibold text-foreground">Лимиты по тарифам</p>
             <div className="grid gap-3 sm:grid-cols-3">
@@ -158,7 +158,7 @@ export default function Devices() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="rounded-2xl border border-accent/10 bg-accent/[0.04] p-5"
+            className="glass-card-accent rounded-2xl border border-accent/10 bg-accent/[0.04] p-4 md:p-5"
           >
             <p className="mb-2 text-sm font-semibold text-foreground">
               Как работает лимит устройств?
