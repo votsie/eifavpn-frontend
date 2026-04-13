@@ -19,10 +19,16 @@ import App from './App.jsx'
     // Everything else (dark, auto, null) → dark
   }
 
-  document.documentElement.setAttribute('data-theme', theme)
-  document.documentElement.style.colorScheme = theme
-  document.documentElement.classList.toggle('dark', theme === 'dark')
-  document.documentElement.classList.toggle('light', theme === 'light')
+  // Apply theme — must run AFTER telegram-web-app.js which overrides class/theme
+  function applyGlobalTheme(t) {
+    document.documentElement.setAttribute('data-theme', t)
+    document.documentElement.style.colorScheme = t
+    document.documentElement.className = t // Override TG SDK class
+  }
+  applyGlobalTheme(theme)
+  // Re-apply after a tick in case TG SDK overwrites
+  setTimeout(() => applyGlobalTheme(theme), 0)
+  setTimeout(() => applyGlobalTheme(theme), 50)
 })()
 
 createRoot(document.getElementById('root')).render(
