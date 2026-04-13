@@ -117,7 +117,8 @@ export default function ConnectModal({ isOpen, onClose, subscriptionUrl }) {
         <motion.div
           initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 40 }}
           transition={{ type: 'spring', damping: 30, stiffness: 350 }}
-          className="max-h-[70vh] w-[calc(100%-1.5rem)] max-w-[400px] overflow-y-auto rounded-[28px] border border-accent/10 bg-[oklch(0.11_0.015_192/97%)] px-5 pt-4 pb-5 backdrop-blur-2xl"
+          style={{ maxWidth: '400px', width: 'calc(100% - 1.5rem)' }}
+          className="max-h-[70vh] overflow-y-auto rounded-[28px] border border-accent/10 bg-[oklch(0.11_0.015_192/97%)] px-5 pt-4 pb-5 backdrop-blur-2xl"
         >
         <div className="mx-auto mb-3 h-1 w-8 rounded-full bg-accent/20 md:hidden" />
 
