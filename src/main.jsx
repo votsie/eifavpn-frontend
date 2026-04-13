@@ -13,13 +13,10 @@ import App from './App.jsx'
     theme = tg.colorScheme
   } else {
     const saved = localStorage.getItem('eifavpn_theme')
-    if (saved === 'light' || saved === 'dark') {
-      theme = saved
-    } else if (saved === 'auto' || !saved) {
-      if (window.matchMedia('(prefers-color-scheme: light)').matches) {
-        theme = 'light'
-      }
+    if (saved === 'light') {
+      theme = 'light'
     }
+    // Everything else (dark, auto, null) → dark
   }
 
   document.documentElement.setAttribute('data-theme', theme)
