@@ -139,10 +139,10 @@ export default function Referral() {
           <p className="mb-1.5 text-[11px] font-medium uppercase tracking-wider text-muted">
             Реферальная ссылка
           </p>
-          <div className="flex items-center gap-2">
-            <code className="flex-1 truncate rounded-lg theme-code-bg px-3 py-2 font-mono text-xs text-accent">
-              {referralLink}
-            </code>
+          <code className="block truncate rounded-lg theme-code-bg px-3 py-2 font-mono text-xs text-accent">
+            {referralLink}
+          </code>
+          <div className="mt-2 flex gap-2">
             <Button
               size="sm"
               variant={copied ? undefined : 'outline'}

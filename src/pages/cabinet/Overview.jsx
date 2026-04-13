@@ -263,23 +263,6 @@ export default function Overview() {
             </div>
           </div>
 
-          {/* Subscription URL */}
-          {sub.subscription_url && !isExpired && (
-            <div className="theme-card-accent rounded-2xl border border-border bg-surface p-4 md:p-5">
-              <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted md:text-[11px]">URL подписки</p>
-              <div className="flex items-center gap-2">
-                <code className="theme-code-bg min-h-11 flex-1 truncate rounded-lg px-3 py-2 font-mono text-xs text-accent">
-                  {sub.subscription_url}
-                </code>
-                <Button size="sm" variant="outline" className="min-h-11" onPress={() => navigator.clipboard.writeText(sub.subscription_url)}>
-                  Копировать
-                </Button>
-              </div>
-              <p className="mt-2 text-[11px] text-muted">
-                Добавьте этот URL в V2rayN, Hiddify или Streisand
-              </p>
-            </div>
-          )}
         </div>
       )}
 
