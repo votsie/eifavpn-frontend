@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Spinner, Input, Chip, Button } from '@heroui/react'
 import { Magnifier } from '@gravity-ui/icons'
 import { motion } from 'motion/react'
@@ -27,6 +28,7 @@ function statusColor(status) {
 }
 
 export default function Subscriptions() {
+  const navigate = useNavigate()
   const [subs, setSubs] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -168,7 +170,8 @@ export default function Subscriptions() {
                 subs.map((sub, i) => (
                   <motion.tr
                     key={sub.id ?? i}
-                    className="border-b border-border/50 hover:bg-surface/50"
+                    className="border-b border-border/50 hover:bg-surface/50 cursor-pointer"
+                    onClick={() => sub.user_id && navigate(`/admin/users/${sub.user_id}`)}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: i * 0.02 }}

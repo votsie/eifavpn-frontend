@@ -144,10 +144,18 @@ export default function Dashboard() {
       </div>
 
       {/* KPI row 2 */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <KpiCard label="Trial → Paid" value={s.trial_to_paid != null ? `${s.trial_to_paid}%` : '—'} />
         <KpiCard label="Avg Check" value={s.avg_check != null ? `${s.avg_check} ₽` : '—'} />
         <KpiCard label="Active Referrers" value={s.active_referrers ?? '—'} />
+        <KpiCard label="Telegram Users" value={s.users?.with_telegram ?? '—'} />
+      </div>
+
+      {/* KPI row 3 */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <KpiCard label="Expired" value={s.subscriptions?.expired ?? '—'} />
+        <KpiCard label="Pending" value={s.subscriptions?.pending ?? '—'} />
+        <KpiCard label="Total Revenue" value={s.revenue?.total != null ? `${s.revenue.total.toLocaleString()} ₽` : '—'} />
       </div>
 
       {/* Charts */}
@@ -236,7 +244,8 @@ export default function Dashboard() {
                     {list.slice(0, 10).map((u, i) => (
                       <motion.tr
                         key={u.id ?? i}
-                        className="border-b border-border/50"
+                        className="border-b border-border/50 cursor-pointer hover:bg-surface/50"
+                        onClick={() => u.user_id && navigate(`/admin/users/${u.user_id}`)}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.35 + i * 0.03 }}

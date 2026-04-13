@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Spinner, Input, Chip, Button } from '@heroui/react'
 import { Magnifier } from '@gravity-ui/icons'
@@ -17,13 +17,16 @@ export default function Users() {
   const [statusFilter, setStatusFilter] = useState('All')
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
+  const [total, setTotal] = useState(0)
+  const [debouncedSearch, setDebouncedSearch] = useState('')
+  const debounceRef = useRef(null)
 
   const fetchUsers = useCallback(async () => {
     setLoading(true)
     setError(null)
     try {
       const params = { page }
-      if (search) params.search = search
+      if (debouncedSearch) params.search = debouncedSearch
       if (planFilter !== 'All') params.plan = planFilter.toLowerCase()
       if (statusFilter !== 'All') params.status = statusFilter.toLowerCase()
 
@@ -31,21 +34,25 @@ export default function Users() {
       if (data && typeof data === 'object') {
         setUsers(data.results ?? data.users ?? [])
         setTotalPages(data.total_pages ?? (Math.ceil((data.count ?? 0) / 20) || 1))
+        setTotal(data.count ?? (data.results ?? data.users ?? []).length)
       }
     } catch (err) {
       setError(err.message)
     } finally {
       setLoading(false)
     }
-  }, [search, planFilter, statusFilter, page])
+  }, [debouncedSearch, planFilter, statusFilter, page])
 
   useEffect(() => {
     fetchUsers()
   }, [fetchUsers])
 
   function handleSearch(e) {
-    setSearch(e.target.value)
+    const val = e.target.value
+    setSearch(val)
     setPage(1)
+    if (debounceRef.current) clearTimeout(debounceRef.current)
+    debounceRef.current = setTimeout(() => setDebouncedSearch(val), 300)
   }
 
   function statusColor(status) {
@@ -109,6 +116,9 @@ export default function Users() {
         </div>
       )}
 
+      {/* Total count */}
+      {!loading && <p className="text-xs text-muted">{total} users found</p>}
+
       {/* Table */}
       {loading ? (
         <div className="flex justify-center py-12">
@@ -121,6 +131,7 @@ export default function Users() {
               <tr className="border-b border-border text-left text-xs text-muted">
                 <th className="px-4 pb-2 pt-3 font-medium">Email</th>
                 <th className="px-4 pb-2 pt-3 font-medium">Name</th>
+                <th className="px-4 pb-2 pt-3 font-medium">Telegram</th>
                 <th className="px-4 pb-2 pt-3 font-medium">Plan</th>
                 <th className="px-4 pb-2 pt-3 font-medium">Status</th>
                 <th className="px-4 pb-2 pt-3 font-medium">Days Left</th>
@@ -131,7 +142,7 @@ export default function Users() {
             <tbody>
               {users.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-8 text-center text-muted">
+                  <td colSpan={8} className="py-8 text-center text-muted">
                     No users found
                   </td>
                 </tr>
@@ -144,6 +155,7 @@ export default function Users() {
                   >
                     <td className="px-4 py-3 text-foreground">{user.email}</td>
                     <td className="px-4 py-3 text-foreground">{user.name || '—'}</td>
+                    <td className="px-4 py-3 text-muted text-xs">{user.telegram_id || '—'}</td>
                     <td className="px-4 py-3">
                       <span className="text-xs font-medium text-muted">{user.plan || '—'}</span>
                     </td>

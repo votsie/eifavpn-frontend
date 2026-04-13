@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Spinner, Chip, Button } from '@heroui/react'
+import { useNavigate } from 'react-router-dom'
+import { Spinner, Chip, Button, Input } from '@heroui/react'
+import { Magnifier } from '@gravity-ui/icons'
 import { motion } from 'motion/react'
 import { getAdminPayments } from '../../api/admin'
 
@@ -17,9 +19,11 @@ function statusColor(status) {
 }
 
 export default function Payments() {
+  const navigate = useNavigate()
   const [payments, setPayments] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [search, setSearch] = useState('')
   const [methodFilter, setMethodFilter] = useState('All')
   const [statusFilter, setStatusFilter] = useState('All')
   const [dateFrom, setDateFrom] = useState('')
@@ -33,6 +37,7 @@ export default function Payments() {
     setError(null)
     try {
       const params = { page }
+      if (search) params.search = search
       if (methodFilter !== 'All') params.method = methodFilter.toLowerCase()
       if (statusFilter !== 'All') params.status = statusFilter.toLowerCase()
       if (dateFrom) params.date_from = dateFrom
@@ -52,7 +57,7 @@ export default function Payments() {
     } finally {
       setLoading(false)
     }
-  }, [methodFilter, statusFilter, dateFrom, dateTo, page])
+  }, [search, methodFilter, statusFilter, dateFrom, dateTo, page])
 
   useEffect(() => {
     fetchPayments()
@@ -66,6 +71,15 @@ export default function Payments() {
       transition={{ duration: 0.3 }}
     >
       <h1 className="font-heading text-xl font-bold text-foreground">Payments</h1>
+
+      {/* Search */}
+      <Input
+        placeholder="Search by user email..."
+        value={search}
+        onChange={(e) => { setSearch(e.target.value); setPage(1) }}
+        startContent={<Magnifier className="h-4 w-4 text-muted" />}
+        classNames={{ inputWrapper: 'bg-surface border border-border' }}
+      />
 
       {/* Summary */}
       <div className="grid grid-cols-2 gap-3">
@@ -176,7 +190,14 @@ export default function Payments() {
                     transition={{ delay: i * 0.02 }}
                   >
                     <td className="px-4 py-3 text-muted text-xs">{p.id ?? '—'}</td>
-                    <td className="px-4 py-3 text-foreground">{p.user_email ?? p.user ?? '—'}</td>
+                    <td className="px-4 py-3">
+                      <span
+                        className="text-foreground hover:text-accent cursor-pointer underline-offset-2 hover:underline"
+                        onClick={(e) => { e.stopPropagation(); if (p.user_id) navigate(`/admin/users/${p.user_id}`) }}
+                      >
+                        {p.user_email ?? p.user ?? '—'}
+                      </span>
+                    </td>
                     <td className="px-4 py-3 font-heading font-bold text-accent">
                       {p.amount != null ? `${p.amount} ₽` : '—'}
                     </td>
@@ -188,7 +209,7 @@ export default function Payments() {
                       </Chip>
                     </td>
                     <td className="px-4 py-3 text-muted text-xs">
-                      {p.created_at ? new Date(p.created_at).toLocaleDateString() : '—'}
+                      {p.created_at ? new Date(p.created_at).toLocaleString('ru-RU') : '—'}
                     </td>
                   </motion.tr>
                 ))

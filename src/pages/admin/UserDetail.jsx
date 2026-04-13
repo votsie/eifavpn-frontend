@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { Spinner, Button, Input } from '@heroui/react'
 import { ArrowLeft } from '@gravity-ui/icons'
-import { getAdminUser, updateAdminUser, extendUserSubscription, getUserTimeline } from '../../api/admin'
+import { getAdminUser, updateAdminUser, extendUserSubscription, getUserTimeline, getAdminPayments } from '../../api/admin'
 
 export default function UserDetail() {
   const { id } = useParams()
@@ -11,6 +11,7 @@ export default function UserDetail() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [timeline, setTimeline] = useState([])
+  const [payments, setPayments] = useState([])
   const [extendDays, setExtendDays] = useState('')
   const [actionLoading, setActionLoading] = useState(false)
   const [actionMsg, setActionMsg] = useState(null)
@@ -20,13 +21,15 @@ export default function UserDetail() {
 
     async function load() {
       try {
-        const [data, tl] = await Promise.all([
+        const [data, tl, pay] = await Promise.all([
           getAdminUser(id),
           getUserTimeline(id).catch(() => []),
+          getAdminPayments({ search: id }).catch(() => ({ results: [] })),
         ])
         if (!cancelled) {
           setUser(data)
           setTimeline(Array.isArray(tl) ? tl : tl?.events ?? [])
+          setPayments(pay?.results ?? pay?.payments ?? [])
         }
         return
       } catch (err) {
@@ -138,6 +141,34 @@ export default function UserDetail() {
                 {u.is_active ? 'Yes' : 'No'}
               </span>
             </div>
+            <div>
+              <span className="text-muted">Last Login:</span>{' '}
+              <span className="text-foreground">
+                {u.last_login ? new Date(u.last_login).toLocaleString('ru-RU') : '—'}
+              </span>
+            </div>
+            <div>
+              <span className="text-muted">Email Verified:</span>{' '}
+              <span className={u.email_verified ? 'text-green-500' : 'text-red-400'}>
+                {u.email_verified ? 'Yes' : 'No'}
+              </span>
+            </div>
+            <div>
+              <span className="text-muted">Referred By:</span>{' '}
+              <span className="text-foreground">{u.referred_by || '—'}</span>
+            </div>
+            <div>
+              <span className="text-muted">Used Trial:</span>{' '}
+              <span className="text-foreground">{u.used_trial ? 'Yes' : 'No'}</span>
+            </div>
+            <div>
+              <span className="text-muted">Trial Upgrade:</span>{' '}
+              <span className="text-foreground">{u.used_trial_upgrade ? 'Yes' : 'No'}</span>
+            </div>
+            <div>
+              <span className="text-muted">Remnawave UUID:</span>{' '}
+              <span className="text-foreground font-mono text-[10px]">{u.remnawave_uuid || '—'}</span>
+            </div>
           </div>
         </div>
 
@@ -234,6 +265,51 @@ export default function UserDetail() {
             })}
           </div>
         )}
+      </div>
+
+      {/* Row 3b: Payments */}
+      <div className="rounded-xl border border-border bg-surface p-4">
+        <p className="text-xs uppercase tracking-wider text-muted mb-3">Payment History</p>
+        {payments.length === 0 ? (
+          <p className="text-sm text-muted py-4 text-center">No payments found</p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border text-left text-xs text-muted">
+                  <th className="pb-2 font-medium">Date</th>
+                  <th className="pb-2 font-medium">Amount</th>
+                  <th className="pb-2 font-medium">Method</th>
+                  <th className="pb-2 font-medium">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {payments.slice(0, 10).map((pay, i) => (
+                  <tr key={pay.id || i} className="border-b border-border/50">
+                    <td className="py-2 text-muted text-xs">
+                      {pay.created_at ? new Date(pay.created_at).toLocaleString('ru-RU') : '—'}
+                    </td>
+                    <td className="py-2 font-heading font-bold text-foreground">
+                      {pay.amount != null ? `${pay.amount} ₽` : '—'}
+                    </td>
+                    <td className="py-2 text-muted text-xs">{pay.method ?? '—'}</td>
+                    <td className="py-2 text-xs">{pay.status ?? '—'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {/* Navigation buttons */}
+      <div className="flex flex-wrap gap-2">
+        <Button size="sm" variant="flat" onClick={() => navigate('/admin/payments')}>
+          View all payments →
+        </Button>
+        <Button size="sm" variant="flat" onClick={() => navigate('/admin/subscriptions')}>
+          View all subscriptions →
+        </Button>
       </div>
 
       {/* Row 4: Actions */}

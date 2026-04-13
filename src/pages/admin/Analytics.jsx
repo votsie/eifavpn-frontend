@@ -49,9 +49,9 @@ export default function Analytics() {
     async function load() {
       try {
         const [f, c, e, fc] = await Promise.all([
-          getAnalyticsFunnel(),
-          getAnalyticsCohorts(),
-          getExpiringSubs(),
+          getAnalyticsFunnel().catch(() => null),
+          getAnalyticsCohorts().catch(() => []),
+          getExpiringSubs().catch(() => []),
           getForecast().catch(() => []),
         ])
         if (!cancelled) {
@@ -111,15 +111,21 @@ export default function Analytics() {
       {/* Section 1: Conversion Funnel */}
       <div className="rounded-xl border border-border bg-surface p-4">
         <p className="text-sm font-semibold text-foreground mb-4">Conversion Funnel</p>
-        <div className="space-y-3">
+        <div className="space-y-1">
           {funnelSteps.map((step, i) => (
-            <FunnelBar
-              key={step.label}
-              label={step.label}
-              value={step.value}
-              max={funnelMax}
-              delay={i * 0.08}
-            />
+            <div key={step.label}>
+              <FunnelBar
+                label={step.label}
+                value={step.value}
+                max={funnelMax}
+                delay={i * 0.08}
+              />
+              {i > 0 && i < funnelSteps.length && funnelSteps[i - 1].value > 0 && (
+                <p className="text-center text-[10px] text-muted my-0.5">
+                  ↓ {((step.value / funnelSteps[i - 1].value) * 100).toFixed(1)}% conversion from previous step
+                </p>
+              )}
+            </div>
           ))}
         </div>
       </div>

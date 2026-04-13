@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { motion } from 'motion/react'
 import { ArrowDownToSquare } from '@gravity-ui/icons'
 
@@ -8,12 +9,33 @@ const EXPORTS = [
   { type: 'referrals', title: 'Referrals', description: 'Export referrals as CSV' },
 ]
 
-function handleExport(type) {
-  const token = localStorage.getItem('eifavpn_access')
-  window.open(`/api/admin/export/${type}/?token=${token}`, '_blank')
-}
-
 export default function Export() {
+  const [exportLoading, setExportLoading] = useState(null)
+  const [exportError, setExportError] = useState(null)
+
+  async function handleExport(type) {
+    setExportLoading(type)
+    setExportError(null)
+    try {
+      const token = localStorage.getItem('eifavpn_access')
+      const res = await fetch(`/api/admin/export/${type}/`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+      if (!res.ok) throw new Error('Export failed')
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `eifavpn-${type}-${new Date().toISOString().slice(0,10)}.csv`
+      a.click()
+      URL.revokeObjectURL(url)
+    } catch (err) {
+      setExportError(err.message)
+    } finally {
+      setExportLoading(null)
+    }
+  }
+
   return (
     <motion.div
       className="space-y-4"
@@ -41,14 +63,25 @@ export default function Export() {
             </div>
             <button
               onClick={() => handleExport(exp.type)}
-              className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-accent/15 px-4 py-2 text-xs font-semibold text-accent transition-colors hover:bg-accent/25"
+              disabled={exportLoading === exp.type}
+              className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-accent/15 px-4 py-2 text-xs font-semibold text-accent transition-colors hover:bg-accent/25 disabled:opacity-50"
             >
-              <ArrowDownToSquare className="h-3.5 w-3.5" />
-              Download CSV
+              {exportLoading === exp.type ? (
+                <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-accent border-t-transparent" />
+              ) : (
+                <ArrowDownToSquare className="h-3.5 w-3.5" />
+              )}
+              {exportLoading === exp.type ? 'Downloading...' : 'Download CSV'}
             </button>
           </motion.div>
         ))}
       </div>
+
+      {exportError && (
+        <div className="rounded-xl border border-red-500/30 bg-red-500/5 p-4 text-sm text-red-400">
+          {exportError}
+        </div>
+      )}
     </motion.div>
   )
 }

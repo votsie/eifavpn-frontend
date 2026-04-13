@@ -10,10 +10,10 @@ function StatusCard({ name, ok, detail }) {
         <p className="text-sm font-semibold text-foreground">{name}</p>
         <span
           className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
-            ok ? 'bg-accent/15 text-accent' : 'bg-danger/15 text-danger'
+            ok === true ? 'bg-accent/15 text-accent' : ok === false ? 'bg-danger/15 text-danger' : 'bg-yellow-500/15 text-yellow-400'
           }`}
         >
-          {ok ? 'Online' : 'Offline'}
+          {ok === true ? 'Online' : ok === false ? 'Offline' : 'Unknown'}
         </span>
       </div>
       <p className="mt-1 text-xs text-muted">{detail}</p>
@@ -52,7 +52,6 @@ export default function System() {
 
   const h = health || {}
   const userCount = stats?.total_users ?? '—'
-  const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
 
   return (
     <motion.div
@@ -65,13 +64,13 @@ export default function System() {
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
         <StatusCard
           name="API Server"
-          ok={true}
-          detail="Responding normally — page loaded successfully"
+          ok={h.api != null ? !!h.api : true}
+          detail={h.api_detail ?? 'Responding normally — page loaded successfully'}
         />
         <StatusCard
           name="Database"
-          ok={true}
-          detail={`${userCount} users in DB`}
+          ok={h.database?.status ? h.database.status === 'ok' || h.database.status === 'online' : true}
+          detail={h.database?.detail ?? `${userCount} users in DB`}
         />
         <StatusCard
           name="Remnawave VPN"
@@ -92,16 +91,6 @@ export default function System() {
           name="Disk Usage"
           ok={h.disk?.ok ?? true}
           detail={h.disk?.detail ?? 'No data available'}
-        />
-        <StatusCard
-          name="Last Deploy"
-          ok={true}
-          detail={`Approximately ${today}`}
-        />
-        <StatusCard
-          name="SSL Certificate"
-          ok={true}
-          detail="Valid — eifavpn.ru"
         />
       </div>
     </motion.div>

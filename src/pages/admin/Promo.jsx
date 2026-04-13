@@ -18,6 +18,8 @@ export default function Promo() {
   const [validUntil, setValidUntil] = useState('')
   const [planFilter, setPlanFilter] = useState('')
 
+  const [actionMsg, setActionMsg] = useState(null)
+
   // Inline edit
   const [editId, setEditId] = useState(null)
   const [editValue, setEditValue] = useState('')
@@ -77,8 +79,8 @@ export default function Promo() {
     try {
       await updatePromo(promo.id, { is_active: false })
       loadPromos()
-    } catch {
-      // silent
+    } catch (err) {
+      setActionMsg({ type: 'error', text: err.message || 'Ошибка' })
     }
   }
 
@@ -90,8 +92,8 @@ export default function Promo() {
       })
       setEditId(null)
       loadPromos()
-    } catch {
-      // silent
+    } catch (err) {
+      setActionMsg({ type: 'error', text: err.message || 'Ошибка' })
     }
   }
 
@@ -210,6 +212,13 @@ export default function Promo() {
           </div>
         )}
       </div>
+
+      {/* Action message */}
+      {actionMsg && (
+        <div className={`rounded-xl border p-4 text-sm ${actionMsg.type === 'error' ? 'border-red-500/30 bg-red-500/5 text-red-400' : 'border-green-500/30 bg-green-500/5 text-green-400'}`}>
+          {actionMsg.text}
+        </div>
+      )}
 
       {/* Table */}
       <div className="rounded-xl border border-border bg-surface p-4">

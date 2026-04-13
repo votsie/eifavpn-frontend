@@ -197,7 +197,7 @@ export default function Notifications() {
                       </td>
                       <td className="py-2 pr-3 text-xs text-foreground">{item.recipients ?? item.recipient_count ?? '—'}</td>
                       <td className="py-2 pr-3 text-xs text-foreground">{item.subject || '—'}</td>
-                      <td className="py-2 text-xs text-muted max-w-[200px] truncate">
+                      <td className="py-2 text-xs text-muted max-w-[200px] truncate" title={item.message}>
                         {item.message || '—'}
                       </td>
                     </tr>

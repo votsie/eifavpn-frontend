@@ -17,6 +17,8 @@ export default function Audit() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [typeFilter, setTypeFilter] = useState('all')
+  const [dateFrom, setDateFrom] = useState('')
+  const [dateTo, setDateTo] = useState('')
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
 
@@ -26,6 +28,8 @@ export default function Audit() {
 
     const params = { page }
     if (typeFilter !== 'all') params.type = typeFilter
+    if (dateFrom) params.date_from = dateFrom
+    if (dateTo) params.date_to = dateTo
 
     getAdminAuditLog(params)
       .then((data) => {
@@ -42,7 +46,7 @@ export default function Audit() {
       })
 
     return () => { cancelled = true }
-  }, [typeFilter, page])
+  }, [typeFilter, dateFrom, dateTo, page])
 
   return (
     <motion.div
@@ -67,6 +71,24 @@ export default function Audit() {
             {t === 'all' ? 'All' : t.replace('_', ' ')}
           </button>
         ))}
+      </div>
+
+      {/* Date range */}
+      <div className="flex flex-wrap items-center gap-3">
+        <span className="text-xs text-muted">From:</span>
+        <input
+          type="date"
+          value={dateFrom}
+          onChange={(e) => { setDateFrom(e.target.value); setPage(1) }}
+          className="rounded-lg border border-border bg-surface px-3 py-1.5 text-sm text-foreground"
+        />
+        <span className="text-xs text-muted">To:</span>
+        <input
+          type="date"
+          value={dateTo}
+          onChange={(e) => { setDateTo(e.target.value); setPage(1) }}
+          className="rounded-lg border border-border bg-surface px-3 py-1.5 text-sm text-foreground"
+        />
       </div>
 
       {loading ? (

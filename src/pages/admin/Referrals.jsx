@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Spinner, Chip, Button } from '@heroui/react'
+import { Spinner, Chip, Button, Input } from '@heroui/react'
+import { Magnifier } from '@gravity-ui/icons'
 import { motion } from 'motion/react'
 import { getAdminReferrals } from '../../api/admin'
 
@@ -9,6 +10,7 @@ export default function Referrals() {
   const [referrals, setReferrals] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [search, setSearch] = useState('')
   const [bonusFilter, setBonusFilter] = useState('All')
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
@@ -19,6 +21,7 @@ export default function Referrals() {
     setError(null)
     try {
       const params = { page }
+      if (search) params.search = search
       if (bonusFilter === 'Applied') params.bonus_applied = 'true'
       if (bonusFilter === 'Pending') params.bonus_applied = 'false'
 
@@ -36,7 +39,7 @@ export default function Referrals() {
     } finally {
       setLoading(false)
     }
-  }, [bonusFilter, page])
+  }, [search, bonusFilter, page])
 
   useEffect(() => {
     fetchReferrals()
@@ -50,6 +53,15 @@ export default function Referrals() {
       transition={{ duration: 0.3 }}
     >
       <h1 className="font-heading text-xl font-bold text-foreground">Referrals</h1>
+
+      {/* Search */}
+      <Input
+        placeholder="Search by email..."
+        value={search}
+        onChange={(e) => { setSearch(e.target.value); setPage(1) }}
+        startContent={<Magnifier className="h-4 w-4 text-muted" />}
+        classNames={{ inputWrapper: 'bg-surface border border-border' }}
+      />
 
       {/* Summary */}
       <div className="grid grid-cols-2 gap-3">
