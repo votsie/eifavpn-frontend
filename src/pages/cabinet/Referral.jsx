@@ -110,14 +110,14 @@ export default function Referral() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl w-full space-y-3 overflow-hidden md:space-y-5">
-      <h1 className="font-heading text-2xl font-bold text-foreground">Реферальная программа</h1>
+    <div className="mx-auto max-w-4xl w-full grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
+      <h1 className="font-heading text-2xl font-bold text-foreground md:col-span-2">Реферальная программа</h1>
 
       {/* Referral link card */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        className="theme-card-accent rounded-2xl border border-accent/20 bg-gradient-to-r from-accent/[0.08] to-surface/60 p-5 md:p-6"
+        className="md:col-span-2 theme-card-accent rounded-2xl border border-accent/20 bg-gradient-to-r from-accent/[0.08] to-surface/60 p-5 md:p-6"
       >
         <p className="text-lg font-bold text-foreground">Приглашайте друзей</p>
         <p className="mt-1 text-sm text-muted">
@@ -169,7 +169,7 @@ export default function Referral() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="grid gap-3 sm:grid-cols-2"
+        className="md:col-span-2 grid gap-3 sm:grid-cols-2"
       >
         <StatCard
           label="Приглашено"

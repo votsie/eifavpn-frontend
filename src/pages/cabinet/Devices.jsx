@@ -78,11 +78,11 @@ export default function Devices() {
   const isUnlimited = hwidLimit === 0
 
   return (
-    <div className="mx-auto max-w-3xl w-full space-y-3 overflow-hidden md:space-y-5">
-      <h1 className="font-heading text-2xl font-bold text-foreground">Устройства</h1>
+    <div className="mx-auto max-w-4xl w-full grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
+      <h1 className="font-heading text-2xl font-bold text-foreground md:col-span-2">Устройства</h1>
 
       {!sub ? (
-        <div className="theme-card rounded-2xl border border-border bg-surface p-5 text-center md:p-6">
+        <div className="md:col-span-2 theme-card rounded-2xl border border-border bg-surface p-5 text-center md:p-6">
           <p className="text-muted">У вас нет активной подписки</p>
           <Button
             className="glow-cyan mt-4 font-semibold"
@@ -160,7 +160,7 @@ export default function Devices() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="theme-card rounded-2xl border border-border bg-surface p-4 md:p-5"
+            className="md:col-span-2 theme-card rounded-2xl border border-border bg-surface p-4 md:p-5"
           >
             <p className="mb-3 text-sm font-semibold text-foreground">
               Подключённые устройства
@@ -238,7 +238,7 @@ export default function Devices() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="theme-card-accent rounded-2xl border border-accent/10 bg-accent/[0.04] p-4 md:p-5"
+            className="md:col-span-2 theme-card-accent rounded-2xl border border-accent/10 bg-accent/[0.04] p-4 md:p-5"
           >
             <p className="mb-2 text-sm font-semibold text-foreground">
               Как работает лимит устройств?

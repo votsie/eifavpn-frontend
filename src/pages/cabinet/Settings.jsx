@@ -309,8 +309,8 @@ export default function Settings() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl w-full space-y-3 overflow-hidden md:space-y-5">
-      <h1 className="font-heading text-2xl font-bold text-foreground">Настройки</h1>
+    <div className="mx-auto max-w-4xl w-full grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
+      <h1 className="font-heading text-2xl font-bold text-foreground md:col-span-2">Настройки</h1>
 
       {/* Theme selector */}
       <motion.div
@@ -461,7 +461,7 @@ export default function Settings() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.05 }}
-        className="theme-card rounded-2xl border border-border bg-surface p-4 md:p-5"
+        className="md:col-span-2 theme-card rounded-2xl border border-border bg-surface p-4 md:p-5"
       >
         <p className="mb-3 text-sm font-semibold text-foreground">Привязанные аккаунты</p>
 

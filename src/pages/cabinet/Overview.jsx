@@ -107,13 +107,13 @@ export default function Overview() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-3xl space-y-3 overflow-hidden md:space-y-5">
-      <h1 className="font-heading text-2xl font-bold text-foreground">Обзор</h1>
+    <div className="mx-auto w-full max-w-4xl grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
+      <h1 className="font-heading text-2xl font-bold text-foreground md:col-span-2">Обзор</h1>
 
       {/* Trial banner */}
       {canTrial && (
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-          className="theme-card-accent overflow-hidden rounded-2xl border border-accent/20 bg-gradient-to-r from-accent/[0.08] to-surface/60 p-5 md:p-6">
+          className="md:col-span-2 theme-card-accent overflow-hidden rounded-2xl border border-accent/20 bg-gradient-to-r from-accent/[0.08] to-surface/60 p-5 md:p-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-lg font-bold text-foreground">Попробуйте MAX бесплатно!</p>
@@ -130,7 +130,7 @@ export default function Overview() {
       {/* Trial upgrade banner */}
       {canTrialUpgrade && (
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-          className="theme-card-accent overflow-hidden rounded-2xl border border-warning/20 bg-gradient-to-r from-warning/[0.06] to-surface/60 p-5 md:p-6">
+          className="md:col-span-2 theme-card-accent overflow-hidden rounded-2xl border border-warning/20 bg-gradient-to-r from-warning/[0.06] to-surface/60 p-5 md:p-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-lg font-bold text-foreground">Специальное предложение!</p>
@@ -145,7 +145,7 @@ export default function Overview() {
 
       {/* Subscription card */}
       {hasSub && (
-        <div className="space-y-3 md:space-y-4">
+        <div className="md:col-span-2 grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
           {/* Header */}
           <div className="theme-card flex flex-wrap items-start justify-between gap-3 rounded-2xl border border-border bg-surface p-4 md:p-5">
             <div>
@@ -171,7 +171,7 @@ export default function Overview() {
           </div>
 
           {/* Stats grid */}
-          <div className="grid grid-cols-2 gap-2 overflow-hidden md:gap-3 lg:grid-cols-4">
+          <div className="md:col-span-2 grid grid-cols-2 gap-2 overflow-hidden md:gap-3 lg:grid-cols-4">
             <StatCard
               label="Осталось"
               value={isExpired ? 'Истекла' : `${days} дн.`}
@@ -195,7 +195,7 @@ export default function Overview() {
           </div>
 
           {/* Traffic */}
-          <div className="theme-card rounded-2xl border border-border bg-surface p-4 md:p-5">
+          <div className="md:col-span-2 theme-card rounded-2xl border border-border bg-surface p-4 md:p-5">
             <div className="flex items-center justify-between">
               <p className="text-sm font-semibold text-foreground">Трафик</p>
               <p className="text-sm text-muted">
@@ -285,7 +285,7 @@ export default function Overview() {
 
       {/* No subscription */}
       {!hasSub && !canTrial && !canTrialUpgrade && (
-        <div className="theme-card rounded-2xl border border-border bg-surface p-5 text-center md:p-6">
+        <div className="md:col-span-2 theme-card rounded-2xl border border-border bg-surface p-5 text-center md:p-6">
           <p className="text-muted">У вас нет активной подписки</p>
           <Button className="glow-cyan mt-4 font-semibold" onPress={() => navigate('/cabinet/purchase')}>
             Выбрать тариф
