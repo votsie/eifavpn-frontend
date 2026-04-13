@@ -7,6 +7,10 @@ import {
   CreditCard,
   NodesRight,
   ArrowLeft,
+  Clock,
+  Cpu,
+  ArrowDownToSquare,
+  Gear,
 } from '@gravity-ui/icons'
 import Background from '../components/Background'
 
@@ -17,6 +21,10 @@ const adminLinks = [
   { to: '/admin/payments', icon: CreditCard, label: 'Payments' },
   { to: '/admin/referrals', icon: NodesRight, label: 'Referrals' },
   { to: '/admin/analytics', icon: ChartLine, label: 'Analytics' },
+  { to: '/admin/audit', icon: Clock, label: 'Audit Log' },
+  { to: '/admin/system', icon: Cpu, label: 'System' },
+  { to: '/admin/export', icon: ArrowDownToSquare, label: 'Export' },
+  { to: '/admin/settings', icon: Gear, label: 'Settings' },
 ]
 
 function SidebarLink({ to, icon: Icon, label, end }) {

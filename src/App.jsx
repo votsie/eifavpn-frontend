@@ -28,6 +28,10 @@ import AdminSubscriptions from './pages/admin/Subscriptions'
 import AdminPayments from './pages/admin/Payments'
 import AdminReferrals from './pages/admin/Referrals'
 import AdminAnalytics from './pages/admin/Analytics'
+import AdminAudit from './pages/admin/Audit'
+import AdminSystem from './pages/admin/System'
+import AdminExport from './pages/admin/Export'
+import AdminSettings from './pages/admin/Settings'
 
 function useAnalyticsPageview() {
   const location = useLocation()
@@ -83,6 +87,10 @@ export default function App() {
         <Route path="payments" element={<AdminPayments />} />
         <Route path="referrals" element={<AdminReferrals />} />
         <Route path="analytics" element={<AdminAnalytics />} />
+        <Route path="audit" element={<AdminAudit />} />
+        <Route path="system" element={<AdminSystem />} />
+        <Route path="export" element={<AdminExport />} />
+        <Route path="settings" element={<AdminSettings />} />
       </Route>
 
       {/* 404 */}

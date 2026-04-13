@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
-import { Spinner } from '@heroui/react'
+import { useNavigate } from 'react-router-dom'
+import { Spinner, Input } from '@heroui/react'
 import { motion } from 'motion/react'
+import { Magnifier } from '@gravity-ui/icons'
 import { getAdminStats, getRegistrationChart, getRevenueChart, getActivityFeed, getExpiringSubs } from '../../api/admin'
 
 function KpiCard({ label, value, delta }) {
@@ -62,6 +64,14 @@ export default function Dashboard() {
   const [expiring, setExpiring] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [searchQuery, setSearchQuery] = useState('')
+  const navigate = useNavigate()
+
+  function handleSearch(e) {
+    if (e.key === 'Enter' && searchQuery.trim()) {
+      navigate(`/admin/users?search=${encodeURIComponent(searchQuery)}`)
+    }
+  }
 
   useEffect(() => {
     let cancelled = false
@@ -114,6 +124,16 @@ export default function Dashboard() {
   return (
     <div className="space-y-4">
       <h1 className="font-heading text-xl font-bold text-foreground">Dashboard</h1>
+
+      {/* Global search */}
+      <Input
+        placeholder="Search users by email, Telegram ID, name..."
+        value={searchQuery}
+        onValueChange={setSearchQuery}
+        onKeyDown={handleSearch}
+        classNames={{ inputWrapper: 'border-border bg-surface' }}
+        startContent={<Magnifier className="h-4 w-4 text-muted" />}
+      />
 
       {/* KPI row 1 */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">

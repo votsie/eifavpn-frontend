@@ -59,3 +59,28 @@ export function getActivityFeed() {
 export function getExpiringSubs() {
   return apiFetch('/admin/stats/expiring/')
 }
+
+export function getAdminAuditLog(params = {}) {
+  const query = new URLSearchParams(params).toString()
+  return apiFetch(`/admin/audit/?${query}`)
+}
+
+export function getSystemHealth() {
+  return apiFetch('/admin/system/health/')
+}
+
+export function getAdminSettings() {
+  return apiFetch('/admin/settings/')
+}
+
+export function updateAdminSettings(data) {
+  return apiFetch('/admin/settings/', { method: 'PATCH', body: JSON.stringify(data) })
+}
+
+export function globalSearch(query) {
+  return apiFetch(`/admin/search/?q=${encodeURIComponent(query)}`)
+}
+
+export function sendBulkNotification(data) {
+  return apiFetch('/admin/notifications/send/', { method: 'POST', body: JSON.stringify(data) })
+}
