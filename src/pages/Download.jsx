@@ -3,17 +3,17 @@ import { useParams, useSearchParams, useNavigate } from 'react-router-dom'
 import { Button } from '@heroui/react'
 import Background from '../components/Background'
 
-const GITHUB_URLS = {
-  android: 'https://github.com/Happ-proxy/happ-android/releases/latest/download/Happ.apk',
-  windows: 'https://github.com/Happ-proxy/happ-desktop/releases/latest/download/setup-Happ.x64.exe',
-  macos: 'https://github.com/Happ-proxy/happ-desktop/releases/latest/download/Happ.macOS.universal.dmg',
-  'linux-deb': 'https://github.com/Happ-proxy/happ-desktop/releases/latest/download/Happ.linux.x64.deb',
-  'linux-rpm': 'https://github.com/Happ-proxy/happ-desktop/releases/latest/download/Happ.linux.x64.rpm',
-  'linux-pkg': 'https://github.com/Happ-proxy/happ-desktop/releases/latest/download/Happ.linux.x64.pkg.tar.zst',
+const DOWNLOADS = {
+  android: 'https://play.google.com/store/apps/details?id=app.hiddify.com',
+  ios: 'https://apps.apple.com/us/app/hiddify-proxy-vpn/id6596777532',
+  windows: 'https://github.com/hiddify/hiddify-app/releases/latest',
+  macos: 'https://github.com/hiddify/hiddify-app/releases/latest',
+  linux: 'https://github.com/hiddify/hiddify-app/releases/latest',
 }
 
 const PLATFORM_NAMES = {
   android: 'Android',
+  ios: 'iOS',
   windows: 'Windows',
   macos: 'macOS',
   linux: 'Linux',
@@ -25,9 +25,7 @@ export default function Download() {
   const navigate = useNavigate()
   const [started, setStarted] = useState(false)
 
-  const format = searchParams.get('format')
-  const urlKey = platform === 'linux' && format ? `linux-${format}` : platform
-  const downloadUrl = GITHUB_URLS[urlKey]
+  const downloadUrl = DOWNLOADS[platform]
   const platformName = PLATFORM_NAMES[platform] || platform
 
   useEffect(() => {
@@ -53,11 +51,8 @@ export default function Download() {
 
           <div className="mb-6">
             <p className="text-lg font-semibold text-foreground">
-              Скачать HAPP для {platformName}
+              Скачать Hiddify для {platformName}
             </p>
-            {format && (
-              <p className="mt-1 text-sm text-muted">Формат: {format.toUpperCase()}</p>
-            )}
           </div>
 
           {downloadUrl ? (

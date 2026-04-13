@@ -26,53 +26,48 @@ const FileIcon = () => <Icon d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002
 const LinkIcon = () => <Icon d="M10 14a3.5 3.5 0 005 0l3-3a3.5 3.5 0 00-5-5l-.5.5m1 5a3.5 3.5 0 00-5 0l-3 3a3.5 3.5 0 005 5l.5-.5" />
 const BackIcon = () => <Icon d="M19 12H5m0 0l7 7m-7-7l7-7" size={16} />
 
-const HAPP_LINKS = {
+const HIDDIFY_LINKS = {
   phone: {
-    iphone: [
-      { label: 'App Store (RU)', url: 'https://apps.apple.com/ru/app/happ-proxy-utility-plus/id6746188973', Icon: StoreIcon },
-      { label: 'App Store (Global)', url: 'https://apps.apple.com/us/app/happ-proxy-utility/id6504287215', Icon: StoreIcon },
+    ios: [
+      { label: 'App Store', url: 'https://apps.apple.com/us/app/hiddify-proxy-vpn/id6596777532', Icon: StoreIcon },
     ],
     android: [
-      { label: 'Google Play', url: 'https://play.google.com/store/apps/details?id=com.happproxy', Icon: StoreIcon },
-      { label: 'Скачать APK', url: '/download/android', external: true, Icon: FileIcon },
+      { label: 'Google Play', url: 'https://play.google.com/store/apps/details?id=app.hiddify.com', Icon: StoreIcon },
+    ],
+  },
+  tablet: {
+    ios: [
+      { label: 'App Store', url: 'https://apps.apple.com/us/app/hiddify-proxy-vpn/id6596777532', Icon: StoreIcon },
+    ],
+    android: [
+      { label: 'Google Play', url: 'https://play.google.com/store/apps/details?id=app.hiddify.com', Icon: StoreIcon },
     ],
   },
   computer: {
-    windows: [{ label: 'Скачать EXE', url: '/download/windows', external: true, Icon: FileIcon }],
+    windows: [
+      { label: 'Скачать для Windows', url: 'https://github.com/hiddify/hiddify-app/releases/latest', Icon: DownloadIcon },
+    ],
     macos: [
-      { label: 'App Store (RU)', url: 'https://apps.apple.com/ru/app/happ-proxy-utility-plus/id6746188973', Icon: StoreIcon },
-      { label: 'App Store (Global)', url: 'https://apps.apple.com/us/app/happ-proxy-utility/id6504287215', Icon: StoreIcon },
-      { label: 'Скачать DMG', url: '/download/macos', external: true, Icon: FileIcon },
+      { label: 'Скачать для macOS', url: 'https://github.com/hiddify/hiddify-app/releases/latest', Icon: DownloadIcon },
     ],
     linux: [
-      { label: 'DEB (Ubuntu)', url: '/download/linux?format=deb', external: true, Icon: FileIcon },
-      { label: 'RPM (Fedora)', url: '/download/linux?format=rpm', external: true, Icon: FileIcon },
-      { label: 'PKG (Arch)', url: '/download/linux?format=pkg', external: true, Icon: FileIcon },
+      { label: 'Скачать для Linux', url: 'https://github.com/hiddify/hiddify-app/releases/latest', Icon: DownloadIcon },
     ],
-  },
-  tv: {
-    android_tv: [
-      { label: 'Google Play', url: 'https://play.google.com/store/apps/details?id=com.happproxy', Icon: StoreIcon },
-      { label: 'Скачать APK', url: '/download/android', external: true, Icon: FileIcon },
-    ],
-    apple_tv: [{ label: 'App Store', url: 'https://apps.apple.com/us/app/happ-proxy-utility-for-tv/id6748297274', Icon: StoreIcon }],
   },
 }
 
 const DEVICES = [
   { key: 'phone', label: 'Телефон', Icon: PhoneIcon },
+  { key: 'tablet', label: 'Планшет', Icon: PhoneIcon },
   { key: 'computer', label: 'Компьютер', Icon: LaptopIcon },
-  { key: 'tv', label: 'ТВ', Icon: TvIcon },
 ]
 
 const PLATFORM_MAP = {
-  iphone: { label: 'iPhone', Icon: AppleIcon },
+  ios: { label: 'iOS', Icon: AppleIcon },
   android: { label: 'Android', Icon: AndroidIcon },
   windows: { label: 'Windows', Icon: WindowsIcon },
   macos: { label: 'macOS', Icon: AppleIcon },
   linux: { label: 'Linux', Icon: LinuxIcon },
-  android_tv: { label: 'Android TV', Icon: AndroidIcon },
-  apple_tv: { label: 'Apple TV', Icon: AppleIcon },
 }
 
 function extLink(url, ext) {
@@ -102,8 +97,8 @@ export default function ConnectModal({ isOpen, onClose, subscriptionUrl }) {
     return () => document.removeEventListener('keydown', onKey)
   }, [isOpen, close])
   function connect() {
-    // Always open our /connect page which handles happ:// redirect
-    // Telegram Mini App can't open happ:// directly — must go through browser page
+    // Always open our /connect page which handles hiddify:// redirect
+    // Telegram Mini App can't open hiddify:// directly — must go through browser page
     const connectPage = `${window.location.origin}/connect?url=${encodeURIComponent(subscriptionUrl)}`
     if (isTelegramWebApp()) {
       window.Telegram.WebApp.openLink(connectPage)
@@ -145,16 +140,16 @@ export default function ConnectModal({ isOpen, onClose, subscriptionUrl }) {
         <AnimatePresence mode="wait">
           {step === 'choice' && (
             <motion.div key="c" {...slide} className="space-y-2.5">
-              <p className="text-[13px] text-muted">Для подключения нужно приложение HAPP.</p>
+              <p className="text-[13px] text-muted">Для подключения нужно приложение Hiddify.</p>
               <button onClick={() => setStep('device')}
                 className="flex w-full items-center gap-3.5 rounded-2xl border border-accent/12 bg-accent/[0.05] p-3.5 text-left transition-all active:scale-[0.98]">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent/10"><DownloadIcon /></div>
-                <div><p className="text-sm font-semibold text-foreground">Установить HAPP</p><p className="text-[11px] text-muted">Скачать для вашего устройства</p></div>
+                <div><p className="text-sm font-semibold text-foreground">Установить Hiddify</p><p className="text-[11px] text-muted">Скачать для вашего устройства</p></div>
               </button>
               <button onClick={() => setStep('connect')}
                 className="flex w-full items-center gap-3.5 rounded-2xl border border-border bg-default p-3.5 text-left transition-all active:scale-[0.98]">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-default"><CheckIcon /></div>
-                <div><p className="text-sm font-semibold text-foreground">У меня есть HAPP</p><p className="text-[11px] text-muted">Добавить подписку</p></div>
+                <div><p className="text-sm font-semibold text-foreground">У меня есть Hiddify</p><p className="text-[11px] text-muted">Добавить подписку</p></div>
               </button>
             </motion.div>
           )}
@@ -176,7 +171,7 @@ export default function ConnectModal({ isOpen, onClose, subscriptionUrl }) {
           {step === 'platform' && device && (
             <motion.div key="p" {...slide} className="space-y-3">
               <div className="grid grid-cols-2 gap-2.5">
-                {Object.keys(HAPP_LINKS[device] || {}).map((p) => {
+                {Object.keys(HIDDIFY_LINKS[device] || {}).map((p) => {
                   const pm = PLATFORM_MAP[p]
                   return (
                     <button key={p} onClick={() => { setPlatform(p); setStep('links') }}
@@ -192,7 +187,7 @@ export default function ConnectModal({ isOpen, onClose, subscriptionUrl }) {
 
           {step === 'links' && platform && (
             <motion.div key="l" {...slide} className="space-y-2.5">
-              {(HAPP_LINKS[device]?.[platform] || []).map((link, i) => (
+              {(HIDDIFY_LINKS[device]?.[platform] || []).map((link, i) => (
                 <button key={i} onClick={() => extLink(link.url, link.external)}
                   className="flex w-full items-center gap-3 rounded-2xl border border-border bg-default p-3.5 text-left transition-all active:scale-[0.98] hover:border-accent/15">
                   <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-surface"><link.Icon /></div>
@@ -208,14 +203,14 @@ export default function ConnectModal({ isOpen, onClose, subscriptionUrl }) {
 
           {step === 'connect' && (
             <motion.div key="cn" {...slide} className="space-y-3">
-              <p className="text-[13px] text-muted">Добавить подписку в HAPP:</p>
+              <p className="text-[13px] text-muted">Добавить подписку в Hiddify:</p>
               <Button fullWidth size="lg" className="glow-cyan h-12 gap-2 text-[14px] font-bold" onPress={connect}>
                 <RocketIcon /> Подключиться
               </Button>
               <div className="theme-code-bg rounded-xl border border-border p-3">
                 <code className="block truncate text-[11px] text-accent/80">{subscriptionUrl}</code>
               </div>
-              <button onClick={() => setStep('device')} className="flex items-center gap-1 text-[12px] text-muted hover:text-foreground"><BackIcon /> Скачать HAPP</button>
+              <button onClick={() => setStep('device')} className="flex items-center gap-1 text-[12px] text-muted hover:text-foreground"><BackIcon /> Скачать Hiddify</button>
             </motion.div>
           )}
         </AnimatePresence>

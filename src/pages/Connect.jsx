@@ -11,20 +11,20 @@ export default function ConnectPage() {
 
   const subscriptionUrl = searchParams.get('url') || ''
   const isValidUrl = subscriptionUrl.startsWith('https://')
-  const happUrl = isValidUrl ? `happ://add/${subscriptionUrl}` : ''
+  const hiddifyUrl = isValidUrl ? `hiddify://import/${subscriptionUrl}` : ''
 
   useEffect(() => {
     if (isValidUrl) {
-      window.location.href = happUrl
+      window.location.href = hiddifyUrl
       const timer = setTimeout(() => setShowFallback(true), 2000)
       return () => clearTimeout(timer)
     } else {
       setShowFallback(true)
     }
-  }, [subscriptionUrl, happUrl])
+  }, [subscriptionUrl, hiddifyUrl])
 
   function handleRetry() {
-    window.location.href = happUrl
+    window.location.href = hiddifyUrl
   }
 
   function handleCopy() {
@@ -49,7 +49,7 @@ export default function ConnectPage() {
             <p className="text-sm text-danger">Ссылка подписки не указана или некорректна</p>
           ) : !showFallback ? (
             <div>
-              <p className="text-sm text-muted">Открываем HAPP...</p>
+              <p className="text-sm text-muted">Открываем Hiddify...</p>
               <div className="mt-4 flex justify-center">
                 <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent border-t-transparent" />
               </div>
@@ -57,7 +57,7 @@ export default function ConnectPage() {
           ) : (
             <div className="space-y-4">
               <p className="text-sm text-muted">
-                Если HAPP не открылся автоматически, попробуйте ещё раз:
+                Если Hiddify не открылся автоматически, попробуйте ещё раз:
               </p>
 
               <Button
@@ -65,16 +65,16 @@ export default function ConnectPage() {
                 className="glow-cyan w-full font-semibold"
                 onPress={handleRetry}
               >
-                Открыть в HAPP
+                Открыть в Hiddify
               </Button>
 
               <Button
                 size="sm"
                 variant="outline"
                 className="w-full"
-                onPress={() => navigate('/download/android')}
+                onPress={() => window.open('https://play.google.com/store/apps/details?id=app.hiddify.com', '_blank')}
               >
-                Скачать HAPP
+                Скачать Hiddify
               </Button>
 
               <Button
