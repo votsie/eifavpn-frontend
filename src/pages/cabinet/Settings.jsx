@@ -414,6 +414,30 @@ export default function Settings() {
         </div>
       </motion.div>
 
+      {/* Admin badge + link */}
+      {user?.is_staff && (
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="rounded-2xl border border-accent/20 bg-accent/[0.06] p-4 md:p-5 flex flex-col justify-between"
+        >
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-accent/15 text-accent text-xs font-bold">A</span>
+              <p className="text-sm font-semibold text-foreground">Администратор</p>
+            </div>
+            <p className="text-xs text-muted">У вас есть доступ к панели управления сервисом.</p>
+          </div>
+          <Button
+            size="sm"
+            className="mt-3 glow-cyan font-semibold"
+            onPress={() => navigate('/admin')}
+          >
+            Открыть админку
+          </Button>
+        </motion.div>
+      )}
+
       {/* Linked accounts */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
