@@ -44,7 +44,7 @@ export default function TelegramLoginWidget({ onAuth }) {
     setError(null)
 
     window.Telegram.Login.auth(
-      { bot_id: TELEGRAM_CLIENT_ID, request_access: ['write'] },
+      { client_id: String(TELEGRAM_CLIENT_ID), request_access: ['write'] },
       (data) => {
         setLoading(false)
         if (!data) {
