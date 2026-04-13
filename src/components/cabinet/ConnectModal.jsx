@@ -110,14 +110,14 @@ export default function ConnectModal({ isOpen, onClose, subscriptionUrl }) {
 
   return (
     <>
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm" onClick={close} />
+      <div className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm" onClick={close} />
 
-      <motion.div
-        initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
-        transition={{ type: 'spring', damping: 30, stiffness: 350 }}
-        className="fixed bottom-[56px] left-1/2 z-[101] mx-auto max-h-[70vh] w-[calc(100%-1.5rem)] max-w-[400px] -translate-x-1/2 overflow-y-auto rounded-[28px] border border-accent/10 bg-[oklch(0.11_0.015_192/97%)] px-5 pt-4 pb-5 backdrop-blur-2xl md:bottom-auto md:top-1/2 md:-translate-y-1/2 md:border-accent/8"
-      >
+      <div className="fixed inset-0 z-[101] flex items-end justify-center pb-[56px] md:items-center md:pb-0">
+        <motion.div
+          initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 40 }}
+          transition={{ type: 'spring', damping: 30, stiffness: 350 }}
+          className="max-h-[70vh] w-[calc(100%-1.5rem)] max-w-[400px] overflow-y-auto rounded-[28px] border border-accent/10 bg-[oklch(0.11_0.015_192/97%)] px-5 pt-4 pb-5 backdrop-blur-2xl"
+        >
         <div className="mx-auto mb-3 h-1 w-8 rounded-full bg-accent/20 md:hidden" />
 
         <div className="mb-4 flex items-center justify-between">
@@ -211,6 +211,7 @@ export default function ConnectModal({ isOpen, onClose, subscriptionUrl }) {
           )}
         </AnimatePresence>
       </motion.div>
+      </div>
     </>
   )
 }
