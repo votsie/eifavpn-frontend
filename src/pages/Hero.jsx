@@ -88,7 +88,7 @@ export default function Hero() {
               <p className="mt-0.5 text-[11px] text-muted md:text-xs">Серверов</p>
             </div>
             <div>
-              <p className="font-heading text-xl font-bold text-foreground md:text-2xl">50M+</p>
+              <p className="font-heading text-xl font-bold text-foreground md:text-2xl">700+</p>
               <p className="mt-0.5 text-[11px] text-muted md:text-xs">Пользователей</p>
             </div>
             <div>
