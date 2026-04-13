@@ -76,10 +76,6 @@ export function linkTelegram(initData) {
   return apiFetch('/auth/link-telegram/', { method: 'POST', body: JSON.stringify({ initData }) })
 }
 
-export function linkTelegramWidget(widgetData) {
-  return apiFetch('/auth/link-telegram/', { method: 'POST', body: JSON.stringify({ widgetData }) })
-}
-
 export function linkTelegramOidc(idToken) {
   return apiFetch('/auth/link-telegram/', { method: 'POST', body: JSON.stringify({ idToken }) })
 }

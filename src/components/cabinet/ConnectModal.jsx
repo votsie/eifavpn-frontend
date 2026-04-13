@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import { Button } from '@heroui/react'
 import { motion, AnimatePresence } from 'motion/react'
+import { isTelegramWebApp } from '../../utils/telegram'
 
 /* ── SVG line icons (Bootstrap-style, stroke only, accent neon) ── */
 const Icon = ({ d, size = 24 }) => (
@@ -74,13 +75,12 @@ const PLATFORM_MAP = {
   apple_tv: { label: 'Apple TV', Icon: AppleIcon },
 }
 
-function isTg() { return !!window.Telegram?.WebApp?.initData }
 function extLink(url, ext) {
   // For Telegram Mini App: must use https:// URLs, open in external browser
   let full = url
   if (ext) full = window.location.origin + url
   if (!full.startsWith('http')) full = window.location.origin + full
-  if (isTg()) {
+  if (isTelegramWebApp()) {
     window.Telegram.WebApp.openLink(full)
   } else {
     window.open(full, '_blank')
@@ -93,12 +93,19 @@ export default function ConnectModal({ isOpen, onClose, subscriptionUrl }) {
   const [platform, setPlatform] = useState(null)
 
   function reset() { setStep('choice'); setDevice(null); setPlatform(null) }
-  function close() { reset(); onClose() }
+  const close = useCallback(() => { reset(); onClose() }, [onClose])
+
+  useEffect(() => {
+    if (!isOpen) return
+    function onKey(e) { if (e.key === 'Escape') close() }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [isOpen, close])
   function connect() {
     // Always open our /connect page which handles happ:// redirect
     // Telegram Mini App can't open happ:// directly — must go through browser page
     const connectPage = `${window.location.origin}/connect?url=${encodeURIComponent(subscriptionUrl)}`
-    if (isTg()) {
+    if (isTelegramWebApp()) {
       window.Telegram.WebApp.openLink(connectPage)
     } else {
       window.open(connectPage, '_blank')
@@ -130,8 +137,8 @@ export default function ConnectModal({ isOpen, onClose, subscriptionUrl }) {
             {step === 'links' && PLATFORM_MAP[platform]?.label}
             {step === 'connect' && 'Подключиться'}
           </h2>
-          <button onClick={close} className="flex h-7 w-7 items-center justify-center rounded-full text-muted transition-colors hover:text-foreground">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12" /></svg>
+          <button onClick={close} aria-label="Закрыть" className="flex h-7 w-7 items-center justify-center rounded-full text-muted transition-colors hover:text-foreground">
+            <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12" /></svg>
           </button>
         </div>
 

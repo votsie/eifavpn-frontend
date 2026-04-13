@@ -229,3 +229,8 @@ body {
 }
 .float { animation: float 4s ease-in-out infinite; }
 
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .pulse-ring, .float { animation: none; }
+}
+

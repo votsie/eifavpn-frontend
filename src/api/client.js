@@ -27,14 +27,16 @@ export async function apiFetch(endpoint, options = {}) {
     headers['Authorization'] = `Bearer ${token}`
   }
 
+  let retried = false
   let res = await fetch(url, { ...options, headers })
 
   // Auto-refresh on 401
-  if (res.status === 401 && token && !options._retried) {
+  if (res.status === 401 && token && !retried) {
+    retried = true
     const refreshed = await tryRefreshToken()
     if (refreshed) {
       headers['Authorization'] = `Bearer ${localStorage.getItem('eifavpn_access')}`
-      res = await fetch(url, { ...options, headers, _retried: true })
+      res = await fetch(url, { ...options, headers })
     } else {
       onUnauthorized?.()
       throw new ApiError('Unauthorized', 401)

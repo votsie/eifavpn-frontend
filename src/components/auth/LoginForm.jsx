@@ -44,6 +44,14 @@ export default function LoginForm() {
     const access = searchParams.get('access')
     const refresh = searchParams.get('refresh')
     if (auth && access && refresh) {
+      const state = searchParams.get('state')
+      const savedState = sessionStorage.getItem('oauth_state')
+      if (state && savedState && state !== savedState) {
+        setError('Ошибка безопасности. Попробуйте снова.')
+        sessionStorage.removeItem('oauth_state')
+        return
+      }
+      sessionStorage.removeItem('oauth_state')
       loginWithTokens(access, refresh).then((success) => {
         if (success) navigate(from, { replace: true })
       })
@@ -66,10 +74,6 @@ export default function LoginForm() {
       const result = await sendCode(email.trim())
       setStep('code')
       setCodeSent(true)
-      // Fallback: if server returned code (email delivery failed), auto-fill it
-      if (result?.code) {
-        setCode(result.code)
-      }
     } catch (err) {
       setError(err.message || 'Ошибка отправки кода')
     } finally {
@@ -115,7 +119,11 @@ export default function LoginForm() {
       <Button
         fullWidth size="lg" variant="outline"
         className="h-12 text-[14px] font-medium"
-        onPress={() => { window.location.href = '/api/auth/google/' }}
+        onPress={() => {
+          const state = crypto.randomUUID()
+          sessionStorage.setItem('oauth_state', state)
+          window.location.href = `/api/auth/google/?state=${state}`
+        }}
         isDisabled={loading}
       >
         <svg className="h-[18px] w-[18px] shrink-0" viewBox="0 0 24 24">

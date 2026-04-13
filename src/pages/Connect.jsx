@@ -10,10 +10,11 @@ export default function ConnectPage() {
   const [copied, setCopied] = useState(false)
 
   const subscriptionUrl = searchParams.get('url') || ''
-  const happUrl = `happ://add/${subscriptionUrl}`
+  const isValidUrl = subscriptionUrl.startsWith('https://')
+  const happUrl = isValidUrl ? `happ://add/${subscriptionUrl}` : ''
 
   useEffect(() => {
-    if (subscriptionUrl) {
+    if (isValidUrl) {
       window.location.href = happUrl
       const timer = setTimeout(() => setShowFallback(true), 2000)
       return () => clearTimeout(timer)
@@ -44,8 +45,8 @@ export default function ConnectPage() {
             <p className="mt-1 text-sm text-muted">Подключение к VPN</p>
           </div>
 
-          {!subscriptionUrl ? (
-            <p className="text-sm text-danger">Ссылка подписки не указана</p>
+          {!isValidUrl ? (
+            <p className="text-sm text-danger">Ссылка подписки не указана или некорректна</p>
           ) : !showFallback ? (
             <div>
               <p className="text-sm text-muted">Открываем HAPP...</p>

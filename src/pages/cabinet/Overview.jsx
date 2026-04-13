@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Button, Chip, ProgressBar } from '@heroui/react'
+import { Button, Chip, ProgressBar, Spinner } from '@heroui/react'
 import { useAuthStore } from '../../stores/authStore'
 import { getMySubscription, activateTrial, purchaseTrialUpgrade } from '../../api/subscriptions'
 import { useNavigate } from 'react-router-dom'
@@ -93,7 +93,11 @@ export default function Overview() {
     finally { setTrialLoading(false) }
   }
 
-  if (loading) return <div className="text-muted">Загрузка...</div>
+  if (loading) return (
+    <div className="flex min-h-[200px] items-center justify-center">
+      <Spinner size="lg" />
+    </div>
+  )
 
   const paymentLabel = {
     trial: 'Триал (бесплатно)',

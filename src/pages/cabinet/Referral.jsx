@@ -4,6 +4,7 @@ import { Copy } from '@gravity-ui/icons'
 import { motion } from 'motion/react'
 import { useAuthStore } from '../../stores/authStore'
 import { getReferralInfo, getReferralList, prepareShare } from '../../api/referrals'
+import { isTelegramWebApp } from '../../utils/telegram'
 
 function StatCard({ label, value, sub, accent }) {
   return (
@@ -15,10 +16,6 @@ function StatCard({ label, value, sub, accent }) {
       {sub && <p className="mt-0.5 text-xs text-muted md:text-[11px]">{sub}</p>}
     </div>
   )
-}
-
-function isTelegramWebApp() {
-  return !!window.Telegram?.WebApp?.initData
 }
 
 function getTgVersion() {
@@ -244,7 +241,7 @@ export default function Referral() {
           <div className="space-y-2">
             {list.map((ref, i) => (
               <div
-                key={i}
+                key={ref.email || i}
                 className="theme-card flex min-h-11 items-center justify-between rounded-xl border border-border theme-subtle-bg px-4 py-3"
               >
                 <div className="min-w-0 flex-1">

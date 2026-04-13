@@ -71,6 +71,12 @@ export default function Settings() {
   // Link message (for Google OAuth redirect)
   const [linkMsg, setLinkMsg] = useState(null)
 
+  // Delete account
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [deletePassword, setDeletePassword] = useState('')
+  const [deleteLoading, setDeleteLoading] = useState(false)
+  const [deleteError, setDeleteError] = useState(null)
+
   // Merge state
   const [mergePreview, setMergePreview] = useState(null)
   const [mergeProvider, setMergeProvider] = useState(null)
@@ -172,7 +178,16 @@ export default function Settings() {
 
   function handleLinkGoogle() {
     const token = localStorage.getItem('eifavpn_access')
-    window.location.href = `/api/auth/link-google/?token=${token}`
+    const form = document.createElement('form')
+    form.method = 'POST'
+    form.action = '/api/auth/link-google/'
+    const input = document.createElement('input')
+    input.type = 'hidden'
+    input.name = 'token'
+    input.value = token
+    form.appendChild(input)
+    document.body.appendChild(form)
+    form.submit()
   }
 
   async function handleLinkTelegram() {
@@ -754,24 +769,46 @@ export default function Settings() {
           size="sm"
           color="danger"
           variant="outline"
-          onPress={async () => {
-            const confirmed = window.confirm('Вы уверены, что хотите удалить аккаунт? Все данные и подписка будут удалены. Это действие необратимо.')
-            if (!confirmed) return
-            const password = user?.has_usable_password !== false
-              ? window.prompt('Введите пароль для подтверждения:')
-              : ''
-            if (password === null) return
-            try {
-              await deleteAccount(password)
-              await logout()
-              navigate('/')
-            } catch (err) {
-              alert(err.message || 'Ошибка удаления аккаунта')
-            }
-          }}
+          onPress={() => setShowDeleteConfirm(true)}
         >
           Удалить аккаунт
         </Button>
+        {showDeleteConfirm && (
+          <div className="mt-3 space-y-3 rounded-xl border border-danger/20 bg-danger/[0.04] p-4">
+            <p className="text-sm text-foreground">Вы уверены? Все данные будут удалены безвозвратно.</p>
+            {user?.has_usable_password !== false && (
+              <Input
+                type="password"
+                placeholder="Введите пароль для подтверждения"
+                value={deletePassword}
+                onValueChange={setDeletePassword}
+                size="sm"
+                classNames={{ inputWrapper: 'border-border bg-surface' }}
+              />
+            )}
+            {deleteError && <p className="text-sm text-danger">{deleteError}</p>}
+            <div className="flex gap-2">
+              <Button size="sm" color="danger" onPress={async () => {
+                setDeleteLoading(true)
+                setDeleteError(null)
+                try {
+                  await deleteAccount(deletePassword)
+                  await logout()
+                  navigate('/')
+                } catch (err) {
+                  setDeleteError(err.message || 'Ошибка удаления аккаунта')
+                } finally {
+                  setDeleteLoading(false)
+                }
+              }} isPending={deleteLoading}>
+                Удалить навсегда
+              </Button>
+              <Button size="sm" variant="outline" onPress={() => { setShowDeleteConfirm(false); setDeletePassword(''); setDeleteError(null) }}>
+                Отмена
+              </Button>
+            </div>
+          </div>
+        )}
       </motion.div>
 
       <MergeAccountModal

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Button } from '@heroui/react'
+import { Button, Spinner } from '@heroui/react'
 import { CircleCheck, CircleXmark } from '@gravity-ui/icons'
 import { motion, AnimatePresence } from 'motion/react'
 import { getPlans, purchase } from '../../api/subscriptions'
@@ -33,10 +33,15 @@ export default function Purchase() {
   const [paymentMethod, setPaymentMethod] = useState('stars')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [plansLoading, setPlansLoading] = useState(true)
+  const [plansError, setPlansError] = useState(null)
   const { user } = useAuthStore()
 
   useEffect(() => {
-    getPlans().then(setPlans).catch(() => {})
+    getPlans()
+      .then(setPlans)
+      .catch((err) => setPlansError(err.message || 'Ошибка загрузки тарифов'))
+      .finally(() => setPlansLoading(false))
   }, [])
 
   const currentPlan = plans.find((p) => p.id === selectedPlan)
@@ -65,6 +70,8 @@ export default function Purchase() {
       <h1 className="font-heading text-xl font-bold text-foreground">Выбрать тариф</h1>
 
       {/* Plan cards with price */}
+      {plansLoading && <div className="flex justify-center py-8"><Spinner size="lg" /></div>}
+      {plansError && <p className="text-sm text-danger">{plansError}</p>}
       <div className="grid gap-3 sm:grid-cols-3">
         {plans.map((plan) => {
           const price = plan.pricing?.[period] || 0
@@ -73,6 +80,7 @@ export default function Purchase() {
             <button
               key={plan.id}
               onClick={() => setSelectedPlan(plan.id)}
+              aria-pressed={isSelected}
               className={`relative rounded-xl border p-4 text-left transition-all duration-200 ${
                 isSelected
                   ? 'border-accent bg-accent/[0.06]'
@@ -121,6 +129,7 @@ export default function Purchase() {
               <button
                 key={p.id}
                 onClick={() => setPeriod(p.id)}
+                aria-pressed={period === p.id}
                 className={`relative rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-150 ${
                   period === p.id
                     ? 'bg-accent text-accent-foreground'
@@ -146,6 +155,7 @@ export default function Purchase() {
               <button
                 key={m.id}
                 onClick={() => setPaymentMethod(m.id)}
+                aria-pressed={paymentMethod === m.id}
                 className={`rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-150 ${
                   paymentMethod === m.id
                     ? 'bg-accent text-accent-foreground'

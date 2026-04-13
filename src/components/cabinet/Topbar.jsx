@@ -33,6 +33,7 @@ export default function Topbar() {
         {/* Settings gear — mobile only */}
         <Link
           to="/cabinet/settings"
+          aria-label="Настройки"
           className="flex h-9 w-9 items-center justify-center rounded-lg text-muted transition-colors hover:bg-default hover:text-foreground md:hidden"
         >
           <Gear className="h-[18px] w-[18px]" />

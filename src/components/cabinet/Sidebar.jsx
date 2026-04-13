@@ -44,7 +44,7 @@ function SidebarLink({ to, icon: Icon, label }) {
 export default function Sidebar({ mobile = false }) {
   if (mobile) {
     return (
-      <nav className="fixed bottom-0 left-0 right-0 z-50 flex border-t border-border bg-surface md:hidden"
+      <nav aria-label="Основная навигация" className="fixed bottom-0 left-0 right-0 z-50 flex border-t border-border bg-surface md:hidden"
         style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
         {mobileLinks.map((link) => (
           <NavLink
@@ -83,7 +83,7 @@ export default function Sidebar({ mobile = false }) {
       </div>
 
       {/* Nav links */}
-      <nav className="flex flex-1 flex-col gap-1 px-3 pt-2">
+      <nav aria-label="Боковая навигация" className="flex flex-1 flex-col gap-1 px-3 pt-2">
         {links.map((link) => (
           <SidebarLink key={link.to} {...link} />
         ))}
