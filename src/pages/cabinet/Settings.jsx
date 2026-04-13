@@ -4,7 +4,7 @@ import { Copy, Pencil } from '@gravity-ui/icons'
 import { motion } from 'motion/react'
 import { useAuthStore } from '../../stores/authStore'
 import { updateProfile, changePassword, deleteAccount, linkEmail, linkEmailVerify, linkTelegram, linkTelegramOidc } from '../../api/auth'
-import TelegramLoginWidget from '../../components/TelegramLoginWidget'
+import { useTelegramLogin } from '../../components/TelegramLoginWidget'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { getMySubscription } from '../../api/subscriptions'
 
@@ -128,8 +128,8 @@ export default function Settings() {
   const canLinkGoogle = !user?.google_id
   const canLinkTelegram = !user?.telegram_id
 
-  // Telegram widget state
-  const [showTelegramWidget, setShowTelegramWidget] = useState(false)
+  // Telegram OIDC login hook
+  const { openTelegramLogin, sdkReady: tgReady, loading: tgLinkLoading } = useTelegramLogin(handleTelegramOidcAuth)
 
   async function handleLinkEmailSend() {
     setLinkEmailLoading(true)
@@ -179,8 +179,8 @@ export default function Settings() {
         setLinkMsg({ type: 'error', text: err.message || 'Ошибка привязки Telegram' })
       }
     } else {
-      // Web context — show Telegram Login Widget
-      setShowTelegramWidget(true)
+      // Web context — open Telegram OIDC popup
+      openTelegramLogin()
     }
   }
 
@@ -188,7 +188,6 @@ export default function Settings() {
     try {
       await linkTelegramOidc(id_token)
       await fetchMe()
-      setShowTelegramWidget(false)
       setLinkMsg({ type: 'success', text: 'Telegram успешно привязан' })
     } catch (err) {
       setLinkMsg({ type: 'error', text: err.message || 'Ошибка привязки Telegram' })
@@ -572,11 +571,6 @@ export default function Settings() {
               <Chip size="sm" className="bg-default text-[10px] text-muted">Нет</Chip>
             )}
           </div>
-          {showTelegramWidget && canLinkTelegram && (
-            <div className="mt-3 flex flex-col items-center gap-2">
-              <TelegramLoginWidget onAuth={handleTelegramOidcAuth} />
-            </div>
-          )}
         </div>
       </motion.div>
 
