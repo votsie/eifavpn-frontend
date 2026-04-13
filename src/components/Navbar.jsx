@@ -6,7 +6,7 @@ export default function Navbar() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 px-4 pt-3 md:px-6 md:pt-4">
-      <nav className="mx-auto flex max-w-5xl items-center justify-between gap-6 rounded-2xl border border-border bg-surface/60 px-5 py-2.5 backdrop-blur-2xl md:px-6 md:py-3">
+      <nav className="mx-auto flex max-w-5xl items-center justify-between gap-6 rounded-2xl border-b border-border bg-background px-5 py-2.5 md:px-6 md:py-3">
         <a href="/" className="flex shrink-0 items-center gap-2.5">
           <img src="/logo.png" alt="EIFAVPN" className="h-8 w-8 object-contain" />
           <span className="font-heading text-[17px] font-bold tracking-tight text-foreground">

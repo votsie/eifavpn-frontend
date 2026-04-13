@@ -67,23 +67,13 @@ export default function Features() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
               transition={{ duration: 0.45, delay: i * 0.06 }}
-              className={`group relative overflow-hidden rounded-2xl border p-5 transition-all duration-300 hover:bg-surface/70 md:p-6 ${
+              className={`group relative overflow-hidden rounded-2xl border p-5 transition-all duration-300 hover:border-accent/20 md:p-6 ${
                 f.accent
-                  ? 'border-accent/12 bg-accent/[0.04]'
-                  : 'border-border bg-surface/30'
+                  ? 'border-accent/12 bg-surface'
+                  : 'border-border bg-surface'
               }`}
             >
-              {f.accent && (
-                <div
-                  className="pointer-events-none absolute -top-10 -right-10 h-28 w-28 rounded-full"
-                  style={{ background: 'radial-gradient(circle, var(--accent) 0%, transparent 70%)', opacity: 0.1 }}
-                />
-              )}
-              <div className={`mb-3 flex h-10 w-10 items-center justify-center rounded-xl transition-shadow duration-300 ${
-                f.accent
-                  ? 'bg-accent/12 text-accent'
-                  : 'bg-default text-foreground/80'
-              }`}>
+              <div className={`mb-3 flex h-10 w-10 items-center justify-center rounded-xl transition-shadow duration-300 bg-accent/12 text-accent`}>
                 <f.icon className="h-[18px] w-[18px]" />
               </div>
               <h3 className="font-heading mb-1.5 text-[15px] font-bold text-foreground md:text-base">

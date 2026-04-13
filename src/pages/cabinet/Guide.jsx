@@ -183,7 +183,7 @@ export default function Guide() {
           selectedKey={selectedPlatform}
           onSelectionChange={setSelectedPlatform}
           classNames={{
-            tabList: 'bg-surface/40 border border-border',
+            tabList: 'bg-surface border border-border',
             cursor: 'bg-accent/20',
             tab: 'text-muted data-[selected=true]:text-accent',
           }}
@@ -200,7 +200,7 @@ export default function Guide() {
         initial={{ opacity: 0, x: 12 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.2 }}
-        className="theme-card rounded-2xl border border-border bg-surface/40 p-4 md:p-5"
+        className="theme-card rounded-2xl border border-border bg-surface p-4 md:p-5"
       >
         {/* App info */}
         <div className="mb-5 flex items-center justify-between">
@@ -255,7 +255,7 @@ export default function Guide() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
-          className="theme-card rounded-2xl border border-border bg-surface/40 p-4 md:p-5"
+          className="theme-card rounded-2xl border border-border bg-surface p-4 md:p-5"
         >
           <p className="mb-4 text-center text-sm font-semibold text-foreground">
             Или отсканируйте QR-код

@@ -24,7 +24,7 @@ export default function Login() {
           }}
         />
 
-        <div className="rounded-[28px] border border-border bg-surface/65 px-8 py-10 shadow-2xl backdrop-blur-2xl">
+        <div className="rounded-[28px] border border-border bg-surface px-8 py-10 shadow-2xl">
           {/* Header */}
           <div className="mb-8 flex flex-col items-center">
             <motion.img

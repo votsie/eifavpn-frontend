@@ -301,7 +301,7 @@ export default function Settings() {
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        className="theme-card rounded-2xl border border-border bg-surface/40 p-4 md:p-5"
+        className="theme-card rounded-2xl border border-border bg-surface p-4 md:p-5"
       >
         <p className="mb-3 text-sm font-semibold text-foreground">Тема оформления</p>
         <div className="flex gap-2">
@@ -333,7 +333,7 @@ export default function Settings() {
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        className="theme-card rounded-2xl border border-border bg-surface/40 p-4 md:p-5"
+        className="theme-card rounded-2xl border border-border bg-surface p-4 md:p-5"
       >
         <div className="flex items-center justify-between">
           <p className="text-sm font-semibold text-foreground">Профиль</p>
@@ -376,7 +376,7 @@ export default function Settings() {
                   value={avatarUrl}
                   onValueChange={setAvatarUrl}
                   size="sm"
-                  classNames={{ inputWrapper: 'border-border bg-surface/40' }}
+                  classNames={{ inputWrapper: 'border-border bg-surface' }}
                 />
               ) : (
                 <p className="text-xs text-muted">
@@ -395,7 +395,7 @@ export default function Settings() {
                 value={firstName}
                 onValueChange={setFirstName}
                 size="sm"
-                classNames={{ inputWrapper: 'border-border bg-surface/40' }}
+                classNames={{ inputWrapper: 'border-border bg-surface' }}
               />
             ) : (
               <p className="text-sm text-foreground">{user?.first_name || 'Не указано'}</p>
@@ -446,7 +446,7 @@ export default function Settings() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.05 }}
-        className="theme-card rounded-2xl border border-border bg-surface/40 p-4 md:p-5"
+        className="theme-card rounded-2xl border border-border bg-surface p-4 md:p-5"
       >
         <p className="mb-3 text-sm font-semibold text-foreground">Привязанные аккаунты</p>
 
@@ -500,7 +500,7 @@ export default function Settings() {
                   value={linkEmailValue}
                   onValueChange={setLinkEmailValue}
                   size="sm"
-                  classNames={{ inputWrapper: 'border-border bg-surface/40' }}
+                  classNames={{ inputWrapper: 'border-border bg-surface' }}
                 />
                 <div className="flex gap-2">
                   <Button
@@ -535,7 +535,7 @@ export default function Settings() {
                   value={linkEmailCode}
                   onValueChange={setLinkEmailCode}
                   size="sm"
-                  classNames={{ inputWrapper: 'border-border bg-surface/40' }}
+                  classNames={{ inputWrapper: 'border-border bg-surface' }}
                 />
                 <div className="flex gap-2">
                   <Button
@@ -631,7 +631,7 @@ export default function Settings() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="theme-card rounded-2xl border border-border bg-surface/40 p-4 md:p-5"
+          className="theme-card rounded-2xl border border-border bg-surface p-4 md:p-5"
         >
           <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted md:text-[11px]">
             URL подписки
@@ -659,7 +659,7 @@ export default function Settings() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.12 }}
-          className="theme-card rounded-2xl border border-border bg-surface/40 p-4 md:p-5"
+          className="theme-card rounded-2xl border border-border bg-surface p-4 md:p-5"
         >
           <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted md:text-[11px]">
             Реферальный код
@@ -691,7 +691,7 @@ export default function Settings() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15 }}
-        className="theme-card rounded-2xl border border-border bg-surface/40 p-4 md:p-5"
+        className="theme-card rounded-2xl border border-border bg-surface p-4 md:p-5"
       >
         <p className="mb-4 text-sm font-semibold text-foreground">Сменить пароль</p>
         <div className="space-y-3">
@@ -702,7 +702,7 @@ export default function Settings() {
             value={oldPassword}
             onValueChange={setOldPassword}
             size="sm"
-            classNames={{ inputWrapper: 'border-border bg-surface/40' }}
+            classNames={{ inputWrapper: 'border-border bg-surface' }}
           />
           <Input
             type="password"
@@ -711,7 +711,7 @@ export default function Settings() {
             value={newPassword}
             onValueChange={setNewPassword}
             size="sm"
-            classNames={{ inputWrapper: 'border-border bg-surface/40' }}
+            classNames={{ inputWrapper: 'border-border bg-surface' }}
           />
           <Input
             type="password"
@@ -720,7 +720,7 @@ export default function Settings() {
             value={confirmPassword}
             onValueChange={setConfirmPassword}
             size="sm"
-            classNames={{ inputWrapper: 'border-border bg-surface/40' }}
+            classNames={{ inputWrapper: 'border-border bg-surface' }}
           />
           <Button
             size="sm"

@@ -143,7 +143,7 @@ export default function Servers() {
         onValueChange={setSearch}
         startContent={<Magnifier className="h-4 w-4 text-muted" />}
         classNames={{
-          inputWrapper: 'theme-card border-border bg-surface/40',
+          inputWrapper: 'theme-card border-border bg-surface',
         }}
       />
 
@@ -166,7 +166,7 @@ export default function Servers() {
               className={`relative rounded-2xl border p-4 transition-all ${
                 server.isCurrentNode
                   ? 'theme-card-accent border-accent/30 bg-accent/[0.06]'
-                  : 'theme-card border-border bg-surface/40'
+                  : 'theme-card border-border bg-surface'
               }`}
             >
               {server.isCurrentNode && (
@@ -210,7 +210,7 @@ export default function Servers() {
 
       {/* Empty state */}
       {!isLoading && filtered.length === 0 && (
-        <div className="theme-card rounded-2xl border border-border bg-surface/40 p-8 text-center">
+        <div className="theme-card rounded-2xl border border-border bg-surface p-8 text-center">
           <p className="text-muted">
             {search ? 'Серверы не найдены по вашему запросу' : 'Нет доступных серверов'}
           </p>

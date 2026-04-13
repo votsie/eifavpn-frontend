@@ -19,7 +19,7 @@
     --cursor-interactive: pointer;
     --cursor-disabled: not-allowed;
 
-    --radius: 1rem;
+    --radius: 0.75rem;
     --field-radius: calc(var(--radius) * 1.5);
 
     --background: oklch(0.985 0.003 200);
@@ -28,7 +28,7 @@
     --surface-foreground: var(--foreground);
     --overlay: oklch(1.0 0 0);
     --overlay-foreground: var(--foreground);
-    --muted: oklch(0.45 0.02 200);
+    --muted: oklch(0.40 0.02 200);
     --scrollbar: oklch(0.80 0.01 200);
     --default: oklch(0.94 0.003 200);
     --default-foreground: var(--foreground);
@@ -74,7 +74,7 @@
     --cursor-interactive: pointer;
     --cursor-disabled: not-allowed;
 
-    --radius: 1rem;
+    --radius: 0.75rem;
     --field-radius: calc(var(--radius) * 1.5);
 
     --background: oklch(0.11 0.012 200);
@@ -83,7 +83,7 @@
     --surface-foreground: var(--foreground);
     --overlay: oklch(0.14 0.012 200);
     --overlay-foreground: var(--foreground);
-    --muted: oklch(0.68 0.02 200);
+    --muted: oklch(0.72 0.02 200);
     --scrollbar: oklch(0.35 0.02 200);
     --default: oklch(0.21 0.015 200);
     --default-foreground: var(--snow);
@@ -117,7 +117,7 @@
 /* ── Typography ───────────────────────────────────────── */
 @theme inline {
   --font-heading: 'Manrope', system-ui, sans-serif;
-  --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 }
 
@@ -154,17 +154,6 @@ body {
     0 0 40px oklch(0.42 0.18 180 / 6%);
 }
 
-[data-theme="dark"] .glow-cyan-lg {
-  box-shadow:
-    0 0 40px oklch(0.78 0.17 180 / 28%),
-    0 0 100px oklch(0.78 0.17 180 / 12%),
-    0 0 160px oklch(0.78 0.17 180 / 5%);
-}
-[data-theme="light"] .glow-cyan-lg {
-  box-shadow:
-    0 0 24px oklch(0.42 0.18 180 / 18%),
-    0 0 60px oklch(0.42 0.18 180 / 8%);
-}
 
 [data-theme="dark"] .text-glow {
   text-shadow: 0 0 24px oklch(0.78 0.17 180 / 40%);
@@ -177,14 +166,13 @@ body {
 [data-theme="light"] .theme-card {
   background: white;
   border: 1px solid var(--border);
-  border-radius: 1rem;
+  border-radius: 0.75rem;
   box-shadow: var(--surface-shadow);
 }
 [data-theme="dark"] .theme-card {
   background: var(--surface);
   border: 1px solid oklch(0.78 0.17 180 / 8%);
-  border-radius: 1rem;
-  backdrop-filter: blur(12px);
+  border-radius: 0.75rem;
 }
 
 /* ── Theme-aware accent card ─────────────────────────── */
@@ -195,8 +183,7 @@ body {
   box-shadow: var(--surface-shadow);
 }
 [data-theme="dark"] .theme-card-accent {
-  background: linear-gradient(135deg, oklch(0.78 0.17 180 / 8%) 0%, oklch(0.14 0.015 200 / 70%) 100%);
-  backdrop-filter: blur(28px) saturate(1.5);
+  background: linear-gradient(135deg, oklch(0.78 0.17 180 / 8%) 0%, var(--surface) 100%);
   border: 1px solid oklch(0.78 0.17 180 / 14%);
   border-radius: 1.25rem;
 }
@@ -242,28 +229,3 @@ body {
 }
 .float { animation: float 4s ease-in-out infinite; }
 
-@keyframes orb-drift-1 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  25% { transform: translate(80px, -40px) scale(1.1); }
-  50% { transform: translate(-30px, 60px) scale(0.95); }
-  75% { transform: translate(-70px, -20px) scale(1.05); }
-}
-
-@keyframes orb-drift-2 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(-60px, 50px) scale(1.08); }
-  66% { transform: translate(50px, -30px) scale(0.92); }
-}
-
-@keyframes orb-drift-3 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  20% { transform: translate(40px, 30px) scale(1.05); }
-  40% { transform: translate(-50px, -40px) scale(0.97); }
-  60% { transform: translate(30px, -60px) scale(1.1); }
-  80% { transform: translate(-40px, 20px) scale(0.93); }
-}
-
-@keyframes twinkle {
-  0%, 100% { opacity: 0.15; }
-  50% { opacity: 0.8; }
-}

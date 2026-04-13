@@ -92,7 +92,7 @@ export default function Plans() {
           transition={{ duration: 0.4, delay: 0.1 }}
           className="mb-10 flex justify-center"
         >
-          <div className="inline-flex items-center gap-1 rounded-xl border border-border bg-surface/40 p-1">
+          <div className="inline-flex items-center gap-1 rounded-xl border border-border bg-surface p-1">
             {periods.map((p) => (
               <button
                 key={p.id}
@@ -134,13 +134,9 @@ export default function Plans() {
               >
                 <div className={`relative flex flex-col overflow-hidden rounded-2xl border p-6 transition-all duration-300 md:p-7 ${
                   plan.popular
-                    ? 'border-accent/20 bg-gradient-to-b from-accent/[0.06] to-surface/50 glow-cyan'
-                    : 'border-border bg-surface/30 hover:border-accent/10'
+                    ? 'border-accent bg-surface'
+                    : 'border-border bg-surface hover:border-accent/10'
                 }`}>
-                  {plan.popular && (
-                    <div className="pointer-events-none absolute -top-12 -right-12 h-32 w-32 rounded-full"
-                      style={{ background: 'radial-gradient(circle, var(--accent) 0%, transparent 70%)', opacity: 0.1 }} />
-                  )}
 
                   {/* Name */}
                   <div className="mb-4">
@@ -203,7 +199,7 @@ export default function Plans() {
                     fullWidth
                     size="lg"
                     variant={plan.popular ? undefined : 'outline'}
-                    className={`text-[14px] font-semibold ${plan.popular ? 'glow-cyan' : ''}`}
+                    className="text-[14px] font-semibold"
                     onPress={() => navigate(`/register?plan=${plan.id}`)}
                   >
                     {plan.popular ? 'Подключить Pro' : `Выбрать ${plan.name}`}

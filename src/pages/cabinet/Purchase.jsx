@@ -97,7 +97,7 @@ export default function Purchase() {
               className={`relative min-h-11 rounded-2xl border p-4 text-left transition-all duration-200 md:p-5 ${
                 selectedPlan === plan.id
                   ? 'theme-card-accent border-accent/30 bg-accent/[0.06]'
-                  : 'theme-card border-border bg-surface/40 hover:border-accent/10'
+                  : 'theme-card border-border bg-surface hover:border-accent/10'
               }`}
             >
               {plan.id === 'pro' && (
@@ -131,7 +131,7 @@ export default function Purchase() {
       {/* Step 2: Period */}
       <div className="mb-6 md:mb-8">
         <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted">2. Период</h2>
-        <div className="theme-card inline-flex items-center gap-1 rounded-2xl border border-border bg-surface/40 p-1.5">
+        <div className="theme-card inline-flex items-center gap-1 rounded-2xl border border-border bg-surface p-1.5">
           {PERIODS.map((p) => (
             <button
               key={p.id}
@@ -164,7 +164,7 @@ export default function Purchase() {
               className={`min-h-11 rounded-2xl border p-4 text-left transition-all duration-200 ${
                 paymentMethod === m.id
                   ? 'theme-card-accent border-accent/30 bg-accent/[0.06]'
-                  : 'theme-card border-border bg-surface/40 hover:border-accent/10'
+                  : 'theme-card border-border bg-surface hover:border-accent/10'
               }`}
             >
               <span className="text-2xl">{m.icon}</span>
@@ -176,7 +176,7 @@ export default function Purchase() {
       </div>
 
       {/* Summary + Pay */}
-      <div className="theme-card-accent rounded-2xl border border-border bg-surface/50 p-5 backdrop-blur-sm md:p-6">
+      <div className="theme-card-accent rounded-2xl border border-border bg-surface p-5  md:p-6">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="text-sm text-muted">Итого</p>

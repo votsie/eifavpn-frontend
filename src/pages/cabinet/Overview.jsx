@@ -143,7 +143,7 @@ export default function Overview() {
       {hasSub && (
         <div className="space-y-3 md:space-y-4">
           {/* Header */}
-          <div className="theme-card flex flex-wrap items-start justify-between gap-3 rounded-2xl border border-border bg-surface/40 p-4 md:p-5">
+          <div className="theme-card flex flex-wrap items-start justify-between gap-3 rounded-2xl border border-border bg-surface p-4 md:p-5">
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="font-heading text-xl font-bold text-foreground">{sub.plan_name}</h2>
@@ -191,7 +191,7 @@ export default function Overview() {
           </div>
 
           {/* Traffic */}
-          <div className="theme-card rounded-2xl border border-border bg-surface/40 p-4 md:p-5">
+          <div className="theme-card rounded-2xl border border-border bg-surface p-4 md:p-5">
             <div className="flex items-center justify-between">
               <p className="text-sm font-semibold text-foreground">Трафик</p>
               <p className="text-sm text-muted">
@@ -229,7 +229,7 @@ export default function Overview() {
           </div>
 
           {/* Connection info */}
-          <div className="theme-card rounded-2xl border border-border bg-surface/40 p-4 md:p-5">
+          <div className="theme-card rounded-2xl border border-border bg-surface p-4 md:p-5">
             <p className="mb-3 text-sm font-semibold text-foreground">Подключение</p>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               <div>
@@ -261,7 +261,7 @@ export default function Overview() {
 
           {/* Subscription URL */}
           {sub.subscription_url && !isExpired && (
-            <div className="theme-card-accent rounded-2xl border border-border bg-surface/40 p-4 md:p-5">
+            <div className="theme-card-accent rounded-2xl border border-border bg-surface p-4 md:p-5">
               <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted md:text-[11px]">URL подписки</p>
               <div className="flex items-center gap-2">
                 <code className="theme-code-bg min-h-11 flex-1 truncate rounded-lg px-3 py-2 font-mono text-xs text-accent">
@@ -281,7 +281,7 @@ export default function Overview() {
 
       {/* No subscription */}
       {!hasSub && !canTrial && !canTrialUpgrade && (
-        <div className="theme-card rounded-2xl border border-border bg-surface/40 p-5 text-center md:p-6">
+        <div className="theme-card rounded-2xl border border-border bg-surface p-5 text-center md:p-6">
           <p className="text-muted">У вас нет активной подписки</p>
           <Button className="glow-cyan mt-4 font-semibold" onPress={() => navigate('/cabinet/purchase')}>
             Выбрать тариф

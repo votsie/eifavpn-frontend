@@ -99,7 +99,7 @@ export default function Register() {
         <div className="pointer-events-none absolute -inset-8 -z-10 rounded-full"
           style={{ background: 'radial-gradient(circle, var(--accent) 0%, transparent 70%)', opacity: 0.1, filter: 'blur(40px)' }} />
 
-        <div className="rounded-[28px] border border-border bg-surface/65 px-8 py-10 shadow-2xl backdrop-blur-2xl">
+        <div className="rounded-[28px] border border-border bg-surface px-8 py-10 shadow-2xl">
           <div className="mb-8 flex flex-col items-center">
             <motion.img src="/logo.png" alt="EIFAVPN"
               className="mb-4 h-16 w-16 object-contain"

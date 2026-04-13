@@ -193,7 +193,7 @@ export default function Referral() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15 }}
-        className="theme-card rounded-2xl border border-border bg-surface/40 p-4 md:p-5"
+        className="theme-card rounded-2xl border border-border bg-surface p-4 md:p-5"
       >
         <p className="mb-3 text-sm font-semibold text-foreground">Как это работает?</p>
         <div className="space-y-3">
@@ -232,7 +232,7 @@ export default function Referral() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="theme-card rounded-2xl border border-border bg-surface/40 p-4 md:p-5"
+        className="theme-card rounded-2xl border border-border bg-surface p-4 md:p-5"
       >
         <p className="mb-3 text-sm font-semibold text-foreground">Приглашённые пользователи</p>
 
