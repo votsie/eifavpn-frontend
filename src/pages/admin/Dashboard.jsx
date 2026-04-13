@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Spinner } from '@heroui/react'
-import { getAdminStats, getRegistrationChart, getRevenueChart } from '../../api/admin'
+import { motion } from 'motion/react'
+import { getAdminStats, getRegistrationChart, getRevenueChart, getActivityFeed, getExpiringSubs } from '../../api/admin'
 
 function KpiCard({ label, value, delta }) {
   return (
@@ -57,6 +58,8 @@ export default function Dashboard() {
   const [stats, setStats] = useState(null)
   const [regChart, setRegChart] = useState(null)
   const [revChart, setRevChart] = useState(null)
+  const [activity, setActivity] = useState(null)
+  const [expiring, setExpiring] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -65,15 +68,19 @@ export default function Dashboard() {
 
     async function load() {
       try {
-        const [s, r, rv] = await Promise.all([
+        const [s, r, rv, act, exp] = await Promise.all([
           getAdminStats(),
           getRegistrationChart(),
           getRevenueChart(),
+          getActivityFeed().catch(() => []),
+          getExpiringSubs().catch(() => []),
         ])
         if (!cancelled) {
           setStats(s)
           setRegChart(r)
           setRevChart(rv)
+          setActivity(act)
+          setExpiring(exp)
         }
       } catch (err) {
         if (!cancelled) setError(err.message)
@@ -144,6 +151,88 @@ export default function Dashboard() {
           </div>
         </div>
       )}
+
+      {/* Activity Feed + Expiring Soon */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        {/* Activity Feed */}
+        <motion.div
+          className="rounded-xl border border-border bg-surface p-4"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          <p className="text-sm font-semibold text-foreground mb-3">Activity Feed</p>
+          {(() => {
+            const events = Array.isArray(activity) ? activity : activity?.events ?? activity?.results ?? []
+            if (events.length === 0) {
+              return <p className="text-sm text-muted text-center py-4">No recent activity</p>
+            }
+            return (
+              <ul className="space-y-2">
+                {events.slice(0, 10).map((event, i) => (
+                  <motion.li
+                    key={event.id ?? i}
+                    className="flex items-start gap-2 text-sm"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.25 + i * 0.03 }}
+                  >
+                    <span className="mt-0.5 h-2 w-2 shrink-0 rounded-full bg-accent/70" />
+                    <span className="flex-1 text-foreground">{event.description ?? event.message ?? event.text ?? '—'}</span>
+                    <span className="shrink-0 text-xs text-muted whitespace-nowrap">{event.time_ago ?? event.time ?? ''}</span>
+                  </motion.li>
+                ))}
+              </ul>
+            )
+          })()}
+        </motion.div>
+
+        {/* Expiring Soon */}
+        <motion.div
+          className="rounded-xl border border-border bg-surface p-4"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          <p className="text-sm font-semibold text-foreground mb-3">
+            Expiring Soon <span className="text-xs font-normal text-muted">(7 days)</span>
+          </p>
+          {(() => {
+            const list = Array.isArray(expiring) ? expiring : expiring?.results ?? expiring?.users ?? []
+            if (list.length === 0) {
+              return <p className="text-sm text-muted text-center py-4">No expiring subscriptions</p>
+            }
+            return (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-border text-left text-xs text-muted">
+                      <th className="pb-2 pr-3 font-medium">User</th>
+                      <th className="pb-2 pr-3 font-medium">Plan</th>
+                      <th className="pb-2 font-medium text-right">Days Left</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {list.slice(0, 10).map((u, i) => (
+                      <motion.tr
+                        key={u.id ?? i}
+                        className="border-b border-border/50"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.35 + i * 0.03 }}
+                      >
+                        <td className="py-2 pr-3 text-foreground text-xs">{u.email ?? u.user ?? '—'}</td>
+                        <td className="py-2 pr-3 text-muted text-xs">{u.plan ?? '—'}</td>
+                        <td className="py-2 text-right font-heading font-bold text-warning text-xs">{u.days_left ?? '—'}</td>
+                      </motion.tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )
+          })()}
+        </motion.div>
+      </div>
     </div>
   )
 }

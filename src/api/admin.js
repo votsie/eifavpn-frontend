@@ -33,3 +33,29 @@ export function getAdminSubscriptions(params = {}) {
   const query = new URLSearchParams(params).toString()
   return apiFetch(`/admin/subscriptions/?${query}`)
 }
+
+export function getAdminPayments(params = {}) {
+  const query = new URLSearchParams(params).toString()
+  return apiFetch(`/admin/payments/?${query}`)
+}
+
+export function getAdminReferrals(params = {}) {
+  const query = new URLSearchParams(params).toString()
+  return apiFetch(`/admin/referrals/?${query}`)
+}
+
+export function getAnalyticsCohorts() {
+  return apiFetch('/admin/analytics/cohorts/')
+}
+
+export function getAnalyticsFunnel() {
+  return apiFetch('/admin/analytics/funnel/')
+}
+
+export function getActivityFeed() {
+  return apiFetch('/admin/stats/activity-feed/')
+}
+
+export function getExpiringSubs() {
+  return apiFetch('/admin/stats/expiring/')
+}

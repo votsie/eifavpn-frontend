@@ -24,6 +24,10 @@ import Purchase from './pages/cabinet/Purchase'
 import AdminDashboard from './pages/admin/Dashboard'
 import AdminUsers from './pages/admin/Users'
 import AdminUserDetail from './pages/admin/UserDetail'
+import AdminSubscriptions from './pages/admin/Subscriptions'
+import AdminPayments from './pages/admin/Payments'
+import AdminReferrals from './pages/admin/Referrals'
+import AdminAnalytics from './pages/admin/Analytics'
 
 function useAnalyticsPageview() {
   const location = useLocation()
@@ -75,6 +79,10 @@ export default function App() {
         <Route index element={<AdminDashboard />} />
         <Route path="users" element={<AdminUsers />} />
         <Route path="users/:id" element={<AdminUserDetail />} />
+        <Route path="subscriptions" element={<AdminSubscriptions />} />
+        <Route path="payments" element={<AdminPayments />} />
+        <Route path="referrals" element={<AdminReferrals />} />
+        <Route path="analytics" element={<AdminAnalytics />} />
       </Route>
 
       {/* 404 */}

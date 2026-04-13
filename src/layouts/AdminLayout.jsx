@@ -4,6 +4,8 @@ import {
   Persons,
   ShoppingCart,
   ChartLine,
+  CreditCard,
+  NodesRight,
   ArrowLeft,
 } from '@gravity-ui/icons'
 import Background from '../components/Background'
@@ -12,6 +14,8 @@ const adminLinks = [
   { to: '/admin', icon: LayoutList, label: 'Dashboard', end: true },
   { to: '/admin/users', icon: Persons, label: 'Users' },
   { to: '/admin/subscriptions', icon: ShoppingCart, label: 'Subscriptions' },
+  { to: '/admin/payments', icon: CreditCard, label: 'Payments' },
+  { to: '/admin/referrals', icon: NodesRight, label: 'Referrals' },
   { to: '/admin/analytics', icon: ChartLine, label: 'Analytics' },
 ]
 
