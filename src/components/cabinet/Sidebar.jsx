@@ -4,7 +4,6 @@ import {
   Smartphone,
   Persons,
   Gear,
-  CircleQuestion,
   ShoppingCart,
 } from '@gravity-ui/icons'
 
@@ -14,7 +13,6 @@ const links = [
   { to: '/cabinet/devices', icon: Smartphone, label: 'Устройства' },
   { to: '/cabinet/referral', icon: Persons, label: 'Рефералы' },
   { to: '/cabinet/settings', icon: Gear, label: 'Настройки' },
-  { to: '/cabinet/guide', icon: CircleQuestion, label: 'Инструкция' },
 ]
 
 // Mobile bottom nav: 4 main + guide (settings accessible via topbar gear)
