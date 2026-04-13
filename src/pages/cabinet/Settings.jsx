@@ -184,7 +184,18 @@ export default function Settings() {
         await fetchMe()
         setLinkMsg({ type: 'success', text: 'Telegram успешно привязан' })
       } catch (err) {
-        setLinkMsg({ type: 'error', text: err.message || 'Ошибка привязки Telegram' })
+        if (err.data?.code === 'PROVIDER_ALREADY_LINKED' && err.data?.can_merge) {
+          try {
+            const preview = await mergeAccountPreview(err.data.secondary_user_id)
+            setMergePreview(preview)
+            setMergeProvider('telegram')
+            setShowMergeModal(true)
+          } catch (previewErr) {
+            setLinkMsg({ type: 'error', text: previewErr.message || 'Ошибка получения данных для объединения' })
+          }
+        } else {
+          setLinkMsg({ type: 'error', text: err.message || 'Ошибка привязки Telegram' })
+        }
       }
     } else {
       // Web context — open Telegram OIDC popup
@@ -193,6 +204,7 @@ export default function Settings() {
   }
 
   async function handleTelegramOidcAuth({ id_token }) {
+    setLinkMsg(null)
     try {
       await linkTelegramOidc(id_token)
       await fetchMe()
