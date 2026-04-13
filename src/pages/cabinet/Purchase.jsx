@@ -165,6 +165,23 @@ export default function Purchase() {
         </div>
       </div>
 
+      {/* EIFASTORE promo — only when Telegram Stars selected */}
+      {paymentMethod === 'stars' && (
+        <a
+          href="https://t.me/EIFASTORE_BOT"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-3 rounded-xl border border-accent/20 bg-accent/[0.04] p-3 transition-colors hover:bg-accent/[0.08]"
+        >
+          <img src="/eifastore-logo.png" alt="EIFASTORE" className="h-9 w-9 rounded-lg object-contain" />
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-semibold text-foreground">Купить Telegram Stars</p>
+            <p className="text-xs text-muted">Выгодный курс в EIFASTORE</p>
+          </div>
+          <span className="shrink-0 rounded-md bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground">Открыть</span>
+        </a>
+      )}
+
       {/* Summary */}
       <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-border bg-surface p-4">
         <div>

@@ -263,6 +263,21 @@ export default function Overview() {
             </div>
           </div>
 
+          {/* EIFASTORE promo */}
+          <a
+            href="https://t.me/EIFASTORE_BOT"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="md:col-span-2 flex items-center gap-4 rounded-2xl border border-accent/15 bg-gradient-to-r from-accent/[0.06] to-transparent p-4 transition-colors hover:from-accent/[0.10]"
+          >
+            <img src="/eifastore-logo.png" alt="EIFASTORE" className="h-11 w-11 rounded-xl object-contain" />
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-bold text-foreground">EIFASTORE</p>
+              <p className="text-xs text-muted">Telegram Stars, подписки, цифровые товары по лучшим ценам</p>
+            </div>
+            <span className="shrink-0 rounded-lg bg-accent/10 px-3 py-1.5 text-xs font-semibold text-accent transition-colors hover:bg-accent/20">Перейти</span>
+          </a>
+
         </div>
       )}
 
