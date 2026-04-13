@@ -5,7 +5,9 @@ import { Magnifier } from '@gravity-ui/icons'
 import { getAdminUsers } from '../../api/admin'
 
 const planFilters = ['All', 'Standard', 'Pro', 'Max', 'None']
+const planLabels = { All: 'Все', Standard: 'Standard', Pro: 'Pro', Max: 'Max', None: 'Нет' }
 const statusFilters = ['All', 'Active', 'Expired', 'Trial', 'Never']
+const statusLabels = { All: 'Все', Active: 'Active', Expired: 'Expired', Trial: 'Trial', Never: 'Never' }
 
 export default function Users() {
   const navigate = useNavigate()
@@ -66,11 +68,11 @@ export default function Users() {
 
   return (
     <div className="space-y-4">
-      <h1 className="font-heading text-xl font-bold text-foreground">Users</h1>
+      <h1 className="font-heading text-xl font-bold text-foreground">Пользователи</h1>
 
       {/* Search */}
       <Input
-        placeholder="Search by email or name..."
+        placeholder="Поиск по email или имени..."
         value={search}
         onChange={handleSearch}
         startContent={<Magnifier className="h-4 w-4 text-muted" />}
@@ -79,7 +81,7 @@ export default function Users() {
 
       {/* Plan filter */}
       <div className="flex flex-wrap gap-2">
-        <span className="text-xs text-muted self-center mr-1">Plan:</span>
+        <span className="text-xs text-muted self-center mr-1">План:</span>
         {planFilters.map((f) => (
           <Chip
             key={f}
@@ -88,14 +90,14 @@ export default function Users() {
             className="cursor-pointer text-xs"
             onClick={() => { setPlanFilter(f); setPage(1) }}
           >
-            {f}
+            {planLabels[f] || f}
           </Chip>
         ))}
       </div>
 
       {/* Status filter */}
       <div className="flex flex-wrap gap-2">
-        <span className="text-xs text-muted self-center mr-1">Status:</span>
+        <span className="text-xs text-muted self-center mr-1">Статус:</span>
         {statusFilters.map((f) => (
           <Chip
             key={f}
@@ -104,7 +106,7 @@ export default function Users() {
             className="cursor-pointer text-xs"
             onClick={() => { setStatusFilter(f); setPage(1) }}
           >
-            {f}
+            {statusLabels[f] || f}
           </Chip>
         ))}
       </div>
@@ -117,7 +119,7 @@ export default function Users() {
       )}
 
       {/* Total count */}
-      {!loading && <p className="text-xs text-muted">{total} users found</p>}
+      {!loading && <p className="text-xs text-muted">{total} пользователей</p>}
 
       {/* Table */}
       {loading ? (
@@ -130,20 +132,20 @@ export default function Users() {
             <thead>
               <tr className="border-b border-border text-left text-xs text-muted">
                 <th className="px-4 pb-2 pt-3 font-medium">Email</th>
-                <th className="px-4 pb-2 pt-3 font-medium">Name</th>
+                <th className="px-4 pb-2 pt-3 font-medium">Имя</th>
                 <th className="px-4 pb-2 pt-3 font-medium">Telegram</th>
-                <th className="px-4 pb-2 pt-3 font-medium">Plan</th>
-                <th className="px-4 pb-2 pt-3 font-medium">Status</th>
-                <th className="px-4 pb-2 pt-3 font-medium">Days Left</th>
-                <th className="px-4 pb-2 pt-3 font-medium">Registered</th>
-                <th className="px-4 pb-2 pt-3 font-medium">Actions</th>
+                <th className="px-4 pb-2 pt-3 font-medium">План</th>
+                <th className="px-4 pb-2 pt-3 font-medium">Статус</th>
+                <th className="px-4 pb-2 pt-3 font-medium">Дней</th>
+                <th className="px-4 pb-2 pt-3 font-medium">Дата рег.</th>
+                <th className="px-4 pb-2 pt-3 font-medium">Действия</th>
               </tr>
             </thead>
             <tbody>
               {users.length === 0 ? (
                 <tr>
                   <td colSpan={8} className="py-8 text-center text-muted">
-                    No users found
+                    Пользователи не найдены
                   </td>
                 </tr>
               ) : (
@@ -178,7 +180,7 @@ export default function Users() {
                           navigate(`/admin/users/${user.id}`)
                         }}
                       >
-                        View
+                        Открыть
                       </Button>
                     </td>
                   </tr>
@@ -198,10 +200,10 @@ export default function Users() {
             isDisabled={page <= 1}
             onClick={() => setPage((p) => Math.max(1, p - 1))}
           >
-            Prev
+            Назад
           </Button>
           <span className="text-sm text-muted">
-            Page {page} of {totalPages}
+            Стр. {page} из {totalPages}
           </span>
           <Button
             size="sm"
@@ -209,7 +211,7 @@ export default function Users() {
             isDisabled={page >= totalPages}
             onClick={() => setPage((p) => p + 1)}
           >
-            Next
+            Далее
           </Button>
         </div>
       )}

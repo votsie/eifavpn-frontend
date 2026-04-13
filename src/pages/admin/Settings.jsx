@@ -10,12 +10,12 @@ export default function Settings() {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
     >
-      <h1 className="font-heading text-xl font-bold text-foreground">Settings</h1>
+      <h1 className="font-heading text-xl font-bold text-foreground">Настройки</h1>
 
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
         {/* Plans & Pricing */}
         <div className="rounded-xl border border-border bg-surface p-4">
-          <p className="text-sm font-semibold text-foreground">Plans & Pricing</p>
+          <p className="text-sm font-semibold text-foreground">Планы и цены</p>
           <div className="mt-3 space-y-2">
             <div className="flex items-center justify-between text-xs">
               <span className="text-muted">Standard</span>
@@ -34,29 +34,29 @@ export default function Settings() {
 
         {/* Referral Program */}
         <div className="rounded-xl border border-border bg-surface p-4">
-          <p className="text-sm font-semibold text-foreground">Referral Program</p>
+          <p className="text-sm font-semibold text-foreground">Реферальная программа</p>
           <div className="mt-3 space-y-2">
             <div className="flex items-center justify-between text-xs">
-              <span className="text-muted">Discount</span>
+              <span className="text-muted">Скидка</span>
               <span className="font-medium text-foreground">10%</span>
             </div>
             <div className="flex items-center justify-between text-xs">
-              <span className="text-muted">Bonus days</span>
-              <span className="font-medium text-foreground">7 days</span>
+              <span className="text-muted">Бонусные дни</span>
+              <span className="font-medium text-foreground">7 дней</span>
             </div>
           </div>
         </div>
 
         {/* Trial Settings */}
         <div className="rounded-xl border border-border bg-surface p-4">
-          <p className="text-sm font-semibold text-foreground">Trial Settings</p>
+          <p className="text-sm font-semibold text-foreground">Настройки триала</p>
           <div className="mt-3 space-y-2">
             <div className="flex items-center justify-between text-xs">
-              <span className="text-muted">Duration</span>
-              <span className="font-medium text-foreground">3 days</span>
+              <span className="text-muted">Длительность</span>
+              <span className="font-medium text-foreground">3 дня</span>
             </div>
             <div className="flex items-center justify-between text-xs">
-              <span className="text-muted">Plan</span>
+              <span className="text-muted">План</span>
               <span className="font-medium text-foreground">MAX (free)</span>
             </div>
           </div>
@@ -64,9 +64,9 @@ export default function Settings() {
 
         {/* Maintenance Mode */}
         <div className="rounded-xl border border-border bg-surface p-4">
-          <p className="text-sm font-semibold text-foreground">Maintenance Mode</p>
+          <p className="text-sm font-semibold text-foreground">Режим обслуживания</p>
           <p className="mt-1 text-xs text-muted">
-            When enabled, users see a maintenance page instead of the app.
+            Когда включён, пользователи видят страницу обслуживания вместо приложения.
           </p>
           <div className="mt-3 flex items-center gap-3">
             <button
@@ -82,7 +82,7 @@ export default function Settings() {
               />
             </button>
             <span className="text-xs text-muted">
-              {maintenanceMode ? 'Enabled (visual only)' : 'Disabled'}
+              {maintenanceMode ? 'Включён (визуально)' : 'Выключен'}
             </span>
           </div>
         </div>

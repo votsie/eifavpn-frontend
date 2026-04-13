@@ -50,7 +50,7 @@ export default function UserDetail() {
     setActionMsg(null)
     try {
       await extendUserSubscription(id, days)
-      setActionMsg(`Extended by ${days} days`)
+      setActionMsg(`Продлено на ${days} дн.`)
       setExtendDays('')
       const data = await getAdminUser(id)
       setUser(data)
@@ -68,7 +68,7 @@ export default function UserDetail() {
     try {
       const data = await updateAdminUser(id, { is_active: !user.is_active })
       setUser(data)
-      setActionMsg(data.is_active ? 'User activated' : 'User deactivated')
+      setActionMsg(data.is_active ? 'Пользователь активирован' : 'Пользователь деактивирован')
     } catch (err) {
       setActionMsg(`Error: ${err.message}`)
     } finally {
@@ -88,7 +88,7 @@ export default function UserDetail() {
     return (
       <div className="space-y-4">
         <Button variant="light" size="sm" onClick={() => navigate('/admin/users')}>
-          <ArrowLeft className="h-4 w-4 mr-1" /> Back
+          <ArrowLeft className="h-4 w-4 mr-1" /> Назад
         </Button>
         <div className="rounded-xl border border-red-500/30 bg-red-500/5 p-6 text-center text-sm text-red-400">
           {error}
@@ -103,14 +103,14 @@ export default function UserDetail() {
   return (
     <div className="space-y-4">
       <Button variant="light" size="sm" onClick={() => navigate('/admin/users')}>
-        <ArrowLeft className="h-4 w-4 mr-1" /> Back to users
+        <ArrowLeft className="h-4 w-4 mr-1" /> К списку
       </Button>
 
       {/* Row 1: Profile + Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {/* Profile card */}
         <div className="rounded-xl border border-border bg-surface p-4 space-y-3">
-          <p className="text-xs uppercase tracking-wider text-muted">Profile</p>
+          <p className="text-xs uppercase tracking-wider text-muted">Профиль</p>
           <div className="flex items-center gap-3">
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent/12 text-accent font-heading text-lg font-bold">
               {(u.name || u.email || '?')[0].toUpperCase()}
@@ -130,40 +130,40 @@ export default function UserDetail() {
               <span className="text-foreground">{u.telegram_id || '—'}</span>
             </div>
             <div>
-              <span className="text-muted">Registered:</span>{' '}
+              <span className="text-muted">Регистрация:</span>{' '}
               <span className="text-foreground">
                 {u.registered_at ? new Date(u.registered_at).toLocaleDateString() : '—'}
               </span>
             </div>
             <div>
-              <span className="text-muted">Active:</span>{' '}
+              <span className="text-muted">Активен:</span>{' '}
               <span className={u.is_active ? 'text-green-500' : 'text-red-400'}>
-                {u.is_active ? 'Yes' : 'No'}
+                {u.is_active ? 'Да' : 'Нет'}
               </span>
             </div>
             <div>
-              <span className="text-muted">Last Login:</span>{' '}
+              <span className="text-muted">Последний вход:</span>{' '}
               <span className="text-foreground">
                 {u.last_login ? new Date(u.last_login).toLocaleString('ru-RU') : '—'}
               </span>
             </div>
             <div>
-              <span className="text-muted">Email Verified:</span>{' '}
+              <span className="text-muted">Email подтверждён:</span>{' '}
               <span className={u.email_verified ? 'text-green-500' : 'text-red-400'}>
-                {u.email_verified ? 'Yes' : 'No'}
+                {u.email_verified ? 'Да' : 'Нет'}
               </span>
             </div>
             <div>
-              <span className="text-muted">Referred By:</span>{' '}
+              <span className="text-muted">Приглашён:</span>{' '}
               <span className="text-foreground">{u.referred_by || '—'}</span>
             </div>
             <div>
-              <span className="text-muted">Used Trial:</span>{' '}
-              <span className="text-foreground">{u.used_trial ? 'Yes' : 'No'}</span>
+              <span className="text-muted">Триал:</span>{' '}
+              <span className="text-foreground">{u.used_trial ? 'Да' : 'Нет'}</span>
             </div>
             <div>
-              <span className="text-muted">Trial Upgrade:</span>{' '}
-              <span className="text-foreground">{u.used_trial_upgrade ? 'Yes' : 'No'}</span>
+              <span className="text-muted">Апгрейд триала:</span>{' '}
+              <span className="text-foreground">{u.used_trial_upgrade ? 'Да' : 'Нет'}</span>
             </div>
             <div>
               <span className="text-muted">Remnawave UUID:</span>{' '}
@@ -174,22 +174,22 @@ export default function UserDetail() {
 
         {/* Stats card */}
         <div className="rounded-xl border border-border bg-surface p-4 space-y-3">
-          <p className="text-xs uppercase tracking-wider text-muted">Subscription</p>
+          <p className="text-xs uppercase tracking-wider text-muted">Подписка</p>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <p className="text-xs text-muted">Plan</p>
+              <p className="text-xs text-muted">План</p>
               <p className="font-heading text-lg font-bold text-foreground">{u.plan || '—'}</p>
             </div>
             <div>
-              <p className="text-xs text-muted">Days Left</p>
+              <p className="text-xs text-muted">Дней осталось</p>
               <p className="font-heading text-lg font-bold text-foreground">{u.days_left ?? '—'}</p>
             </div>
             <div>
-              <p className="text-xs text-muted">Status</p>
+              <p className="text-xs text-muted">Статус</p>
               <p className="font-heading text-lg font-bold text-foreground">{u.status || '—'}</p>
             </div>
             <div>
-              <p className="text-xs text-muted">Referrals</p>
+              <p className="text-xs text-muted">Рефералы</p>
               <p className="font-heading text-lg font-bold text-foreground">{u.referral_count ?? '—'}</p>
             </div>
           </div>
@@ -198,19 +198,19 @@ export default function UserDetail() {
 
       {/* Row 2: Subscription History */}
       <div className="rounded-xl border border-border bg-surface p-4">
-        <p className="text-xs uppercase tracking-wider text-muted mb-3">Subscription History</p>
+        <p className="text-xs uppercase tracking-wider text-muted mb-3">История подписок</p>
         {subs.length === 0 ? (
-          <p className="text-sm text-muted py-4 text-center">No subscriptions</p>
+          <p className="text-sm text-muted py-4 text-center">Нет подписок</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border text-left text-xs text-muted">
-                  <th className="pb-2 font-medium">Plan</th>
-                  <th className="pb-2 font-medium">Start</th>
-                  <th className="pb-2 font-medium">End</th>
-                  <th className="pb-2 font-medium">Amount</th>
-                  <th className="pb-2 font-medium">Status</th>
+                  <th className="pb-2 font-medium">План</th>
+                  <th className="pb-2 font-medium">Начало</th>
+                  <th className="pb-2 font-medium">Конец</th>
+                  <th className="pb-2 font-medium">Сумма</th>
+                  <th className="pb-2 font-medium">Статус</th>
                 </tr>
               </thead>
               <tbody>
@@ -235,9 +235,9 @@ export default function UserDetail() {
 
       {/* Row 3: User Timeline */}
       <div className="rounded-xl border border-border bg-surface p-4">
-        <p className="text-xs uppercase tracking-wider text-muted mb-3">User Timeline</p>
+        <p className="text-xs uppercase tracking-wider text-muted mb-3">Хронология</p>
         {timeline.length === 0 ? (
-          <p className="text-sm text-muted py-4 text-center">No timeline events</p>
+          <p className="text-sm text-muted py-4 text-center">Нет событий</p>
         ) : (
           <div className="space-y-0">
             {timeline.map((event, i) => {
@@ -269,18 +269,18 @@ export default function UserDetail() {
 
       {/* Row 3b: Payments */}
       <div className="rounded-xl border border-border bg-surface p-4">
-        <p className="text-xs uppercase tracking-wider text-muted mb-3">Payment History</p>
+        <p className="text-xs uppercase tracking-wider text-muted mb-3">История платежей</p>
         {payments.length === 0 ? (
-          <p className="text-sm text-muted py-4 text-center">No payments found</p>
+          <p className="text-sm text-muted py-4 text-center">Платежей нет</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border text-left text-xs text-muted">
-                  <th className="pb-2 font-medium">Date</th>
-                  <th className="pb-2 font-medium">Amount</th>
-                  <th className="pb-2 font-medium">Method</th>
-                  <th className="pb-2 font-medium">Status</th>
+                  <th className="pb-2 font-medium">Дата</th>
+                  <th className="pb-2 font-medium">Сумма</th>
+                  <th className="pb-2 font-medium">Метод</th>
+                  <th className="pb-2 font-medium">Статус</th>
                 </tr>
               </thead>
               <tbody>
@@ -305,16 +305,16 @@ export default function UserDetail() {
       {/* Navigation buttons */}
       <div className="flex flex-wrap gap-2">
         <Button size="sm" variant="flat" onClick={() => navigate('/admin/payments')}>
-          View all payments →
+          Все платежи →
         </Button>
         <Button size="sm" variant="flat" onClick={() => navigate('/admin/subscriptions')}>
-          View all subscriptions →
+          Все подписки →
         </Button>
       </div>
 
       {/* Row 4: Actions */}
       <div className="rounded-xl border border-border bg-surface p-4 space-y-3">
-        <p className="text-xs uppercase tracking-wider text-muted">Actions</p>
+        <p className="text-xs uppercase tracking-wider text-muted">Действия</p>
 
         {actionMsg && (
           <p className={`text-xs ${actionMsg.startsWith('Error') ? 'text-red-400' : 'text-green-500'}`}>
@@ -327,7 +327,7 @@ export default function UserDetail() {
             <Input
               type="number"
               size="sm"
-              label="Days"
+              label="Дней"
               placeholder="30"
               value={extendDays}
               onChange={(e) => setExtendDays(e.target.value)}
@@ -339,7 +339,7 @@ export default function UserDetail() {
               isLoading={actionLoading}
               onClick={handleExtend}
             >
-              Extend Sub
+              Продлить
             </Button>
           </div>
 
@@ -350,7 +350,7 @@ export default function UserDetail() {
             isLoading={actionLoading}
             onClick={handleToggleActive}
           >
-            {u.is_active ? 'Deactivate' : 'Activate'}
+            {u.is_active ? 'Деактивировать' : 'Активировать'}
           </Button>
         </div>
       </div>

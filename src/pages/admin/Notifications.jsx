@@ -5,10 +5,10 @@ import { sendNotification, getNotificationHistory } from '../../api/admin'
 
 const CHANNELS = ['email', 'telegram']
 const SEGMENTS = [
-  { value: 'all', label: 'All Users' },
-  { value: 'active', label: 'Active Subscribers' },
-  { value: 'expiring', label: 'Expiring Soon' },
-  { value: 'trial', label: 'Trial Users' },
+  { value: 'all', label: 'Все пользователи' },
+  { value: 'active', label: 'Активные подписчики' },
+  { value: 'expiring', label: 'Скоро истекают' },
+  { value: 'trial', label: 'Триал' },
 ]
 
 export default function Notifications() {
@@ -47,7 +47,7 @@ export default function Notifications() {
     setSendResult(null)
     try {
       await sendNotification({ channel, segment, subject, message })
-      setSendResult({ ok: true, text: 'Notification sent successfully' })
+      setSendResult({ ok: true, text: 'Уведомление отправлено' })
       setSubject('')
       setMessage('')
       loadHistory()
@@ -65,15 +65,15 @@ export default function Notifications() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <h1 className="font-heading text-xl font-bold text-foreground">Notifications</h1>
+      <h1 className="font-heading text-xl font-bold text-foreground">Рассылки</h1>
 
       {/* Section 1: Send Notification */}
       <div className="rounded-xl border border-border bg-surface p-4 space-y-4">
-        <p className="text-sm font-semibold text-foreground">Send Notification</p>
+        <p className="text-sm font-semibold text-foreground">Отправить уведомление</p>
 
         {/* Channel selector */}
         <div>
-          <p className="mb-1.5 text-xs text-muted">Channel</p>
+          <p className="mb-1.5 text-xs text-muted">Канал</p>
           <div className="flex gap-1">
             {CHANNELS.map((ch) => (
               <button
@@ -93,7 +93,7 @@ export default function Notifications() {
 
         {/* Segment selector */}
         <div>
-          <p className="mb-1.5 text-xs text-muted">Segment</p>
+          <p className="mb-1.5 text-xs text-muted">Сегмент</p>
           <div className="flex flex-wrap gap-1">
             {SEGMENTS.map((seg) => (
               <button
@@ -114,11 +114,11 @@ export default function Notifications() {
         {/* Subject (for email) */}
         {channel === 'email' && (
           <div>
-            <p className="mb-1.5 text-xs text-muted">Subject</p>
+            <p className="mb-1.5 text-xs text-muted">Тема</p>
             <Input
               value={subject}
               onValueChange={setSubject}
-              placeholder="Notification subject..."
+              placeholder="Тема уведомления..."
               classNames={{ inputWrapper: 'border-border bg-surface' }}
             />
           </div>
@@ -126,11 +126,11 @@ export default function Notifications() {
 
         {/* Message */}
         <div>
-          <p className="mb-1.5 text-xs text-muted">Message</p>
+          <p className="mb-1.5 text-xs text-muted">Сообщение</p>
           <textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            placeholder="Write your notification message..."
+            placeholder="Текст уведомления..."
             rows={4}
             className="w-full rounded-xl border border-border bg-surface p-3 text-sm text-foreground placeholder:text-muted/50 focus:outline-none focus:ring-1 focus:ring-accent/50"
           />
@@ -145,7 +145,7 @@ export default function Notifications() {
             onClick={handleSend}
             isDisabled={!message.trim()}
           >
-            Send Notification
+            Отправить
           </Button>
           {sendResult && (
             <p className={`text-xs ${sendResult.ok ? 'text-green-500' : 'text-red-400'}`}>
@@ -157,25 +157,25 @@ export default function Notifications() {
 
       {/* Section 2: History */}
       <div className="rounded-xl border border-border bg-surface p-4">
-        <p className="text-sm font-semibold text-foreground mb-4">Notification History</p>
+        <p className="text-sm font-semibold text-foreground mb-4">История рассылок</p>
 
         {historyLoading ? (
           <div className="flex justify-center py-8">
             <Spinner size="md" />
           </div>
         ) : history.length === 0 ? (
-          <p className="text-sm text-muted text-center py-4">No notifications sent yet</p>
+          <p className="text-sm text-muted text-center py-4">Рассылок пока нет</p>
         ) : (
           <>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border text-left text-xs text-muted">
-                    <th className="pb-2 pr-3 font-medium">Date</th>
-                    <th className="pb-2 pr-3 font-medium">Channel</th>
-                    <th className="pb-2 pr-3 font-medium">Recipients</th>
-                    <th className="pb-2 pr-3 font-medium">Subject</th>
-                    <th className="pb-2 font-medium">Message</th>
+                    <th className="pb-2 pr-3 font-medium">Дата</th>
+                    <th className="pb-2 pr-3 font-medium">Канал</th>
+                    <th className="pb-2 pr-3 font-medium">Получатели</th>
+                    <th className="pb-2 pr-3 font-medium">Тема</th>
+                    <th className="pb-2 font-medium">Сообщение</th>
                   </tr>
                 </thead>
                 <tbody>

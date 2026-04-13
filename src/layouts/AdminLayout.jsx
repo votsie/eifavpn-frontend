@@ -17,18 +17,19 @@ import {
 import Background from '../components/Background'
 
 const adminLinks = [
-  { to: '/admin', icon: LayoutList, label: 'Dashboard', end: true },
-  { to: '/admin/users', icon: Persons, label: 'Users' },
-  { to: '/admin/subscriptions', icon: ShoppingCart, label: 'Subscriptions' },
-  { to: '/admin/payments', icon: CreditCard, label: 'Payments' },
-  { to: '/admin/referrals', icon: NodesRight, label: 'Referrals' },
-  { to: '/admin/analytics', icon: ChartLine, label: 'Analytics' },
-  { to: '/admin/notifications', icon: Bell, label: 'Notifications' },
-  { to: '/admin/promo', icon: Tag, label: 'Promo Codes' },
-  { to: '/admin/audit', icon: Clock, label: 'Audit Log' },
-  { to: '/admin/system', icon: Cpu, label: 'System' },
-  { to: '/admin/export', icon: ArrowDownToSquare, label: 'Export' },
-  { to: '/admin/settings', icon: Gear, label: 'Settings' },
+  { to: '/admin', icon: LayoutList, label: 'Панель', end: true },
+  { to: '/admin/users', icon: Persons, label: 'Пользователи' },
+  { to: '/admin/subscriptions', icon: ShoppingCart, label: 'Подписки' },
+  { to: '/admin/payments', icon: CreditCard, label: 'Платежи' },
+  { to: '/admin/referrals', icon: NodesRight, label: 'Рефералы' },
+  { to: '/admin/analytics', icon: ChartLine, label: 'Аналитика' },
+  { to: '/admin/notifications', icon: Bell, label: 'Рассылки' },
+  { to: '/admin/promo', icon: Tag, label: 'Промокоды' },
+  { to: '/admin/audit', icon: Clock, label: 'Журнал' },
+  { to: '/admin/system', icon: Cpu, label: 'Система' },
+  { to: '/admin/export', icon: ArrowDownToSquare, label: 'Экспорт' },
+  { to: '/admin/pricing', icon: CreditCard, label: 'Цены' },
+  { to: '/admin/settings', icon: Gear, label: 'Настройки' },
 ]
 
 function SidebarLink({ to, icon: Icon, label, end }) {
@@ -61,7 +62,7 @@ export default function AdminLayout() {
         <div className="flex items-center gap-2.5 px-5 py-5">
           <img src="/logo.png" alt="EIFAVPN" className="h-8 w-8 object-contain" />
           <span className="font-heading text-lg font-bold tracking-tight text-foreground">
-            EIFAVPN <span className="text-xs font-normal text-muted">Admin</span>
+            EIFAVPN <span className="text-xs font-normal text-muted">Админ</span>
           </span>
         </div>
 
@@ -79,7 +80,7 @@ export default function AdminLayout() {
             className="flex items-center gap-2 rounded-xl px-4 py-2 text-sm text-muted transition-colors hover:text-foreground"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to cabinet
+            ← В кабинет
           </NavLink>
         </div>
       </aside>

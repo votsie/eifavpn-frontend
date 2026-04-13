@@ -3,10 +3,10 @@ import { motion } from 'motion/react'
 import { ArrowDownToSquare } from '@gravity-ui/icons'
 
 const EXPORTS = [
-  { type: 'users', title: 'Users', description: 'Export all users as CSV' },
-  { type: 'subscriptions', title: 'Subscriptions', description: 'Export subscriptions as CSV' },
-  { type: 'payments', title: 'Payments', description: 'Export payments as CSV' },
-  { type: 'referrals', title: 'Referrals', description: 'Export referrals as CSV' },
+  { type: 'users', title: 'Пользователи', description: 'Экспорт всех пользователей в CSV' },
+  { type: 'subscriptions', title: 'Подписки', description: 'Экспорт подписок в CSV' },
+  { type: 'payments', title: 'Платежи', description: 'Экспорт платежей в CSV' },
+  { type: 'referrals', title: 'Рефералы', description: 'Экспорт рефералов в CSV' },
 ]
 
 export default function Export() {
@@ -42,7 +42,7 @@ export default function Export() {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
     >
-      <h1 className="font-heading text-xl font-bold text-foreground">Export Data</h1>
+      <h1 className="font-heading text-xl font-bold text-foreground">Экспорт данных</h1>
 
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
         {EXPORTS.map((exp, i) => (
@@ -57,7 +57,7 @@ export default function Export() {
               <div>
                 <p className="text-sm font-semibold text-foreground">{exp.title}</p>
                 <p className="mt-1 text-xs text-muted">{exp.description}</p>
-                <p className="mt-2 text-[10px] text-muted">Click to download the latest data</p>
+                <p className="mt-2 text-[10px] text-muted">Нажмите для скачивания</p>
               </div>
               <ArrowDownToSquare className="h-5 w-5 shrink-0 text-muted" />
             </div>
@@ -71,7 +71,7 @@ export default function Export() {
               ) : (
                 <ArrowDownToSquare className="h-3.5 w-3.5" />
               )}
-              {exportLoading === exp.type ? 'Downloading...' : 'Download CSV'}
+              {exportLoading === exp.type ? 'Загрузка...' : 'Скачать CSV'}
             </button>
           </motion.div>
         ))}

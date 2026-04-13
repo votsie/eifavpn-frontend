@@ -61,7 +61,7 @@ export default function Promo() {
         plan: planFilter || null,
       }
       await createPromo(data)
-      setSaveMsg({ ok: true, text: 'Promo created' })
+      setSaveMsg({ ok: true, text: 'Промокод создан' })
       setCode('')
       setValue('')
       setMaxUses('')
@@ -104,7 +104,7 @@ export default function Promo() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <h1 className="font-heading text-xl font-bold text-foreground">Promo Codes</h1>
+      <h1 className="font-heading text-xl font-bold text-foreground">Промокоды</h1>
 
       {/* Create form (collapsible) */}
       <div className="rounded-xl border border-border bg-surface">
@@ -112,8 +112,8 @@ export default function Promo() {
           onClick={() => setFormOpen((v) => !v)}
           className="flex w-full items-center justify-between p-4 text-sm font-semibold text-foreground"
         >
-          <span>Create Promo Code</span>
-          <span className="text-xs text-muted">{formOpen ? 'Collapse' : 'Expand'}</span>
+          <span>Создать промокод</span>
+          <span className="text-xs text-muted">{formOpen ? 'Свернуть' : 'Развернуть'}</span>
         </button>
 
         {formOpen && (
@@ -121,7 +121,7 @@ export default function Promo() {
             {/* Code */}
             <div className="flex items-end gap-2">
               <div className="flex-1">
-                <p className="mb-1.5 text-xs text-muted">Code</p>
+                <p className="mb-1.5 text-xs text-muted">Код</p>
                 <Input
                   value={code}
                   onValueChange={setCode}
@@ -130,13 +130,13 @@ export default function Promo() {
                 />
               </div>
               <Button size="sm" variant="flat" onClick={generateCode}>
-                Generate random
+                Сгенерировать
               </Button>
             </div>
 
             {/* Type toggle */}
             <div>
-              <p className="mb-1.5 text-xs text-muted">Type</p>
+              <p className="mb-1.5 text-xs text-muted">Тип</p>
               <div className="flex gap-1">
                 {['percent', 'days'].map((t) => (
                   <button
@@ -148,7 +148,7 @@ export default function Promo() {
                         : 'bg-surface text-muted hover:text-foreground border border-border'
                     }`}
                   >
-                    {t === 'percent' ? 'Percent' : 'Days'}
+                    {t === 'percent' ? 'Процент' : 'Дни'}
                   </button>
                 ))}
               </div>
@@ -157,7 +157,7 @@ export default function Promo() {
             {/* Value + Max uses */}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <p className="mb-1.5 text-xs text-muted">Value {type === 'percent' ? '(%)' : '(days)'}</p>
+                <p className="mb-1.5 text-xs text-muted">Значение {type === 'percent' ? '(%)' : '(дни)'}</p>
                 <Input
                   type="number"
                   value={value}
@@ -167,7 +167,7 @@ export default function Promo() {
                 />
               </div>
               <div>
-                <p className="mb-1.5 text-xs text-muted">Max Uses (0 = unlimited)</p>
+                <p className="mb-1.5 text-xs text-muted">Макс. исп. (0 = безлимит)</p>
                 <Input
                   type="number"
                   value={maxUses}
@@ -181,7 +181,7 @@ export default function Promo() {
             {/* Valid until + Plan filter */}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <p className="mb-1.5 text-xs text-muted">Valid Until</p>
+                <p className="mb-1.5 text-xs text-muted">Действует до</p>
                 <input
                   type="date"
                   value={validUntil}
@@ -190,7 +190,7 @@ export default function Promo() {
                 />
               </div>
               <div>
-                <p className="mb-1.5 text-xs text-muted">Plan (optional)</p>
+                <p className="mb-1.5 text-xs text-muted">План (необязательно)</p>
                 <Input
                   value={planFilter}
                   onValueChange={setPlanFilter}
@@ -203,7 +203,7 @@ export default function Promo() {
             {/* Create button */}
             <div className="flex items-center gap-3">
               <Button color="primary" size="sm" isLoading={saving} onClick={handleCreate} isDisabled={!code.trim() || !value}>
-                Create
+                Создать
               </Button>
               {saveMsg && (
                 <p className={`text-xs ${saveMsg.ok ? 'text-green-500' : 'text-red-400'}`}>{saveMsg.text}</p>
@@ -222,27 +222,27 @@ export default function Promo() {
 
       {/* Table */}
       <div className="rounded-xl border border-border bg-surface p-4">
-        <p className="text-sm font-semibold text-foreground mb-4">All Promo Codes</p>
+        <p className="text-sm font-semibold text-foreground mb-4">Все промокоды</p>
 
         {loading ? (
           <div className="flex justify-center py-8">
             <Spinner size="md" />
           </div>
         ) : promos.length === 0 ? (
-          <p className="text-sm text-muted text-center py-4">No promo codes yet</p>
+          <p className="text-sm text-muted text-center py-4">Промокодов пока нет</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border text-left text-xs text-muted">
-                  <th className="pb-2 pr-3 font-medium">Code</th>
-                  <th className="pb-2 pr-3 font-medium">Type</th>
-                  <th className="pb-2 pr-3 font-medium">Value</th>
-                  <th className="pb-2 pr-3 font-medium">Used/Max</th>
-                  <th className="pb-2 pr-3 font-medium">Valid Until</th>
-                  <th className="pb-2 pr-3 font-medium">Plan</th>
-                  <th className="pb-2 pr-3 font-medium">Active</th>
-                  <th className="pb-2 font-medium">Actions</th>
+                  <th className="pb-2 pr-3 font-medium">Код</th>
+                  <th className="pb-2 pr-3 font-medium">Тип</th>
+                  <th className="pb-2 pr-3 font-medium">Значение</th>
+                  <th className="pb-2 pr-3 font-medium">Исп./Макс.</th>
+                  <th className="pb-2 pr-3 font-medium">Действует до</th>
+                  <th className="pb-2 pr-3 font-medium">План</th>
+                  <th className="pb-2 pr-3 font-medium">Активен</th>
+                  <th className="pb-2 font-medium">Действия</th>
                 </tr>
               </thead>
               <tbody>
@@ -288,7 +288,7 @@ export default function Promo() {
                           p.is_active ? 'bg-green-500/15 text-green-400' : 'bg-red-500/15 text-red-400'
                         }`}
                       >
-                        {p.is_active ? 'Active' : 'Inactive'}
+                        {p.is_active ? 'Активен' : 'Неактивен'}
                       </span>
                     </td>
                     <td className="py-2 text-xs">

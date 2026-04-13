@@ -72,11 +72,11 @@ export default function Subscriptions() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <h1 className="font-heading text-xl font-bold text-foreground">Subscriptions</h1>
+      <h1 className="font-heading text-xl font-bold text-foreground">Подписки</h1>
 
       {/* Search */}
       <Input
-        placeholder="Search by user email..."
+        placeholder="Поиск по email..."
         value={search}
         onChange={(e) => { setSearch(e.target.value); setPage(1) }}
         startContent={<Magnifier className="h-4 w-4 text-muted" />}
@@ -85,7 +85,7 @@ export default function Subscriptions() {
 
       {/* Plan filter */}
       <div className="flex flex-wrap gap-2">
-        <span className="text-xs text-muted self-center mr-1">Plan:</span>
+        <span className="text-xs text-muted self-center mr-1">План:</span>
         {planFilters.map((f) => (
           <Chip
             key={f}
@@ -101,7 +101,7 @@ export default function Subscriptions() {
 
       {/* Status filter */}
       <div className="flex flex-wrap gap-2">
-        <span className="text-xs text-muted self-center mr-1">Status:</span>
+        <span className="text-xs text-muted self-center mr-1">Статус:</span>
         {statusFilters.map((f) => (
           <Chip
             key={f}
@@ -117,7 +117,7 @@ export default function Subscriptions() {
 
       {/* Method filter */}
       <div className="flex flex-wrap gap-2">
-        <span className="text-xs text-muted self-center mr-1">Method:</span>
+        <span className="text-xs text-muted self-center mr-1">Метод:</span>
         {methodFilters.map((f) => (
           <Chip
             key={f}
@@ -149,21 +149,21 @@ export default function Subscriptions() {
             <thead>
               <tr className="border-b border-border text-left text-xs text-muted">
                 <th className="px-4 pb-2 pt-3 font-medium">ID</th>
-                <th className="px-4 pb-2 pt-3 font-medium">User</th>
-                <th className="px-4 pb-2 pt-3 font-medium">Plan</th>
-                <th className="px-4 pb-2 pt-3 font-medium">Period</th>
-                <th className="px-4 pb-2 pt-3 font-medium">Price</th>
-                <th className="px-4 pb-2 pt-3 font-medium">Method</th>
-                <th className="px-4 pb-2 pt-3 font-medium">Status</th>
-                <th className="px-4 pb-2 pt-3 font-medium">Created</th>
-                <th className="px-4 pb-2 pt-3 font-medium">Expires</th>
+                <th className="px-4 pb-2 pt-3 font-medium">Пользователь</th>
+                <th className="px-4 pb-2 pt-3 font-medium">План</th>
+                <th className="px-4 pb-2 pt-3 font-medium">Период</th>
+                <th className="px-4 pb-2 pt-3 font-medium">Цена</th>
+                <th className="px-4 pb-2 pt-3 font-medium">Метод</th>
+                <th className="px-4 pb-2 pt-3 font-medium">Статус</th>
+                <th className="px-4 pb-2 pt-3 font-medium">Создана</th>
+                <th className="px-4 pb-2 pt-3 font-medium">Истекает</th>
               </tr>
             </thead>
             <tbody>
               {subs.length === 0 ? (
                 <tr>
                   <td colSpan={9} className="py-8 text-center text-muted">
-                    No subscriptions found
+                    Подписки не найдены
                   </td>
                 </tr>
               ) : (
@@ -216,10 +216,10 @@ export default function Subscriptions() {
             isDisabled={page <= 1}
             onClick={() => setPage((p) => Math.max(1, p - 1))}
           >
-            Prev
+            Назад
           </Button>
           <span className="text-sm text-muted">
-            Page {page} of {totalPages}
+            Стр. {page} из {totalPages}
           </span>
           <Button
             size="sm"
@@ -227,7 +227,7 @@ export default function Subscriptions() {
             isDisabled={page >= totalPages}
             onClick={() => setPage((p) => p + 1)}
           >
-            Next
+            Далее
           </Button>
         </div>
       )}

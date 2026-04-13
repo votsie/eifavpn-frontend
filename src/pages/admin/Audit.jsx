@@ -39,7 +39,7 @@ export default function Audit() {
         setTotalPages(data?.total_pages ?? (Math.ceil((data?.count ?? results.length) / 25) || 1))
       })
       .catch(() => {
-        if (!cancelled) setError('Audit log not available yet')
+        if (!cancelled) setError('Журнал действий пока недоступен')
       })
       .finally(() => {
         if (!cancelled) setLoading(false)
@@ -54,7 +54,7 @@ export default function Audit() {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
     >
-      <h1 className="font-heading text-xl font-bold text-foreground">Audit Log</h1>
+      <h1 className="font-heading text-xl font-bold text-foreground">Журнал действий</h1>
 
       {/* Filter chips */}
       <div className="flex flex-wrap gap-2">
@@ -75,14 +75,14 @@ export default function Audit() {
 
       {/* Date range */}
       <div className="flex flex-wrap items-center gap-3">
-        <span className="text-xs text-muted">From:</span>
+        <span className="text-xs text-muted">С:</span>
         <input
           type="date"
           value={dateFrom}
           onChange={(e) => { setDateFrom(e.target.value); setPage(1) }}
           className="rounded-lg border border-border bg-surface px-3 py-1.5 text-sm text-foreground"
         />
-        <span className="text-xs text-muted">To:</span>
+        <span className="text-xs text-muted">По:</span>
         <input
           type="date"
           value={dateTo}
@@ -101,7 +101,7 @@ export default function Audit() {
         </div>
       ) : logs.length === 0 ? (
         <div className="rounded-xl border border-border bg-surface p-8 text-center">
-          <p className="text-sm text-muted">No audit log entries found</p>
+          <p className="text-sm text-muted">Записей не найдено</p>
         </div>
       ) : (
         <>
@@ -110,11 +110,11 @@ export default function Audit() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border text-left text-xs text-muted">
-                  <th className="px-4 py-3 font-medium">Date</th>
-                  <th className="px-4 py-3 font-medium">Type</th>
-                  <th className="px-4 py-3 font-medium">User</th>
-                  <th className="px-4 py-3 font-medium">Action</th>
-                  <th className="px-4 py-3 font-medium">Details</th>
+                  <th className="px-4 py-3 font-medium">Дата</th>
+                  <th className="px-4 py-3 font-medium">Тип</th>
+                  <th className="px-4 py-3 font-medium">Пользователь</th>
+                  <th className="px-4 py-3 font-medium">Действие</th>
+                  <th className="px-4 py-3 font-medium">Детали</th>
                 </tr>
               </thead>
               <tbody>

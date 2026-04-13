@@ -12,7 +12,7 @@ function KpiCard({ label, value, delta }) {
       <p className="mt-1 font-heading text-2xl font-bold text-foreground">{value}</p>
       {delta !== undefined && delta !== null && (
         <p className={`mt-0.5 text-xs font-medium ${delta >= 0 ? 'text-green-500' : 'text-red-400'}`}>
-          {delta >= 0 ? '+' : ''}{delta} today
+          {delta >= 0 ? '+' : ''}{delta} сегодня
         </p>
       )}
     </div>
@@ -123,11 +123,11 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-4">
-      <h1 className="font-heading text-xl font-bold text-foreground">Dashboard</h1>
+      <h1 className="font-heading text-xl font-bold text-foreground">Панель управления</h1>
 
       {/* Global search */}
       <Input
-        placeholder="Search users by email, Telegram ID, name..."
+        placeholder="Поиск по email, Telegram ID, имени..."
         value={searchQuery}
         onValueChange={setSearchQuery}
         onKeyDown={handleSearch}
@@ -137,48 +137,52 @@ export default function Dashboard() {
 
       {/* KPI row 1 */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <KpiCard label="Total Users" value={s.total_users ?? '—'} delta={s.users_today} />
-        <KpiCard label="Active Subs" value={s.active_subscriptions ?? '—'} />
-        <KpiCard label="Revenue (month)" value={s.revenue_month != null ? `${s.revenue_month.toLocaleString()} ₽` : '—'} />
-        <KpiCard label="MRR" value={s.mrr != null ? `${s.mrr.toLocaleString()} ₽` : '—'} />
+        <KpiCard label="Всего пользователей" value={s.users?.total ?? '—'} delta={s.users?.today} />
+        <KpiCard label="Активные подписки" value={s.subscriptions?.active ?? '—'} />
+        <KpiCard label="Выручка (месяц)" value={s.revenue?.month != null ? `${s.revenue.month.toLocaleString()} ₽` : '—'} />
+        <KpiCard label="MRR" value={s.subscriptions?.active != null ? `${s.subscriptions.active} акт.` : '—'} />
       </div>
 
       {/* KPI row 2 */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <KpiCard label="Trial → Paid" value={s.trial_to_paid != null ? `${s.trial_to_paid}%` : '—'} />
-        <KpiCard label="Avg Check" value={s.avg_check != null ? `${s.avg_check} ₽` : '—'} />
-        <KpiCard label="Active Referrers" value={s.active_referrers ?? '—'} />
-        <KpiCard label="Telegram Users" value={s.users?.with_telegram ?? '—'} />
+        <KpiCard label="Триал → Платный" value={s.users?.total > 0 ? `${(s.subscriptions?.active / s.users.total * 100).toFixed(1)}%` : '—'} />
+        <KpiCard label="Средний чек" value={s.revenue?.avg_check != null ? `${s.revenue.avg_check} ₽` : '—'} />
+        <KpiCard label="Активные рефереры" value={s.referrals?.active_referrers ?? '—'} />
+        <KpiCard label="Telegram пользователи" value={s.users?.with_telegram ?? '—'} />
       </div>
 
       {/* KPI row 3 */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <KpiCard label="Expired" value={s.subscriptions?.expired ?? '—'} />
-        <KpiCard label="Pending" value={s.subscriptions?.pending ?? '—'} />
-        <KpiCard label="Total Revenue" value={s.revenue?.total != null ? `${s.revenue.total.toLocaleString()} ₽` : '—'} />
+        <KpiCard label="Истёкшие" value={s.subscriptions?.expired ?? '—'} />
+        <KpiCard label="Ожидающие" value={s.subscriptions?.pending ?? '—'} />
+        <KpiCard label="Общая выручка" value={s.revenue?.total != null ? `${s.revenue.total.toLocaleString()} ₽` : '—'} />
       </div>
 
       {/* Charts */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {regChart && Array.isArray(regChart) && (
-          <BarChart data={regChart} label="Registrations (30 days)" />
+          <BarChart data={regChart.map(d => ({ label: d.date?.slice(5) || '', value: d.count || d.amount || 0 }))} label="Регистрации (30 дней)" />
         )}
         {revChart && Array.isArray(revChart) && (
-          <BarChart data={revChart} label="Revenue (30 days)" />
+          <BarChart data={revChart.map(d => ({ label: d.date?.slice(5) || '', value: d.amount || d.count || 0 }))} label="Выручка (30 дней)" />
         )}
       </div>
 
       {/* Plan distribution */}
-      {s.plan_distribution && (
-        <div className="rounded-xl border border-border bg-surface p-4">
-          <p className="text-sm font-semibold text-foreground mb-3">Plan Distribution</p>
-          <div className="space-y-2">
-            {Object.entries(s.plan_distribution).map(([name, percent]) => (
-              <PlanBar key={name} name={name} percent={percent} />
-            ))}
+      {s.subscriptions?.by_plan && Object.keys(s.subscriptions.by_plan).length > 0 && (() => {
+        const byPlan = s.subscriptions.by_plan
+        const totalSubs = Object.values(byPlan).reduce((a, b) => a + b, 0) || 1
+        return (
+          <div className="rounded-xl border border-border bg-surface p-4">
+            <p className="text-sm font-semibold text-foreground mb-3">Распределение по планам</p>
+            <div className="space-y-2">
+              {Object.entries(byPlan).map(([name, count]) => (
+                <PlanBar key={name} name={name} percent={Math.round(count / totalSubs * 100)} />
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )
+      })()}
 
       {/* Activity Feed + Expiring Soon */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -189,11 +193,11 @@ export default function Dashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <p className="text-sm font-semibold text-foreground mb-3">Activity Feed</p>
+          <p className="text-sm font-semibold text-foreground mb-3">Лента событий</p>
           {(() => {
             const events = Array.isArray(activity) ? activity : activity?.events ?? activity?.results ?? []
             if (events.length === 0) {
-              return <p className="text-sm text-muted text-center py-4">No recent activity</p>
+              return <p className="text-sm text-muted text-center py-4">Нет событий</p>
             }
             return (
               <ul className="space-y-2">
@@ -206,8 +210,8 @@ export default function Dashboard() {
                     transition={{ delay: 0.25 + i * 0.03 }}
                   >
                     <span className="mt-0.5 h-2 w-2 shrink-0 rounded-full bg-accent/70" />
-                    <span className="flex-1 text-foreground">{event.description ?? event.message ?? event.text ?? '—'}</span>
-                    <span className="shrink-0 text-xs text-muted whitespace-nowrap">{event.time_ago ?? event.time ?? ''}</span>
+                    <span className="flex-1 text-foreground">{event.detail ? `${event.detail}${event.user_email ? ': ' + event.user_email : ''}` : event.description ?? event.message ?? '—'}</span>
+                    <span className="shrink-0 text-xs text-muted whitespace-nowrap">{event.date ? new Date(event.date).toLocaleDateString('ru-RU') : event.time_ago ?? ''}</span>
                   </motion.li>
                 ))}
               </ul>
@@ -223,21 +227,21 @@ export default function Dashboard() {
           transition={{ delay: 0.3 }}
         >
           <p className="text-sm font-semibold text-foreground mb-3">
-            Expiring Soon <span className="text-xs font-normal text-muted">(7 days)</span>
+            Скоро истекают <span className="text-xs font-normal text-muted">(7 дней)</span>
           </p>
           {(() => {
             const list = Array.isArray(expiring) ? expiring : expiring?.results ?? expiring?.users ?? []
             if (list.length === 0) {
-              return <p className="text-sm text-muted text-center py-4">No expiring subscriptions</p>
+              return <p className="text-sm text-muted text-center py-4">Нет истекающих подписок</p>
             }
             return (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-border text-left text-xs text-muted">
-                      <th className="pb-2 pr-3 font-medium">User</th>
-                      <th className="pb-2 pr-3 font-medium">Plan</th>
-                      <th className="pb-2 font-medium text-right">Days Left</th>
+                      <th className="pb-2 pr-3 font-medium">Пользователь</th>
+                      <th className="pb-2 pr-3 font-medium">План</th>
+                      <th className="pb-2 font-medium text-right">Дней</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -250,7 +254,7 @@ export default function Dashboard() {
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.35 + i * 0.03 }}
                       >
-                        <td className="py-2 pr-3 text-foreground text-xs">{u.email ?? u.user ?? '—'}</td>
+                        <td className="py-2 pr-3 text-foreground text-xs">{u.user_email ?? u.email ?? u.user ?? '—'}</td>
                         <td className="py-2 pr-3 text-muted text-xs">{u.plan ?? '—'}</td>
                         <td className="py-2 text-right font-heading font-bold text-warning text-xs">{u.days_left ?? '—'}</td>
                       </motion.tr>

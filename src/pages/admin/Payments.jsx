@@ -70,11 +70,11 @@ export default function Payments() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <h1 className="font-heading text-xl font-bold text-foreground">Payments</h1>
+      <h1 className="font-heading text-xl font-bold text-foreground">Платежи</h1>
 
       {/* Search */}
       <Input
-        placeholder="Search by user email..."
+        placeholder="Поиск по email..."
         value={search}
         onChange={(e) => { setSearch(e.target.value); setPage(1) }}
         startContent={<Magnifier className="h-4 w-4 text-muted" />}
@@ -84,13 +84,13 @@ export default function Payments() {
       {/* Summary */}
       <div className="grid grid-cols-2 gap-3">
         <div className="rounded-xl border border-border bg-surface p-4">
-          <p className="text-xs uppercase tracking-wider text-muted">Total Revenue</p>
+          <p className="text-xs uppercase tracking-wider text-muted">Общая выручка</p>
           <p className="mt-1 font-heading text-2xl font-bold text-accent">
             {summary.total_revenue.toLocaleString()} ₽
           </p>
         </div>
         <div className="rounded-xl border border-border bg-surface p-4">
-          <p className="text-xs uppercase tracking-wider text-muted">Transactions</p>
+          <p className="text-xs uppercase tracking-wider text-muted">Транзакции</p>
           <p className="mt-1 font-heading text-2xl font-bold text-foreground">
             {summary.count}
           </p>
@@ -99,7 +99,7 @@ export default function Payments() {
 
       {/* Method filter */}
       <div className="flex flex-wrap gap-2">
-        <span className="text-xs text-muted self-center mr-1">Method:</span>
+        <span className="text-xs text-muted self-center mr-1">Метод:</span>
         {methodFilters.map((f) => (
           <Chip
             key={f}
@@ -115,7 +115,7 @@ export default function Payments() {
 
       {/* Status filter */}
       <div className="flex flex-wrap gap-2">
-        <span className="text-xs text-muted self-center mr-1">Status:</span>
+        <span className="text-xs text-muted self-center mr-1">Статус:</span>
         {statusFilters.map((f) => (
           <Chip
             key={f}
@@ -131,14 +131,14 @@ export default function Payments() {
 
       {/* Date range */}
       <div className="flex flex-wrap items-center gap-3">
-        <span className="text-xs text-muted">From:</span>
+        <span className="text-xs text-muted">С:</span>
         <input
           type="date"
           value={dateFrom}
           onChange={(e) => { setDateFrom(e.target.value); setPage(1) }}
           className="rounded-lg border border-border bg-surface px-3 py-1.5 text-sm text-foreground"
         />
-        <span className="text-xs text-muted">To:</span>
+        <span className="text-xs text-muted">По:</span>
         <input
           type="date"
           value={dateTo}
@@ -165,19 +165,19 @@ export default function Payments() {
             <thead>
               <tr className="border-b border-border text-left text-xs text-muted">
                 <th className="px-4 pb-2 pt-3 font-medium">ID</th>
-                <th className="px-4 pb-2 pt-3 font-medium">User</th>
-                <th className="px-4 pb-2 pt-3 font-medium">Amount</th>
-                <th className="px-4 pb-2 pt-3 font-medium">Method</th>
-                <th className="px-4 pb-2 pt-3 font-medium">Payment ID</th>
-                <th className="px-4 pb-2 pt-3 font-medium">Status</th>
-                <th className="px-4 pb-2 pt-3 font-medium">Date</th>
+                <th className="px-4 pb-2 pt-3 font-medium">Пользователь</th>
+                <th className="px-4 pb-2 pt-3 font-medium">Сумма</th>
+                <th className="px-4 pb-2 pt-3 font-medium">Метод</th>
+                <th className="px-4 pb-2 pt-3 font-medium">ID платежа</th>
+                <th className="px-4 pb-2 pt-3 font-medium">Статус</th>
+                <th className="px-4 pb-2 pt-3 font-medium">Дата</th>
               </tr>
             </thead>
             <tbody>
               {payments.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="py-8 text-center text-muted">
-                    No payments found
+                    Платежи не найдены
                   </td>
                 </tr>
               ) : (
@@ -228,10 +228,10 @@ export default function Payments() {
             isDisabled={page <= 1}
             onClick={() => setPage((p) => Math.max(1, p - 1))}
           >
-            Prev
+            Назад
           </Button>
           <span className="text-sm text-muted">
-            Page {page} of {totalPages}
+            Стр. {page} из {totalPages}
           </span>
           <Button
             size="sm"
@@ -239,7 +239,7 @@ export default function Payments() {
             isDisabled={page >= totalPages}
             onClick={() => setPage((p) => p + 1)}
           >
-            Next
+            Далее
           </Button>
         </div>
       )}

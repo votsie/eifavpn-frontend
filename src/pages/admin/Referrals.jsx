@@ -52,11 +52,11 @@ export default function Referrals() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <h1 className="font-heading text-xl font-bold text-foreground">Referrals</h1>
+      <h1 className="font-heading text-xl font-bold text-foreground">Рефералы</h1>
 
       {/* Search */}
       <Input
-        placeholder="Search by email..."
+        placeholder="Поиск по email..."
         value={search}
         onChange={(e) => { setSearch(e.target.value); setPage(1) }}
         startContent={<Magnifier className="h-4 w-4 text-muted" />}
@@ -66,13 +66,13 @@ export default function Referrals() {
       {/* Summary */}
       <div className="grid grid-cols-2 gap-3">
         <div className="rounded-xl border border-border bg-surface p-4">
-          <p className="text-xs uppercase tracking-wider text-muted">Total Referrals</p>
+          <p className="text-xs uppercase tracking-wider text-muted">Всего рефералов</p>
           <p className="mt-1 font-heading text-2xl font-bold text-foreground">
             {summary.total_referrals}
           </p>
         </div>
         <div className="rounded-xl border border-border bg-surface p-4">
-          <p className="text-xs uppercase tracking-wider text-muted">Bonus Days Issued</p>
+          <p className="text-xs uppercase tracking-wider text-muted">Бонусных дней выдано</p>
           <p className="mt-1 font-heading text-2xl font-bold text-accent">
             {summary.bonus_days_issued}
           </p>
@@ -81,7 +81,7 @@ export default function Referrals() {
 
       {/* Bonus filter */}
       <div className="flex flex-wrap gap-2">
-        <span className="text-xs text-muted self-center mr-1">Bonus:</span>
+        <span className="text-xs text-muted self-center mr-1">Бонус:</span>
         {bonusFilters.map((f) => (
           <Chip
             key={f}
@@ -112,18 +112,18 @@ export default function Referrals() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border text-left text-xs text-muted">
-                <th className="px-4 pb-2 pt-3 font-medium">Referrer</th>
-                <th className="px-4 pb-2 pt-3 font-medium">Referred</th>
-                <th className="px-4 pb-2 pt-3 font-medium">Date</th>
-                <th className="px-4 pb-2 pt-3 font-medium">Subscription</th>
-                <th className="px-4 pb-2 pt-3 font-medium">Bonus Applied</th>
+                <th className="px-4 pb-2 pt-3 font-medium">Пригласил</th>
+                <th className="px-4 pb-2 pt-3 font-medium">Приглашённый</th>
+                <th className="px-4 pb-2 pt-3 font-medium">Дата</th>
+                <th className="px-4 pb-2 pt-3 font-medium">Подписка</th>
+                <th className="px-4 pb-2 pt-3 font-medium">Бонус начислен</th>
               </tr>
             </thead>
             <tbody>
               {referrals.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="py-8 text-center text-muted">
-                    No referrals found
+                    Рефералы не найдены
                   </td>
                 </tr>
               ) : (
@@ -147,7 +147,7 @@ export default function Referrals() {
                         color={r.bonus_applied ? 'success' : 'warning'}
                         variant="flat"
                       >
-                        {r.bonus_applied ? 'Yes' : 'Pending'}
+                        {r.bonus_applied ? 'Да' : 'Ожидание'}
                       </Chip>
                     </td>
                   </motion.tr>
@@ -167,10 +167,10 @@ export default function Referrals() {
             isDisabled={page <= 1}
             onClick={() => setPage((p) => Math.max(1, p - 1))}
           >
-            Prev
+            Назад
           </Button>
           <span className="text-sm text-muted">
-            Page {page} of {totalPages}
+            Стр. {page} из {totalPages}
           </span>
           <Button
             size="sm"
@@ -178,7 +178,7 @@ export default function Referrals() {
             isDisabled={page >= totalPages}
             onClick={() => setPage((p) => p + 1)}
           >
-            Next
+            Далее
           </Button>
         </div>
       )}

@@ -13,7 +13,7 @@ function StatusCard({ name, ok, detail }) {
             ok === true ? 'bg-accent/15 text-accent' : ok === false ? 'bg-danger/15 text-danger' : 'bg-yellow-500/15 text-yellow-400'
           }`}
         >
-          {ok === true ? 'Online' : ok === false ? 'Offline' : 'Unknown'}
+          {ok === true ? 'Онлайн' : ok === false ? 'Офлайн' : 'Неизвестно'}
         </span>
       </div>
       <p className="mt-1 text-xs text-muted">{detail}</p>
@@ -59,7 +59,7 @@ export default function System() {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
     >
-      <h1 className="font-heading text-xl font-bold text-foreground">System Health</h1>
+      <h1 className="font-heading text-xl font-bold text-foreground">Состояние системы</h1>
 
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
         <StatusCard

@@ -89,10 +89,10 @@ export default function Analytics() {
 
   const funnelData = funnel ?? {}
   const funnelSteps = [
-    { label: 'Total Users', value: funnelData.total_users ?? 0 },
-    { label: 'Used Trial', value: funnelData.used_trial ?? 0 },
-    { label: 'Paid Once', value: funnelData.paid_once ?? 0 },
-    { label: 'Active Now', value: funnelData.active_now ?? 0 },
+    { label: 'Всего пользователей', value: funnelData.total_users ?? 0 },
+    { label: 'Использовали триал', value: funnelData.used_trial ?? 0 },
+    { label: 'Оплатили', value: funnelData.paid_once ?? 0 },
+    { label: 'Активны сейчас', value: funnelData.active_now ?? 0 },
   ]
   const funnelMax = funnelSteps[0].value || 1
 
@@ -106,11 +106,11 @@ export default function Analytics() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <h1 className="font-heading text-xl font-bold text-foreground">Analytics</h1>
+      <h1 className="font-heading text-xl font-bold text-foreground">Аналитика</h1>
 
       {/* Section 1: Conversion Funnel */}
       <div className="rounded-xl border border-border bg-surface p-4">
-        <p className="text-sm font-semibold text-foreground mb-4">Conversion Funnel</p>
+        <p className="text-sm font-semibold text-foreground mb-4">Воронка конверсии</p>
         <div className="space-y-1">
           {funnelSteps.map((step, i) => (
             <div key={step.label}>
@@ -122,7 +122,7 @@ export default function Analytics() {
               />
               {i > 0 && i < funnelSteps.length && funnelSteps[i - 1].value > 0 && (
                 <p className="text-center text-[10px] text-muted my-0.5">
-                  ↓ {((step.value / funnelSteps[i - 1].value) * 100).toFixed(1)}% conversion from previous step
+                  ↓ {((step.value / funnelSteps[i - 1].value) * 100).toFixed(1)}% конверсия с предыдущего шага
                 </p>
               )}
             </div>
@@ -132,16 +132,16 @@ export default function Analytics() {
 
       {/* Section 2: Cohort Retention */}
       <div className="rounded-xl border border-border bg-surface p-4">
-        <p className="text-sm font-semibold text-foreground mb-4">Cohort Retention</p>
+        <p className="text-sm font-semibold text-foreground mb-4">Когортный анализ</p>
         {cohortRows.length === 0 ? (
-          <p className="text-sm text-muted text-center py-4">No cohort data available</p>
+          <p className="text-sm text-muted text-center py-4">Нет данных по когортам</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border text-left text-xs text-muted">
-                  <th className="px-3 pb-2 pt-1 font-medium">Month</th>
-                  <th className="px-3 pb-2 pt-1 font-medium">Registered</th>
+                  <th className="px-3 pb-2 pt-1 font-medium">Месяц</th>
+                  <th className="px-3 pb-2 pt-1 font-medium">Зарегистрировано</th>
                   {cohortRows[0]?.retention?.map((_, i) => (
                     <th key={i} className="px-3 pb-2 pt-1 font-medium text-center">
                       {i + 1}m
@@ -182,19 +182,19 @@ export default function Analytics() {
       {/* Section 3: At-Risk Users */}
       <div className="rounded-xl border border-border bg-surface p-4">
         <p className="text-sm font-semibold text-foreground mb-4">
-          At-Risk Users <span className="text-xs font-normal text-muted">(expiring in 7 days)</span>
+          Пользователи в зоне риска <span className="text-xs font-normal text-muted">(истекают через 7 дней)</span>
         </p>
         {expiringList.length === 0 ? (
-          <p className="text-sm text-muted text-center py-4">No at-risk users</p>
+          <p className="text-sm text-muted text-center py-4">Нет пользователей в зоне риска</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border text-left text-xs text-muted">
-                  <th className="px-3 pb-2 pt-1 font-medium">User</th>
-                  <th className="px-3 pb-2 pt-1 font-medium">Plan</th>
-                  <th className="px-3 pb-2 pt-1 font-medium">Expires</th>
-                  <th className="px-3 pb-2 pt-1 font-medium">Days Left</th>
+                  <th className="px-3 pb-2 pt-1 font-medium">Пользователь</th>
+                  <th className="px-3 pb-2 pt-1 font-medium">План</th>
+                  <th className="px-3 pb-2 pt-1 font-medium">Истекает</th>
+                  <th className="px-3 pb-2 pt-1 font-medium">Дней</th>
                 </tr>
               </thead>
               <tbody>
@@ -227,12 +227,12 @@ export default function Analytics() {
         const maxMrr = Math.max(...forecast.map((item) => item.mrr ?? 0), 1)
         return (
           <div className="rounded-xl border border-border bg-surface p-4">
-            <p className="text-sm font-semibold text-foreground mb-4">MRR Forecast</p>
+            <p className="text-sm font-semibold text-foreground mb-4">Прогноз MRR</p>
             <div className="flex items-end gap-[2px] h-40">
               {forecast.map((item, i) => (
                 <div key={i} className="flex-1 group relative flex flex-col items-center justify-end h-full">
                   <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:block rounded bg-foreground px-1.5 py-0.5 text-[10px] text-surface whitespace-nowrap z-10">
-                    {item.month}: {(item.mrr ?? 0).toLocaleString()} ₽{item.forecast ? ' (forecast)' : ''}
+                    {item.month}: {(item.mrr ?? 0).toLocaleString()} ₽{item.forecast ? ' (прогноз)' : ''}
                   </div>
                   <div
                     className={`w-full rounded-sm transition-colors ${item.forecast ? 'bg-accent/30 border border-dashed border-accent/40' : 'bg-accent/70 hover:bg-accent'}`}
@@ -245,10 +245,10 @@ export default function Analytics() {
             </div>
             <div className="mt-3 flex items-center gap-4 text-[10px] text-muted">
               <span className="flex items-center gap-1">
-                <span className="inline-block h-2.5 w-2.5 rounded-sm bg-accent/70" /> Actual
+                <span className="inline-block h-2.5 w-2.5 rounded-sm bg-accent/70" /> Факт
               </span>
               <span className="flex items-center gap-1">
-                <span className="inline-block h-2.5 w-2.5 rounded-sm border border-dashed border-accent/40 bg-accent/30" /> Forecast
+                <span className="inline-block h-2.5 w-2.5 rounded-sm border border-dashed border-accent/40 bg-accent/30" /> Прогноз
               </span>
             </div>
           </div>
