@@ -1,4 +1,5 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
 import LandingLayout from './layouts/LandingLayout'
 import CabinetLayout from './layouts/CabinetLayout'
 import AdminLayout from './layouts/AdminLayout'
@@ -24,7 +25,17 @@ import AdminDashboard from './pages/admin/Dashboard'
 import AdminUsers from './pages/admin/Users'
 import AdminUserDetail from './pages/admin/UserDetail'
 
+function useAnalyticsPageview() {
+  const location = useLocation()
+  useEffect(() => {
+    if (window.ym) {
+      window.ym(108520192, 'hit', location.pathname + location.search)
+    }
+  }, [location])
+}
+
 export default function App() {
+  useAnalyticsPageview()
   return (
     <Routes>
       {/* Landing */}
