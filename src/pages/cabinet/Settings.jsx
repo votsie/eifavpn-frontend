@@ -3,8 +3,9 @@ import { Button, Input, Chip } from '@heroui/react'
 import { Copy, Pencil } from '@gravity-ui/icons'
 import { motion } from 'motion/react'
 import { useAuthStore } from '../../stores/authStore'
-import { updateProfile, changePassword, deleteAccount, linkEmail, linkEmailVerify, linkTelegram, linkTelegramOidc } from '../../api/auth'
+import { updateProfile, changePassword, deleteAccount, linkEmail, linkEmailVerify, linkTelegram, linkTelegramOidc, mergeAccountPreview, mergeAccountConfirm } from '../../api/auth'
 import { useTelegramLogin } from '../../components/TelegramLoginWidget'
+import MergeAccountModal from '../../components/cabinet/MergeAccountModal'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { getMySubscription } from '../../api/subscriptions'
 
@@ -69,6 +70,13 @@ export default function Settings() {
 
   // Link message (for Google OAuth redirect)
   const [linkMsg, setLinkMsg] = useState(null)
+
+  // Merge state
+  const [mergePreview, setMergePreview] = useState(null)
+  const [mergeProvider, setMergeProvider] = useState(null)
+  const [mergeLoading, setMergeLoading] = useState(false)
+  const [mergeError, setMergeError] = useState(null)
+  const [showMergeModal, setShowMergeModal] = useState(false)
 
   // Handle Google OAuth link redirect
   useEffect(() => {
@@ -190,7 +198,38 @@ export default function Settings() {
       await fetchMe()
       setLinkMsg({ type: 'success', text: 'Telegram успешно привязан' })
     } catch (err) {
-      setLinkMsg({ type: 'error', text: err.message || 'Ошибка привязки Telegram' })
+      if (err.data?.code === 'PROVIDER_ALREADY_LINKED' && err.data?.can_merge) {
+        try {
+          const preview = await mergeAccountPreview(err.data.secondary_user_id)
+          setMergePreview(preview)
+          setMergeProvider('telegram')
+          setShowMergeModal(true)
+        } catch (previewErr) {
+          setLinkMsg({ type: 'error', text: previewErr.message || 'Ошибка получения данных для объединения' })
+        }
+      } else {
+        setLinkMsg({ type: 'error', text: err.message || 'Ошибка привязки Telegram' })
+      }
+    }
+  }
+
+  async function handleMergeConfirm() {
+    if (!mergePreview?.merge_token) return
+    setMergeLoading(true)
+    setMergeError(null)
+    try {
+      const result = await mergeAccountConfirm(mergePreview.merge_token)
+      if (result.tokens) {
+        loginWithTokens(result.tokens.access, result.tokens.refresh)
+      }
+      await fetchMe()
+      setShowMergeModal(false)
+      setMergePreview(null)
+      setLinkMsg({ type: 'success', text: 'Аккаунты успешно объединены' })
+    } catch (err) {
+      setMergeError(err.message || 'Ошибка объединения аккаунтов')
+    } finally {
+      setMergeLoading(false)
     }
   }
 
@@ -722,6 +761,16 @@ export default function Settings() {
           Удалить аккаунт
         </Button>
       </motion.div>
+
+      <MergeAccountModal
+        isOpen={showMergeModal}
+        onClose={() => { setShowMergeModal(false); setMergePreview(null); setMergeError(null) }}
+        preview={mergePreview}
+        provider={mergeProvider}
+        onConfirm={handleMergeConfirm}
+        loading={mergeLoading}
+        error={mergeError}
+      />
     </div>
   )
 }
