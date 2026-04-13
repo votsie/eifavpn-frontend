@@ -1,7 +1,6 @@
 import { NavLink } from 'react-router-dom'
 import {
   LayoutList,
-  Globe,
   Smartphone,
   Persons,
   Gear,
@@ -12,7 +11,6 @@ import {
 const links = [
   { to: '/cabinet/overview', icon: LayoutList, label: 'Обзор' },
   { to: '/cabinet/purchase', icon: ShoppingCart, label: 'Тарифы' },
-  { to: '/cabinet/servers', icon: Globe, label: 'Серверы' },
   { to: '/cabinet/devices', icon: Smartphone, label: 'Устройства' },
   { to: '/cabinet/referral', icon: Persons, label: 'Рефералы' },
   { to: '/cabinet/settings', icon: Gear, label: 'Настройки' },
