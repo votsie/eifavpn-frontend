@@ -122,3 +122,11 @@ export function getForecast() {
 export function bulkExtend(userIds, days) {
   return apiFetch('/admin/bulk/extend/', { method: 'POST', body: JSON.stringify({ user_ids: userIds, days }) })
 }
+
+export function manageSubscription(subId, data) {
+  return apiFetch(`/admin/subscriptions/${subId}/manage/`, { method: 'POST', body: JSON.stringify(data) })
+}
+
+export function getUserRemnawave(userId) {
+  return apiFetch(`/admin/users/${userId}/remnawave/`)
+}
