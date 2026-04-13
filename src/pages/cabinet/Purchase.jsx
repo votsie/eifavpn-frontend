@@ -21,7 +21,7 @@ const PAYMENT_METHODS = [
 const FEATURES = [
   { key: 'servers', format: (v) => `${v} серверов` },
   { key: 'devices', format: (v) => `${v} устройств` },
-  { key: 'unlimited_traffic', format: (v) => v ? 'Безлимит' : '100 ГБ/мес' },
+  { key: 'unlimited_traffic', format: (v) => v ? 'Безлимит' : '1 ТБ/мес' },
   { key: 'adblock', format: () => 'Adblock', bool: true },
   { key: 'p2p', format: () => 'P2P', bool: true },
 ]

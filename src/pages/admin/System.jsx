@@ -51,7 +51,7 @@ export default function System() {
   }
 
   const h = health || {}
-  const userCount = stats?.total_users ?? '—'
+  const userCount = h.database?.users_count ?? stats?.total_users ?? '—'
 
   return (
     <motion.div
@@ -63,34 +63,34 @@ export default function System() {
 
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
         <StatusCard
-          name="API Server"
-          ok={h.api != null ? !!h.api : true}
-          detail={h.api_detail ?? 'Responding normally — page loaded successfully'}
+          name="API Сервер"
+          ok={h.api === 'online' || h.api != null ? true : null}
+          detail="Работает нормально"
         />
         <StatusCard
-          name="Database"
-          ok={h.database?.status ? h.database.status === 'ok' || h.database.status === 'online' : true}
-          detail={h.database?.detail ?? `${userCount} users in DB`}
+          name="База данных"
+          ok={h.database?.status === 'online' || h.database?.status === 'ok' ? true : h.database ? false : null}
+          detail={`${userCount} пользователей в БД`}
         />
         <StatusCard
           name="Remnawave VPN"
-          ok={h.remnawave?.ok ?? h.vpn?.ok ?? null}
-          detail={h.remnawave?.detail ?? h.vpn?.detail ?? 'Check manually at remnawave panel'}
+          ok={h.remnawave === 'online' ? true : h.remnawave ? false : null}
+          detail={h.remnawave === 'online' ? 'Панель Remnawave работает' : 'Проверьте панель Remnawave вручную'}
         />
         <StatusCard
-          name="SMTP Email"
-          ok={h.smtp?.ok ?? null}
-          detail={h.smtp?.detail ?? 'Status unknown — endpoint not available'}
+          name="SMTP Почта"
+          ok={h.smtp === 'configured' ? true : h.smtp ? false : null}
+          detail={h.smtp === 'configured' ? 'Настроен (Gmail SMTP)' : 'Статус неизвестен'}
         />
         <StatusCard
-          name="Telegram Bot"
-          ok={h.telegram?.ok ?? null}
-          detail={h.telegram?.detail ?? 'Status unknown — endpoint not available'}
+          name="Telegram Бот"
+          ok={h.telegram_bot?.status === 'online' ? true : h.telegram_bot ? false : null}
+          detail={h.telegram_bot?.status === 'online' ? `Бот @${h.telegram_bot.bot} работает` : 'Статус неизвестен'}
         />
         <StatusCard
-          name="Disk Usage"
+          name="Диск"
           ok={h.disk?.ok ?? true}
-          detail={h.disk?.detail ?? 'No data available'}
+          detail={h.disk?.detail ?? 'Нет данных'}
         />
       </div>
     </motion.div>

@@ -34,6 +34,7 @@ import AdminAudit from './pages/admin/Audit'
 import AdminSystem from './pages/admin/System'
 import AdminExport from './pages/admin/Export'
 import AdminSettings from './pages/admin/Settings'
+import AdminPricing from './pages/admin/Pricing'
 
 function useAnalyticsPageview() {
   const location = useLocation()
@@ -95,6 +96,7 @@ export default function App() {
         <Route path="system" element={<AdminSystem />} />
         <Route path="export" element={<AdminExport />} />
         <Route path="settings" element={<AdminSettings />} />
+        <Route path="pricing" element={<AdminPricing />} />
       </Route>
 
       {/* 404 */}

@@ -27,7 +27,7 @@ export function purchaseTrialUpgrade(payment_method = 'stars') {
 }
 
 export function getHwidDevices(uuid) {
-  return apiFetch(`/proxy/hwid-user-devices/by-user/${uuid}`)
+  return apiFetch(`/proxy/api/hwid-user-devices/by-user/${uuid}`)
 }
 
 export function getAccessibleNodes(uuid) {

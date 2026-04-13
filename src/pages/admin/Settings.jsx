@@ -1,9 +1,6 @@
-import { useState } from 'react'
 import { motion } from 'motion/react'
 
 export default function Settings() {
-  const [maintenanceMode, setMaintenanceMode] = useState(false)
-
   return (
     <motion.div
       className="space-y-4"
@@ -59,31 +56,6 @@ export default function Settings() {
               <span className="text-muted">План</span>
               <span className="font-medium text-foreground">MAX (free)</span>
             </div>
-          </div>
-        </div>
-
-        {/* Maintenance Mode */}
-        <div className="rounded-xl border border-border bg-surface p-4">
-          <p className="text-sm font-semibold text-foreground">Режим обслуживания</p>
-          <p className="mt-1 text-xs text-muted">
-            Когда включён, пользователи видят страницу обслуживания вместо приложения.
-          </p>
-          <div className="mt-3 flex items-center gap-3">
-            <button
-              onClick={() => setMaintenanceMode(!maintenanceMode)}
-              className={`relative h-6 w-11 rounded-full transition-colors ${
-                maintenanceMode ? 'bg-accent' : 'bg-border'
-              }`}
-            >
-              <span
-                className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white transition-transform ${
-                  maintenanceMode ? 'translate-x-5' : 'translate-x-0'
-                }`}
-              />
-            </button>
-            <span className="text-xs text-muted">
-              {maintenanceMode ? 'Включён (визуально)' : 'Выключен'}
-            </span>
           </div>
         </div>
       </div>

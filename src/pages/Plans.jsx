@@ -25,6 +25,7 @@ const plans = [
     features: [
       { text: '7 серверов', ok: true },
       { text: 'До 3 устройств', ok: true },
+      { text: '1 ТБ трафика/мес', ok: true },
       { text: 'AES-256', ok: true },
       { text: 'Блокировщик рекламы', ok: false },
       { text: 'Торренты (P2P)', ok: false },
