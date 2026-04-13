@@ -116,7 +116,7 @@ export default function ConnectModal({ isOpen, onClose, subscriptionUrl }) {
       <motion.div
         initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
         transition={{ type: 'spring', damping: 30, stiffness: 350 }}
-        className="fixed inset-x-0 bottom-[56px] z-[101] max-h-[70vh] overflow-y-auto rounded-t-[28px] border-t border-accent/10 bg-[oklch(0.11_0.015_192/97%)] px-5 pt-4 pb-5 backdrop-blur-2xl md:bottom-auto md:inset-auto md:left-1/2 md:top-1/2 md:w-full md:max-w-sm md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-[28px] md:border md:border-accent/8"
+        className="fixed inset-x-3 bottom-[56px] z-[101] mx-auto max-h-[70vh] max-w-[420px] overflow-y-auto rounded-[28px] border border-accent/10 bg-[oklch(0.11_0.015_192/97%)] px-5 pt-4 pb-5 backdrop-blur-2xl md:inset-x-auto md:bottom-auto md:left-1/2 md:top-1/2 md:w-full md:max-w-sm md:-translate-x-1/2 md:-translate-y-1/2 md:border-accent/8"
       >
         <div className="mx-auto mb-3 h-1 w-8 rounded-full bg-accent/20 md:hidden" />
 
