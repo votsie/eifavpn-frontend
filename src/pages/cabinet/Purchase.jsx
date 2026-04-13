@@ -115,17 +115,17 @@ export default function Purchase() {
       </div>
 
       {/* Period + Payment */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+      <div className="flex flex-col gap-4">
         {/* Period */}
-        <div className="flex-1">
+        <div>
           <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted">Период</p>
-          <div className="inline-flex gap-1 rounded-lg border border-border bg-surface p-1">
+          <div className="flex gap-1 rounded-xl border border-border bg-surface p-1">
             {PERIODS.map((p) => (
               <button
                 key={p.id}
                 onClick={() => setPeriod(p.id)}
                 aria-pressed={period === p.id}
-                className={`relative rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-150 ${
+                className={`relative flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-150 ${
                   period === p.id
                     ? 'bg-accent text-accent-foreground'
                     : 'text-muted hover:text-foreground'
@@ -145,13 +145,13 @@ export default function Purchase() {
         {/* Payment */}
         <div>
           <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted">Оплата</p>
-          <div className="inline-flex gap-1 rounded-lg border border-border bg-surface p-1">
+          <div className="flex gap-1 rounded-xl border border-border bg-surface p-1">
             {PAYMENT_METHODS.map((m) => (
               <button
                 key={m.id}
                 onClick={() => setPaymentMethod(m.id)}
                 aria-pressed={paymentMethod === m.id}
-                className={`rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-150 ${
+                className={`flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-150 ${
                   paymentMethod === m.id
                     ? 'bg-accent text-accent-foreground'
                     : 'text-muted hover:text-foreground'
