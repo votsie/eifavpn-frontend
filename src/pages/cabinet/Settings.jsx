@@ -312,38 +312,6 @@ export default function Settings() {
     <div className="mx-auto max-w-4xl w-full grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
       <h1 className="font-heading text-2xl font-bold text-foreground md:col-span-2">Настройки</h1>
 
-      {/* Theme selector */}
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="theme-card rounded-2xl border border-border bg-surface p-4 md:p-5"
-      >
-        <p className="mb-3 text-sm font-semibold text-foreground">Тема оформления</p>
-        <div className="flex gap-2">
-          <Button
-            size="sm"
-            variant={theme === 'light' ? undefined : 'outline'}
-            onPress={() => setTheme('light')}
-          >
-            Светлая
-          </Button>
-          <Button
-            size="sm"
-            variant={theme === 'dark' ? undefined : 'outline'}
-            onPress={() => setTheme('dark')}
-          >
-            Тёмная
-          </Button>
-          <Button
-            size="sm"
-            variant={theme === 'auto' ? undefined : 'outline'}
-            onPress={() => setTheme('auto')}
-          >
-            Авто
-          </Button>
-        </div>
-      </motion.div>
-
       {/* Profile section */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
@@ -394,8 +362,8 @@ export default function Settings() {
                   classNames={{ inputWrapper: 'border-border bg-surface' }}
                 />
               ) : (
-                <p className="text-xs text-muted">
-                  {avatarUrl || 'Аватар не установлен'}
+                <p className="text-sm font-medium text-foreground">
+                  {user?.first_name || user?.email?.split('@')[0] || 'Пользователь'}
                 </p>
               )}
             </div>
@@ -640,34 +608,6 @@ export default function Settings() {
         </div>
       </motion.div>
 
-      {/* Subscription URL */}
-      {subUrl && (
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="theme-card rounded-2xl border border-border bg-surface p-4 md:p-5"
-        >
-          <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted md:text-[11px]">
-            URL подписки
-          </p>
-          <div className="flex items-center gap-2">
-            <code className="flex-1 truncate rounded-lg theme-code-bg px-3 py-2 font-mono text-xs text-accent">
-              {subUrl}
-            </code>
-            <Button
-              size="sm"
-              variant={copiedSub ? undefined : 'outline'}
-              className={copiedSub ? 'bg-accent text-accent-foreground' : ''}
-              onPress={() => copyToClipboard(subUrl, setCopiedSub)}
-              startContent={<Copy className="h-3.5 w-3.5" />}
-            >
-              {copiedSub ? 'Скопировано!' : 'Копировать'}
-            </Button>
-          </div>
-        </motion.div>
-      )}
-
       {/* Referral code */}
       {user?.referral_code && (
         <motion.div
@@ -679,10 +619,10 @@ export default function Settings() {
           <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted md:text-[11px]">
             Реферальный код
           </p>
-          <div className="flex items-center gap-2">
-            <code className="flex-1 rounded-lg theme-code-bg px-3 py-2 font-mono text-sm font-bold tracking-widest text-accent">
-              {user.referral_code}
-            </code>
+          <code className="block truncate rounded-lg theme-code-bg px-3 py-2 font-mono text-xs text-accent">
+            https://eifavpn.ru/register?ref={user.referral_code}
+          </code>
+          <div className="mt-2 flex gap-2">
             <Button
               size="sm"
               variant={copiedRef ? undefined : 'outline'}
@@ -695,7 +635,7 @@ export default function Settings() {
               }
               startContent={<Copy className="h-3.5 w-3.5" />}
             >
-              {copiedRef ? 'Скопировано!' : 'Ссылка'}
+              {copiedRef ? 'Скопировано!' : 'Копировать'}
             </Button>
           </div>
         </motion.div>
@@ -716,7 +656,6 @@ export default function Settings() {
             placeholder="Введите текущий пароль"
             value={oldPassword}
             onValueChange={setOldPassword}
-            size="sm"
             classNames={{ inputWrapper: 'border-border bg-surface' }}
           />
           <Input
@@ -725,7 +664,6 @@ export default function Settings() {
             placeholder="Минимум 6 символов"
             value={newPassword}
             onValueChange={setNewPassword}
-            size="sm"
             classNames={{ inputWrapper: 'border-border bg-surface' }}
           />
           <Input
@@ -734,7 +672,6 @@ export default function Settings() {
             placeholder="Повторите новый пароль"
             value={confirmPassword}
             onValueChange={setConfirmPassword}
-            size="sm"
             classNames={{ inputWrapper: 'border-border bg-surface' }}
           />
           <Button
@@ -754,61 +691,19 @@ export default function Settings() {
         </div>
       </motion.div>
 
-      {/* Danger zone */}
+      {/* Theme selector */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="rounded-2xl border border-danger/20 bg-danger/[0.04] p-5"
+        className="theme-card rounded-2xl border border-border bg-surface p-4 md:p-5"
       >
-        <p className="mb-2 text-sm font-semibold text-danger">Опасная зона</p>
-        <p className="mb-3 text-[13px] text-muted">
-          Удаление аккаунта необратимо. Все данные, включая подписку и историю, будут потеряны.
-        </p>
-        <Button
-          size="sm"
-          color="danger"
-          variant="outline"
-          onPress={() => setShowDeleteConfirm(true)}
-        >
-          Удалить аккаунт
-        </Button>
-        {showDeleteConfirm && (
-          <div className="mt-3 space-y-3 rounded-xl border border-danger/20 bg-danger/[0.04] p-4">
-            <p className="text-sm text-foreground">Вы уверены? Все данные будут удалены безвозвратно.</p>
-            {user?.has_usable_password !== false && (
-              <Input
-                type="password"
-                placeholder="Введите пароль для подтверждения"
-                value={deletePassword}
-                onValueChange={setDeletePassword}
-                size="sm"
-                classNames={{ inputWrapper: 'border-border bg-surface' }}
-              />
-            )}
-            {deleteError && <p className="text-sm text-danger">{deleteError}</p>}
-            <div className="flex gap-2">
-              <Button size="sm" color="danger" onPress={async () => {
-                setDeleteLoading(true)
-                setDeleteError(null)
-                try {
-                  await deleteAccount(deletePassword)
-                  await logout()
-                  navigate('/')
-                } catch (err) {
-                  setDeleteError(err.message || 'Ошибка удаления аккаунта')
-                } finally {
-                  setDeleteLoading(false)
-                }
-              }} isPending={deleteLoading}>
-                Удалить навсегда
-              </Button>
-              <Button size="sm" variant="outline" onPress={() => { setShowDeleteConfirm(false); setDeletePassword(''); setDeleteError(null) }}>
-                Отмена
-              </Button>
-            </div>
-          </div>
-        )}
+        <p className="mb-3 text-sm font-semibold text-foreground">Тема оформления</p>
+        <div className="flex gap-2">
+          <Button size="sm" variant={theme === 'light' ? undefined : 'outline'} onPress={() => setTheme('light')}>Светлая</Button>
+          <Button size="sm" variant={theme === 'dark' ? undefined : 'outline'} onPress={() => setTheme('dark')}>Тёмная</Button>
+          <Button size="sm" variant={theme === 'auto' ? undefined : 'outline'} onPress={() => setTheme('auto')}>Авто</Button>
+        </div>
       </motion.div>
 
       <MergeAccountModal
