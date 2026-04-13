@@ -3,14 +3,15 @@ import { Button, Input, Chip } from '@heroui/react'
 import { Copy, Pencil } from '@gravity-ui/icons'
 import { motion } from 'motion/react'
 import { useAuthStore } from '../../stores/authStore'
-import { updateProfile, changePassword, deleteAccount } from '../../api/auth'
-import { useNavigate } from 'react-router-dom'
+import { updateProfile, changePassword, deleteAccount, linkEmail, linkEmailVerify, linkTelegram } from '../../api/auth'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { getMySubscription } from '../../api/subscriptions'
 import { useEffect } from 'react'
 
 export default function Settings() {
-  const { user, fetchMe, logout } = useAuthStore()
+  const { user, fetchMe, logout, loginWithTokens } = useAuthStore()
   const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
 
   // Profile editing
   const [editingProfile, setEditingProfile] = useState(false)
@@ -31,6 +32,47 @@ export default function Settings() {
   const [copiedSub, setCopiedSub] = useState(false)
   const [copiedRef, setCopiedRef] = useState(false)
 
+  // Link email
+  const [linkEmailStep, setLinkEmailStep] = useState(null) // null | 'email' | 'code'
+  const [linkEmailValue, setLinkEmailValue] = useState('')
+  const [linkEmailCode, setLinkEmailCode] = useState('')
+  const [linkEmailLoading, setLinkEmailLoading] = useState(false)
+  const [linkEmailMsg, setLinkEmailMsg] = useState(null)
+
+  // Link message (for Google OAuth redirect)
+  const [linkMsg, setLinkMsg] = useState(null)
+
+  // Handle Google OAuth link redirect
+  useEffect(() => {
+    const linked = searchParams.get('linked')
+    const error = searchParams.get('error')
+    const access = searchParams.get('access')
+    const refresh = searchParams.get('refresh')
+
+    if (linked === 'google' && access && refresh) {
+      loginWithTokens(access, refresh).then(() => {
+        setLinkMsg({ type: 'success', text: 'Google аккаунт успешно привязан' })
+      })
+      // Clean URL
+      searchParams.delete('linked')
+      searchParams.delete('access')
+      searchParams.delete('refresh')
+      setSearchParams(searchParams, { replace: true })
+    } else if (error === 'google_taken') {
+      setLinkMsg({ type: 'error', text: 'Этот Google аккаунт уже привязан к другому пользователю' })
+      searchParams.delete('error')
+      setSearchParams(searchParams, { replace: true })
+    } else if (error === 'google_already_linked') {
+      setLinkMsg({ type: 'error', text: 'Google аккаунт уже привязан' })
+      searchParams.delete('error')
+      setSearchParams(searchParams, { replace: true })
+    } else if (error === 'link_failed') {
+      setLinkMsg({ type: 'error', text: 'Ошибка привязки Google аккаунта' })
+      searchParams.delete('error')
+      setSearchParams(searchParams, { replace: true })
+    }
+  }, [])
+
   useEffect(() => {
     getMySubscription()
       .then((data) => {
@@ -50,6 +92,65 @@ export default function Settings() {
       }
     }
   }, [user])
+
+  // Detection helpers
+  const isTelegramUser = user?.email?.startsWith('tg_') && user?.telegram_id
+  const isGoogleUser = !!user?.google_id
+  const canLinkEmail = isTelegramUser && !isGoogleUser
+  const canLinkGoogle = !isGoogleUser
+  const canLinkTelegram = !user?.telegram_id
+
+  async function handleLinkEmailSend() {
+    setLinkEmailLoading(true)
+    setLinkEmailMsg(null)
+    try {
+      await linkEmail(linkEmailValue)
+      setLinkEmailStep('code')
+      setLinkEmailMsg({ type: 'success', text: 'Код отправлен на email' })
+    } catch (err) {
+      setLinkEmailMsg({ type: 'error', text: err.message || 'Ошибка отправки кода' })
+    } finally {
+      setLinkEmailLoading(false)
+    }
+  }
+
+  async function handleLinkEmailVerify() {
+    setLinkEmailLoading(true)
+    setLinkEmailMsg(null)
+    try {
+      await linkEmailVerify({ email: linkEmailValue, code: linkEmailCode })
+      await fetchMe()
+      setLinkEmailStep(null)
+      setLinkEmailValue('')
+      setLinkEmailCode('')
+      setLinkEmailMsg({ type: 'success', text: 'Email успешно привязан' })
+    } catch (err) {
+      setLinkEmailMsg({ type: 'error', text: err.message || 'Неверный код' })
+    } finally {
+      setLinkEmailLoading(false)
+    }
+  }
+
+  function handleLinkGoogle() {
+    const token = localStorage.getItem('eifavpn_access')
+    window.location.href = `/api/auth/link-google/?token=${token}`
+  }
+
+  async function handleLinkTelegram() {
+    // Try Telegram WebApp initData if available
+    const tg = window.Telegram?.WebApp
+    if (tg?.initData) {
+      try {
+        await linkTelegram(tg.initData)
+        await fetchMe()
+        setLinkMsg({ type: 'success', text: 'Telegram успешно привязан' })
+      } catch (err) {
+        setLinkMsg({ type: 'error', text: err.message || 'Ошибка привязки Telegram' })
+      }
+    } else {
+      setLinkMsg({ type: 'error', text: 'Привязка Telegram доступна только из Telegram Mini App' })
+    }
+  }
 
   async function handleSaveProfile() {
     setProfileLoading(true)
@@ -223,7 +324,122 @@ export default function Settings() {
         className="glass-card rounded-2xl border border-white/[0.06] bg-surface/40 p-4 md:p-5"
       >
         <p className="mb-3 text-sm font-semibold text-foreground">Привязанные аккаунты</p>
+
+        {linkMsg && (
+          <p className={`mb-3 text-sm ${linkMsg.type === 'success' ? 'text-accent' : 'text-danger'}`}>
+            {linkMsg.text}
+          </p>
+        )}
+
         <div className="space-y-3">
+          {/* Email */}
+          <div className="rounded-xl border border-white/[0.04] bg-black/10 px-4 py-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <span className="text-xl">
+                  <svg viewBox="0 0 24 24" className="h-5 w-5 text-muted" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                    <polyline points="22,6 12,13 2,6"/>
+                  </svg>
+                </span>
+                <div>
+                  <p className="text-sm font-medium text-foreground">Email</p>
+                  <p className="text-[11px] text-muted">
+                    {!isTelegramUser ? user?.email : 'Не привязан'}
+                  </p>
+                </div>
+              </div>
+              {!isTelegramUser ? (
+                <Chip size="sm" className="bg-accent/15 text-[10px] font-semibold text-accent">
+                  Привязан
+                </Chip>
+              ) : canLinkEmail ? (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onPress={() => setLinkEmailStep('email')}
+                >
+                  Привязать
+                </Button>
+              ) : (
+                <Chip size="sm" className="bg-default text-[10px] text-muted">Нет</Chip>
+              )}
+            </div>
+
+            {/* Link email inline form */}
+            {linkEmailStep === 'email' && (
+              <div className="mt-3 space-y-2">
+                <Input
+                  type="email"
+                  placeholder="Введите email"
+                  value={linkEmailValue}
+                  onValueChange={setLinkEmailValue}
+                  size="sm"
+                  classNames={{ inputWrapper: 'border-white/[0.06] bg-surface/40' }}
+                />
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    className="glow-cyan font-semibold"
+                    onPress={handleLinkEmailSend}
+                    isPending={linkEmailLoading}
+                    isDisabled={!linkEmailValue}
+                  >
+                    Отправить код
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onPress={() => { setLinkEmailStep(null); setLinkEmailMsg(null) }}
+                  >
+                    Отмена
+                  </Button>
+                </div>
+                {linkEmailMsg && (
+                  <p className={`text-xs ${linkEmailMsg.type === 'success' ? 'text-accent' : 'text-danger'}`}>
+                    {linkEmailMsg.text}
+                  </p>
+                )}
+              </div>
+            )}
+            {linkEmailStep === 'code' && (
+              <div className="mt-3 space-y-2">
+                <p className="text-xs text-muted">Код отправлен на {linkEmailValue}</p>
+                <Input
+                  placeholder="Введите код"
+                  value={linkEmailCode}
+                  onValueChange={setLinkEmailCode}
+                  size="sm"
+                  classNames={{ inputWrapper: 'border-white/[0.06] bg-surface/40' }}
+                />
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    className="glow-cyan font-semibold"
+                    onPress={handleLinkEmailVerify}
+                    isPending={linkEmailLoading}
+                    isDisabled={!linkEmailCode}
+                  >
+                    Подтвердить
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onPress={() => { setLinkEmailStep(null); setLinkEmailMsg(null) }}
+                  >
+                    Отмена
+                  </Button>
+                </div>
+                {linkEmailMsg && (
+                  <p className={`text-xs ${linkEmailMsg.type === 'success' ? 'text-accent' : 'text-danger'}`}>
+                    {linkEmailMsg.text}
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Google */}
           <div className="flex items-center justify-between rounded-xl border border-white/[0.04] bg-black/10 px-4 py-3">
             <div className="flex items-center gap-3">
               <span className="text-xl">
@@ -241,18 +457,20 @@ export default function Settings() {
                 </p>
               </div>
             </div>
-            <Chip
-              size="sm"
-              className={
-                user?.google_id
-                  ? 'bg-accent/15 text-[10px] font-semibold text-accent'
-                  : 'bg-default text-[10px] text-muted'
-              }
-            >
-              {user?.google_id ? 'Активен' : 'Нет'}
-            </Chip>
+            {user?.google_id ? (
+              <Chip size="sm" className="bg-accent/15 text-[10px] font-semibold text-accent">
+                Привязан
+              </Chip>
+            ) : canLinkGoogle ? (
+              <Button size="sm" variant="outline" onPress={handleLinkGoogle}>
+                Привязать
+              </Button>
+            ) : (
+              <Chip size="sm" className="bg-default text-[10px] text-muted">Нет</Chip>
+            )}
           </div>
 
+          {/* Telegram */}
           <div className="flex items-center justify-between rounded-xl border border-white/[0.04] bg-black/10 px-4 py-3">
             <div className="flex items-center gap-3">
               <span className="text-xl">
@@ -267,16 +485,17 @@ export default function Settings() {
                 </p>
               </div>
             </div>
-            <Chip
-              size="sm"
-              className={
-                user?.telegram_id
-                  ? 'bg-accent/15 text-[10px] font-semibold text-accent'
-                  : 'bg-default text-[10px] text-muted'
-              }
-            >
-              {user?.telegram_id ? 'Активен' : 'Нет'}
-            </Chip>
+            {user?.telegram_id ? (
+              <Chip size="sm" className="bg-accent/15 text-[10px] font-semibold text-accent">
+                Привязан
+              </Chip>
+            ) : canLinkTelegram ? (
+              <Button size="sm" variant="outline" onPress={handleLinkTelegram}>
+                Привязать
+              </Button>
+            ) : (
+              <Chip size="sm" className="bg-default text-[10px] text-muted">Нет</Chip>
+            )}
           </div>
         </div>
       </motion.div>

@@ -63,3 +63,15 @@ export function deleteAccount(password) {
     body: JSON.stringify({ password }),
   })
 }
+
+export function linkEmail(email) {
+  return apiFetch('/auth/link-email/', { method: 'POST', body: JSON.stringify({ email }) })
+}
+
+export function linkEmailVerify({ email, code }) {
+  return apiFetch('/auth/link-email/verify/', { method: 'POST', body: JSON.stringify({ email, code }) })
+}
+
+export function linkTelegram(initData) {
+  return apiFetch('/auth/link-telegram/', { method: 'POST', body: JSON.stringify({ initData }) })
+}
