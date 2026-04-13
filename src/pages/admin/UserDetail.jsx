@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { Spinner, Button, Input } from '@heroui/react'
 import { ArrowLeft } from '@gravity-ui/icons'
-import { getAdminUser, updateAdminUser, extendUserSubscription } from '../../api/admin'
+import { getAdminUser, updateAdminUser, extendUserSubscription, getUserTimeline } from '../../api/admin'
 
 export default function UserDetail() {
   const { id } = useParams()
@@ -10,6 +10,7 @@ export default function UserDetail() {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [timeline, setTimeline] = useState([])
   const [extendDays, setExtendDays] = useState('')
   const [actionLoading, setActionLoading] = useState(false)
   const [actionMsg, setActionMsg] = useState(null)
@@ -19,8 +20,15 @@ export default function UserDetail() {
 
     async function load() {
       try {
-        const data = await getAdminUser(id)
-        if (!cancelled) setUser(data)
+        const [data, tl] = await Promise.all([
+          getAdminUser(id),
+          getUserTimeline(id).catch(() => []),
+        ])
+        if (!cancelled) {
+          setUser(data)
+          setTimeline(Array.isArray(tl) ? tl : tl?.events ?? [])
+        }
+        return
       } catch (err) {
         if (!cancelled) setError(err.message)
       } finally {
@@ -194,7 +202,41 @@ export default function UserDetail() {
         )}
       </div>
 
-      {/* Row 3: Actions */}
+      {/* Row 3: User Timeline */}
+      <div className="rounded-xl border border-border bg-surface p-4">
+        <p className="text-xs uppercase tracking-wider text-muted mb-3">User Timeline</p>
+        {timeline.length === 0 ? (
+          <p className="text-sm text-muted py-4 text-center">No timeline events</p>
+        ) : (
+          <div className="space-y-0">
+            {timeline.map((event, i) => {
+              const colorByType = (t) => {
+                if (t === 'registration') return 'bg-accent'
+                if (t === 'subscription') return 'bg-green-500'
+                if (t === 'referral') return 'bg-blue-500'
+                if (t === 'merge') return 'bg-yellow-500'
+                return 'bg-muted'
+              }
+              return (
+                <div key={i} className="flex gap-3">
+                  <div className="flex flex-col items-center">
+                    <div className={`h-2.5 w-2.5 rounded-full ${colorByType(event.type)}`} />
+                    {i < timeline.length - 1 && <div className="w-px flex-1 bg-border" />}
+                  </div>
+                  <div className="pb-4">
+                    <p className="text-sm text-foreground">{event.description}</p>
+                    <p className="text-xs text-muted">
+                      {event.date ? new Date(event.date).toLocaleDateString() : ''}
+                    </p>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* Row 4: Actions */}
       <div className="rounded-xl border border-border bg-surface p-4 space-y-3">
         <p className="text-xs uppercase tracking-wider text-muted">Actions</p>
 

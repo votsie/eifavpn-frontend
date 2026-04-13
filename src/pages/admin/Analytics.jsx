@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Spinner } from '@heroui/react'
 import { motion } from 'motion/react'
-import { getAnalyticsFunnel, getAnalyticsCohorts, getExpiringSubs } from '../../api/admin'
+import { getAnalyticsFunnel, getAnalyticsCohorts, getExpiringSubs, getForecast } from '../../api/admin'
 
 function FunnelBar({ label, value, max, delay }) {
   const pct = max > 0 ? (value / max) * 100 : 0
@@ -39,6 +39,7 @@ export default function Analytics() {
   const [funnel, setFunnel] = useState(null)
   const [cohorts, setCohorts] = useState(null)
   const [expiring, setExpiring] = useState(null)
+  const [forecast, setForecast] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -47,15 +48,17 @@ export default function Analytics() {
 
     async function load() {
       try {
-        const [f, c, e] = await Promise.all([
+        const [f, c, e, fc] = await Promise.all([
           getAnalyticsFunnel(),
           getAnalyticsCohorts(),
           getExpiringSubs(),
+          getForecast().catch(() => []),
         ])
         if (!cancelled) {
           setFunnel(f)
           setCohorts(c)
           setExpiring(e)
+          setForecast(Array.isArray(fc) ? fc : fc?.data ?? [])
         }
       } catch (err) {
         if (!cancelled) setError(err.message)
@@ -212,6 +215,39 @@ export default function Analytics() {
           </div>
         )}
       </div>
+
+      {/* Section 4: MRR Forecast */}
+      {forecast.length > 0 && (() => {
+        const maxMrr = Math.max(...forecast.map((item) => item.mrr ?? 0), 1)
+        return (
+          <div className="rounded-xl border border-border bg-surface p-4">
+            <p className="text-sm font-semibold text-foreground mb-4">MRR Forecast</p>
+            <div className="flex items-end gap-[2px] h-40">
+              {forecast.map((item, i) => (
+                <div key={i} className="flex-1 group relative flex flex-col items-center justify-end h-full">
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:block rounded bg-foreground px-1.5 py-0.5 text-[10px] text-surface whitespace-nowrap z-10">
+                    {item.month}: {(item.mrr ?? 0).toLocaleString()} ₽{item.forecast ? ' (forecast)' : ''}
+                  </div>
+                  <div
+                    className={`w-full rounded-sm transition-colors ${item.forecast ? 'bg-accent/30 border border-dashed border-accent/40' : 'bg-accent/70 hover:bg-accent'}`}
+                    style={{ height: `${((item.mrr ?? 0) / maxMrr) * 100}%`, minHeight: item.mrr > 0 ? '2px' : '0' }}
+                  />
+                  <p className="mt-1 text-center text-[8px] text-muted">{(item.month ?? '').slice(5)}</p>
+                  <p className="text-center text-[7px] text-muted">{(item.mrr ?? 0).toLocaleString()}</p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-3 flex items-center gap-4 text-[10px] text-muted">
+              <span className="flex items-center gap-1">
+                <span className="inline-block h-2.5 w-2.5 rounded-sm bg-accent/70" /> Actual
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="inline-block h-2.5 w-2.5 rounded-sm border border-dashed border-accent/40 bg-accent/30" /> Forecast
+              </span>
+            </div>
+          </div>
+        )
+      })()}
     </motion.div>
   )
 }

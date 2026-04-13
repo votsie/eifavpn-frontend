@@ -84,3 +84,41 @@ export function globalSearch(query) {
 export function sendBulkNotification(data) {
   return apiFetch('/admin/notifications/send/', { method: 'POST', body: JSON.stringify(data) })
 }
+
+export function getAdminPromos(params = {}) {
+  const query = new URLSearchParams(params).toString()
+  return apiFetch(`/admin/promo/?${query}`)
+}
+
+export function createPromo(data) {
+  return apiFetch('/admin/promo/', { method: 'POST', body: JSON.stringify(data) })
+}
+
+export function updatePromo(id, data) {
+  return apiFetch(`/admin/promo/${id}/`, { method: 'PATCH', body: JSON.stringify(data) })
+}
+
+export function deletePromo(id) {
+  return apiFetch(`/admin/promo/${id}/`, { method: 'DELETE' })
+}
+
+export function sendNotification(data) {
+  return apiFetch('/admin/notifications/send/', { method: 'POST', body: JSON.stringify(data) })
+}
+
+export function getNotificationHistory(params = {}) {
+  const query = new URLSearchParams(params).toString()
+  return apiFetch(`/admin/notifications/history/?${query}`)
+}
+
+export function getUserTimeline(id) {
+  return apiFetch(`/admin/users/${id}/timeline/`)
+}
+
+export function getForecast() {
+  return apiFetch('/admin/analytics/forecast/')
+}
+
+export function bulkExtend(userIds, days) {
+  return apiFetch('/admin/bulk/extend/', { method: 'POST', body: JSON.stringify({ user_ids: userIds, days }) })
+}
