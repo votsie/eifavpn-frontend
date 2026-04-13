@@ -3,7 +3,7 @@ import { Button, Input, Chip } from '@heroui/react'
 import { Copy, Pencil } from '@gravity-ui/icons'
 import { motion } from 'motion/react'
 import { useAuthStore } from '../../stores/authStore'
-import { updateProfile, changePassword, deleteAccount, linkEmail, linkEmailVerify, linkTelegram, linkTelegramWidget } from '../../api/auth'
+import { updateProfile, changePassword, deleteAccount, linkEmail, linkEmailVerify, linkTelegram, linkTelegramOidc } from '../../api/auth'
 import TelegramLoginWidget from '../../components/TelegramLoginWidget'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { getMySubscription } from '../../api/subscriptions'
@@ -184,9 +184,9 @@ export default function Settings() {
     }
   }
 
-  async function handleTelegramWidgetAuth(widgetData) {
+  async function handleTelegramOidcAuth({ id_token }) {
     try {
-      await linkTelegramWidget(widgetData)
+      await linkTelegramOidc(id_token)
       await fetchMe()
       setShowTelegramWidget(false)
       setLinkMsg({ type: 'success', text: 'Telegram успешно привязан' })
@@ -574,11 +574,7 @@ export default function Settings() {
           </div>
           {showTelegramWidget && canLinkTelegram && (
             <div className="mt-3 flex flex-col items-center gap-2">
-              <p className="text-xs text-muted">Войдите через Telegram для привязки:</p>
-              <TelegramLoginWidget
-                botUsername="EIFA_VPNbot"
-                onAuth={handleTelegramWidgetAuth}
-              />
+              <TelegramLoginWidget onAuth={handleTelegramOidcAuth} />
             </div>
           )}
         </div>

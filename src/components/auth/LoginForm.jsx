@@ -3,7 +3,7 @@ import { Button, Input, Separator } from '@heroui/react'
 import { useAuthStore } from '../../stores/authStore'
 import { useNavigate, useLocation, useSearchParams, Link } from 'react-router-dom'
 import { sendCode, verifyCode } from '../../api/auth'
-import { telegramWidgetAuth } from '../../api/telegram'
+import { telegramOidcAuth } from '../../api/telegram'
 import TelegramLoginWidget from '../TelegramLoginWidget'
 
 export default function LoginForm() {
@@ -21,11 +21,11 @@ export default function LoginForm() {
   const from = location.state?.from?.pathname || '/cabinet/overview'
   const [showTelegramWidget, setShowTelegramWidget] = useState(false)
 
-  async function handleTelegramWidgetAuth(widgetData) {
+  async function handleTelegramOidcAuth({ id_token }) {
     setLoading(true)
     setError(null)
     try {
-      const data = await telegramWidgetAuth(widgetData)
+      const data = await telegramOidcAuth(id_token)
       if (data.tokens && data.user) {
         loginWithData(data.user, data.tokens)
         navigate(from, { replace: true })
@@ -139,8 +139,8 @@ export default function LoginForm() {
           Войти через Telegram
         </Button>
       ) : (
-        <div className="flex flex-col items-center gap-2 rounded-xl border border-border p-3">
-          <TelegramLoginWidget botUsername="EIFA_VPNbot" onAuth={handleTelegramWidgetAuth} />
+        <div className="flex flex-col items-center gap-2 py-1">
+          <TelegramLoginWidget onAuth={handleTelegramOidcAuth} />
         </div>
       )}
 

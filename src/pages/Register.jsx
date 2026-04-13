@@ -3,7 +3,7 @@ import { Button, Input, Separator } from '@heroui/react'
 import { useAuthStore } from '../stores/authStore'
 import { useNavigate, useSearchParams, Link } from 'react-router-dom'
 import { sendCode, verifyCode } from '../api/auth'
-import { telegramWidgetAuth } from '../api/telegram'
+import { telegramOidcAuth } from '../api/telegram'
 import TelegramLoginWidget from '../components/TelegramLoginWidget'
 import Background from '../components/Background'
 import { motion } from 'motion/react'
@@ -24,11 +24,11 @@ export default function Register() {
   const preselectedPlan = searchParams.get('plan') || ''
   const [showTelegramWidget, setShowTelegramWidget] = useState(false)
 
-  async function handleTelegramWidgetAuth(widgetData) {
+  async function handleTelegramOidcAuth({ id_token }) {
     setLoading(true)
     setError(null)
     try {
-      const data = await telegramWidgetAuth(widgetData)
+      const data = await telegramOidcAuth(id_token)
       if (data.tokens && data.user) {
         loginWithData(data.user, data.tokens)
         const redirect = preselectedPlan
@@ -140,8 +140,8 @@ export default function Register() {
                   Продолжить с Telegram
                 </Button>
               ) : (
-                <div className="flex flex-col items-center gap-2 rounded-xl border border-border p-3">
-                  <TelegramLoginWidget botUsername="EIFA_VPNbot" onAuth={handleTelegramWidgetAuth} />
+                <div className="flex flex-col items-center gap-2 py-1">
+                  <TelegramLoginWidget onAuth={handleTelegramOidcAuth} />
                 </div>
               )}
 
