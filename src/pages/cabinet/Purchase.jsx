@@ -1,44 +1,29 @@
 import { useState, useEffect } from 'react'
-import { Button, Chip } from '@heroui/react'
+import { Button } from '@heroui/react'
 import { CircleCheck, CircleXmark } from '@gravity-ui/icons'
 import { motion, AnimatePresence } from 'motion/react'
 import { getPlans, purchase } from '../../api/subscriptions'
 import { useAuthStore } from '../../stores/authStore'
 
 const PERIODS = [
-  { id: 1, label: '1 мес', badge: null },
-  { id: 3, label: '3 мес', badge: null },
+  { id: 1, label: '1 мес' },
+  { id: 3, label: '3 мес' },
   { id: 6, label: '6 мес', badge: '-20%' },
   { id: 12, label: '12 мес', badge: '-35%' },
 ]
 
 const PAYMENT_METHODS = [
-  {
-    id: 'stars',
-    name: 'Telegram Stars',
-    icon: '⭐',
-    desc: 'Оплата в Telegram',
-  },
-  {
-    id: 'crypto',
-    name: 'Криптовалюта',
-    icon: '₿',
-    desc: 'TON, USDT, BTC',
-  },
-  {
-    id: 'wata',
-    name: 'Банковская карта',
-    icon: '💳',
-    desc: 'Visa, MC, МИР',
-  },
+  { id: 'stars', name: 'Telegram Stars', desc: 'Оплата в Telegram' },
+  { id: 'crypto', name: 'Криптовалюта', desc: 'TON, USDT, BTC' },
+  { id: 'wata', name: 'Карта', desc: 'Visa, MC, МИР' },
 ]
 
-const FEATURE_LABELS = [
+const FEATURES = [
   { key: 'servers', format: (v) => `${v} серверов` },
-  { key: 'devices', format: (v) => `До ${v} устройств` },
-  { key: 'unlimited_traffic', format: (v) => v ? 'Безлимит трафика' : '100 ГБ/мес' },
-  { key: 'adblock', format: () => 'Блокировщик рекламы', bool: true },
-  { key: 'p2p', format: () => 'Торренты (P2P)', bool: true },
+  { key: 'devices', format: (v) => `${v} устройств` },
+  { key: 'unlimited_traffic', format: (v) => v ? 'Безлимит' : '100 ГБ/мес' },
+  { key: 'adblock', format: () => 'Adblock', bool: true },
+  { key: 'p2p', format: () => 'P2P', bool: true },
 ]
 
 export default function Purchase() {
@@ -66,14 +51,8 @@ export default function Purchase() {
     setLoading(true)
     setError(null)
     try {
-      const result = await purchase({
-        plan: selectedPlan,
-        period,
-        payment_method: paymentMethod,
-      })
-      if (result.payment_url) {
-        window.location.href = result.payment_url
-      }
+      const result = await purchase({ plan: selectedPlan, period, payment_method: paymentMethod })
+      if (result.payment_url) window.location.href = result.payment_url
     } catch (err) {
       setError(err.message || 'Ошибка при создании платежа')
     } finally {
@@ -82,39 +61,43 @@ export default function Purchase() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl w-full overflow-hidden">
-      <h1 className="font-heading mb-2 text-2xl font-bold text-foreground">Выбрать тариф</h1>
-      <p className="mb-6 text-sm text-muted md:mb-8">Выберите план, период и способ оплаты</p>
+    <div className="mx-auto max-w-2xl w-full space-y-5">
+      <h1 className="font-heading text-xl font-bold text-foreground">Выбрать тариф</h1>
 
-      {/* Step 1: Plan selection */}
-      <div className="mb-6 md:mb-8">
-        <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted">1. Тариф</h2>
-        <div className="grid gap-3 sm:grid-cols-3">
-          {plans.map((plan) => (
+      {/* Plan cards with price */}
+      <div className="grid gap-3 sm:grid-cols-3">
+        {plans.map((plan) => {
+          const price = plan.pricing?.[period] || 0
+          const isSelected = selectedPlan === plan.id
+          return (
             <button
               key={plan.id}
               onClick={() => setSelectedPlan(plan.id)}
-              className={`relative min-h-11 rounded-2xl border p-4 text-left transition-all duration-200 md:p-5 ${
-                selectedPlan === plan.id
-                  ? 'theme-card-accent border-accent/30 bg-accent/[0.06]'
-                  : 'theme-card border-border bg-surface hover:border-accent/10'
+              className={`relative rounded-xl border p-4 text-left transition-all duration-200 ${
+                isSelected
+                  ? 'border-accent bg-accent/[0.06]'
+                  : 'border-border bg-surface hover:border-accent/20'
               }`}
             >
               {plan.id === 'pro' && (
-                <Chip size="sm" className="absolute -top-2 right-3 bg-accent/15 text-[10px] font-bold text-accent">
-                  Популярный
-                </Chip>
+                <span className="absolute -top-2 right-3 rounded-full bg-accent/15 px-2 py-0.5 text-[10px] font-bold text-accent">
+                  Popular
+                </span>
               )}
-              <p className="font-heading text-lg font-bold text-foreground">{plan.name}</p>
-              <div className="mt-3 space-y-1.5">
-                {FEATURE_LABELS.map((feat) => {
+              <p className="font-heading text-base font-bold text-foreground">{plan.name}</p>
+              <div className="mt-1 flex items-baseline gap-1">
+                <span className="font-heading text-2xl font-extrabold text-accent">{price}₽</span>
+                <span className="text-xs text-muted">/мес</span>
+              </div>
+              <div className="mt-3 space-y-1">
+                {FEATURES.map((feat) => {
                   const included = feat.bool ? plan[feat.key] : true
                   return (
-                    <div key={feat.key} className="flex items-center gap-2 text-xs">
+                    <div key={feat.key} className="flex items-center gap-1.5 text-[11px]">
                       {included ? (
-                        <CircleCheck className="h-3.5 w-3.5 text-accent/70" />
+                        <CircleCheck className="h-3 w-3 shrink-0 text-accent" />
                       ) : (
-                        <CircleXmark className="h-3.5 w-3.5 text-muted/30" />
+                        <CircleXmark className="h-3 w-3 shrink-0 text-muted/30" />
                       )}
                       <span className={included ? 'text-foreground/80' : 'text-muted/40 line-through'}>
                         {feat.bool ? feat.format() : feat.format(plan[feat.key])}
@@ -124,108 +107,101 @@ export default function Purchase() {
                 })}
               </div>
             </button>
-          ))}
-        </div>
+          )
+        })}
       </div>
 
-      {/* Step 2: Period */}
-      <div className="mb-6 md:mb-8">
-        <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted">2. Период</h2>
-        <div className="theme-card inline-flex items-center gap-1 rounded-2xl border border-border bg-surface p-1.5">
-          {PERIODS.map((p) => (
-            <button
-              key={p.id}
-              onClick={() => setPeriod(p.id)}
-              className={`relative min-h-11 rounded-xl px-5 py-2.5 text-sm font-medium transition-all duration-200 ${
-                period === p.id
-                  ? 'bg-accent text-accent-foreground glow-cyan'
-                  : 'text-muted hover:text-foreground'
-              }`}
-            >
-              {p.label}
-              {p.badge && period !== p.id && (
-                <span className="absolute -top-2 -right-1 rounded-full bg-accent/20 px-1.5 py-0.5 text-[9px] font-bold text-accent">
-                  {p.badge}
-                </span>
-              )}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Step 3: Payment method */}
-      <div className="mb-6 md:mb-8">
-        <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted">3. Оплата</h2>
-        <div className="grid gap-3 sm:grid-cols-3">
-          {PAYMENT_METHODS.map((m) => (
-            <button
-              key={m.id}
-              onClick={() => setPaymentMethod(m.id)}
-              className={`min-h-11 rounded-2xl border p-4 text-left transition-all duration-200 ${
-                paymentMethod === m.id
-                  ? 'theme-card-accent border-accent/30 bg-accent/[0.06]'
-                  : 'theme-card border-border bg-surface hover:border-accent/10'
-              }`}
-            >
-              <span className="text-2xl">{m.icon}</span>
-              <p className="mt-2 text-sm font-semibold text-foreground">{m.name}</p>
-              <p className="text-xs text-muted">{m.desc}</p>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Summary + Pay */}
-      <div className="theme-card-accent rounded-2xl border border-border bg-surface p-5  md:p-6">
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="text-sm text-muted">Итого</p>
-            <div className="flex items-baseline gap-2">
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={`${selectedPlan}-${period}`}
-                  initial={{ opacity: 0, y: -8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 8 }}
-                  transition={{ duration: 0.2 }}
-                  className="font-heading text-3xl font-extrabold text-foreground"
-                >
-                  ₽{finalPrice}
-                </motion.span>
-              </AnimatePresence>
-              <span className="text-sm text-muted">
-                за {period} мес ({monthPrice}₽/мес)
-              </span>
-            </div>
-            {period > 1 && basePrice !== monthPrice && (
-              <p className="mt-1 text-xs text-muted">
-                <span className="line-through">₽{basePrice * period}</span>
-                <span className="ml-2 rounded bg-accent/15 px-1.5 py-0.5 text-accent">
-                  −{Math.round((1 - monthPrice / basePrice) * 100)}%
-                </span>
-              </p>
-            )}
-            {hasReferral && discount > 0 && (
-              <p className="mt-1 text-xs text-accent">
-                Реферальная скидка: −₽{discount}
-              </p>
-            )}
+      {/* Period + Payment in one row */}
+      <div className="flex flex-wrap items-start gap-4">
+        {/* Period */}
+        <div className="flex-1">
+          <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted">Период</p>
+          <div className="inline-flex gap-1 rounded-lg border border-border bg-surface p-1">
+            {PERIODS.map((p) => (
+              <button
+                key={p.id}
+                onClick={() => setPeriod(p.id)}
+                className={`relative rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-150 ${
+                  period === p.id
+                    ? 'bg-accent text-accent-foreground'
+                    : 'text-muted hover:text-foreground'
+                }`}
+              >
+                {p.label}
+                {p.badge && period !== p.id && (
+                  <span className="absolute -top-1.5 -right-1 text-[8px] font-bold text-accent">
+                    {p.badge}
+                  </span>
+                )}
+              </button>
+            ))}
           </div>
-
-          <Button
-            size="lg"
-            className="glow-cyan px-10 text-base font-semibold"
-            onPress={handlePurchase}
-            isPending={loading}
-          >
-            Оплатить
-          </Button>
         </div>
 
-        {error && (
-          <p className="mt-3 text-sm text-danger">{error}</p>
-        )}
+        {/* Payment */}
+        <div>
+          <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted">Оплата</p>
+          <div className="inline-flex gap-1 rounded-lg border border-border bg-surface p-1">
+            {PAYMENT_METHODS.map((m) => (
+              <button
+                key={m.id}
+                onClick={() => setPaymentMethod(m.id)}
+                className={`rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-150 ${
+                  paymentMethod === m.id
+                    ? 'bg-accent text-accent-foreground'
+                    : 'text-muted hover:text-foreground'
+                }`}
+                title={m.desc}
+              >
+                {m.name}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
+
+      {/* Summary */}
+      <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-border bg-surface p-4">
+        <div>
+          <div className="flex items-baseline gap-2">
+            <AnimatePresence mode="wait">
+              <motion.span
+                key={`${selectedPlan}-${period}`}
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 6 }}
+                transition={{ duration: 0.15 }}
+                className="font-heading text-2xl font-extrabold text-foreground"
+              >
+                {finalPrice}₽
+              </motion.span>
+            </AnimatePresence>
+            <span className="text-sm text-muted">
+              {period > 1 ? `за ${period} мес (${monthPrice}₽/мес)` : 'за 1 мес'}
+            </span>
+          </div>
+          {period > 1 && basePrice !== monthPrice && (
+            <p className="mt-0.5 text-xs text-muted">
+              <span className="line-through">{basePrice * period}₽</span>
+              <span className="ml-1.5 text-accent font-medium">-{Math.round((1 - monthPrice / basePrice) * 100)}%</span>
+            </p>
+          )}
+          {hasReferral && discount > 0 && (
+            <p className="mt-0.5 text-xs text-accent">Реферальная скидка: -{discount}₽</p>
+          )}
+        </div>
+
+        <Button
+          size="md"
+          className="glow-cyan px-8 font-semibold"
+          onPress={handlePurchase}
+          isPending={loading}
+        >
+          Оплатить
+        </Button>
+      </div>
+
+      {error && <p className="text-sm text-danger">{error}</p>}
     </div>
   )
 }
