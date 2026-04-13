@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { createPortal } from 'react-dom'
 import { Button } from '@heroui/react'
 import { motion, AnimatePresence } from 'motion/react'
 
@@ -108,7 +109,7 @@ export default function ConnectModal({ isOpen, onClose, subscriptionUrl }) {
 
   const slide = { initial: { opacity: 0, y: 8 }, animate: { opacity: 1, y: 0 }, exit: { opacity: 0, y: -8 }, transition: { duration: 0.2 } }
 
-  return (
+  return createPortal(
     <>
       <div className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm" onClick={close} />
 
@@ -212,6 +213,7 @@ export default function ConnectModal({ isOpen, onClose, subscriptionUrl }) {
         </AnimatePresence>
       </motion.div>
       </div>
-    </>
+    </>,
+    document.body
   )
 }
