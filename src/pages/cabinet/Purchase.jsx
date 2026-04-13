@@ -96,8 +96,8 @@ export default function Purchase() {
               onClick={() => setSelectedPlan(plan.id)}
               className={`relative min-h-11 rounded-2xl border p-4 text-left transition-all duration-200 md:p-5 ${
                 selectedPlan === plan.id
-                  ? 'glass-card-accent border-accent/30 bg-accent/[0.06] shadow-[0_0_20px_oklch(0.80_0.155_180/12%)]'
-                  : 'glass-card border-white/[0.06] bg-surface/40 hover:border-white/[0.1]'
+                  ? 'theme-card-accent border-accent/30 bg-accent/[0.06]'
+                  : 'theme-card border-border bg-surface/40 hover:border-accent/10'
               }`}
             >
               {plan.id === 'pro' && (
@@ -131,14 +131,14 @@ export default function Purchase() {
       {/* Step 2: Period */}
       <div className="mb-6 md:mb-8">
         <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted">2. Период</h2>
-        <div className="glass-card inline-flex items-center gap-1 rounded-2xl border border-white/[0.06] bg-surface/40 p-1.5">
+        <div className="theme-card inline-flex items-center gap-1 rounded-2xl border border-border bg-surface/40 p-1.5">
           {PERIODS.map((p) => (
             <button
               key={p.id}
               onClick={() => setPeriod(p.id)}
               className={`relative min-h-11 rounded-xl px-5 py-2.5 text-sm font-medium transition-all duration-200 ${
                 period === p.id
-                  ? 'bg-accent text-accent-foreground shadow-[0_0_16px_oklch(0.80_0.155_180/18%)]'
+                  ? 'bg-accent text-accent-foreground glow-cyan'
                   : 'text-muted hover:text-foreground'
               }`}
             >
@@ -163,8 +163,8 @@ export default function Purchase() {
               onClick={() => setPaymentMethod(m.id)}
               className={`min-h-11 rounded-2xl border p-4 text-left transition-all duration-200 ${
                 paymentMethod === m.id
-                  ? 'glass-card-accent border-accent/30 bg-accent/[0.06]'
-                  : 'glass-card border-white/[0.06] bg-surface/40 hover:border-white/[0.1]'
+                  ? 'theme-card-accent border-accent/30 bg-accent/[0.06]'
+                  : 'theme-card border-border bg-surface/40 hover:border-accent/10'
               }`}
             >
               <span className="text-2xl">{m.icon}</span>
@@ -176,7 +176,7 @@ export default function Purchase() {
       </div>
 
       {/* Summary + Pay */}
-      <div className="glass-card-accent rounded-2xl border border-white/[0.08] bg-surface/50 p-5 backdrop-blur-sm md:p-6">
+      <div className="theme-card-accent rounded-2xl border border-border bg-surface/50 p-5 backdrop-blur-sm md:p-6">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="text-sm text-muted">Итого</p>

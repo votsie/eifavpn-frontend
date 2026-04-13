@@ -89,7 +89,7 @@ function QrCode({ url }) {
 
   return (
     <div className="flex flex-col items-center gap-2">
-      <div className="overflow-hidden rounded-xl border border-white/[0.06] bg-white p-2">
+      <div className="overflow-hidden rounded-xl border border-border bg-white p-2">
         <img
           src={qrUrl}
           alt="QR код подписки"
@@ -143,13 +143,13 @@ export default function Guide() {
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          className="glass-card-accent rounded-2xl border border-accent/20 bg-gradient-to-r from-accent/[0.08] to-surface/60 p-4 md:p-5"
+          className="theme-card-accent rounded-2xl border border-accent/20 bg-gradient-to-r from-accent/[0.08] to-surface/60 p-4 md:p-5"
         >
           <p className="mb-2 text-[11px] font-medium uppercase tracking-wider text-muted">
             Ваш URL подписки
           </p>
           <div className="flex items-center gap-2">
-            <code className="flex-1 truncate rounded-lg bg-black/20 px-3 py-2 font-mono text-xs text-accent">
+            <code className="flex-1 truncate rounded-lg theme-code-bg px-3 py-2 font-mono text-xs text-accent">
               {subUrl}
             </code>
             <Button
@@ -183,7 +183,7 @@ export default function Guide() {
           selectedKey={selectedPlatform}
           onSelectionChange={setSelectedPlatform}
           classNames={{
-            tabList: 'bg-surface/40 border border-white/[0.06]',
+            tabList: 'bg-surface/40 border border-border',
             cursor: 'bg-accent/20',
             tab: 'text-muted data-[selected=true]:text-accent',
           }}
@@ -200,7 +200,7 @@ export default function Guide() {
         initial={{ opacity: 0, x: 12 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.2 }}
-        className="glass-card rounded-2xl border border-white/[0.06] bg-surface/40 p-4 md:p-5"
+        className="theme-card rounded-2xl border border-border bg-surface/40 p-4 md:p-5"
       >
         {/* App info */}
         <div className="mb-5 flex items-center justify-between">
@@ -236,7 +236,7 @@ export default function Guide() {
 
         {/* Copy URL button inline */}
         {subUrl && (
-          <div className="mt-5 border-t border-white/[0.06] pt-4">
+          <div className="mt-5 border-t border-border pt-4">
             <Button
               size="sm"
               variant="outline"
@@ -255,7 +255,7 @@ export default function Guide() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
-          className="glass-card rounded-2xl border border-white/[0.06] bg-surface/40 p-4 md:p-5"
+          className="theme-card rounded-2xl border border-border bg-surface/40 p-4 md:p-5"
         >
           <p className="mb-4 text-center text-sm font-semibold text-foreground">
             Или отсканируйте QR-код
@@ -269,7 +269,7 @@ export default function Guide() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="glass-card-accent rounded-2xl border border-accent/10 bg-accent/[0.04] p-4 md:p-5"
+        className="theme-card-accent rounded-2xl border border-accent/10 bg-accent/[0.04] p-4 md:p-5"
       >
         <p className="mb-2 text-sm font-semibold text-foreground">Полезные советы</p>
         <div className="space-y-2 text-[13px] text-muted">

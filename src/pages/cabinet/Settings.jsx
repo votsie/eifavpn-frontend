@@ -1,17 +1,45 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button, Input, Chip } from '@heroui/react'
 import { Copy, Pencil } from '@gravity-ui/icons'
 import { motion } from 'motion/react'
 import { useAuthStore } from '../../stores/authStore'
-import { updateProfile, changePassword, deleteAccount, linkEmail, linkEmailVerify, linkTelegram } from '../../api/auth'
+import { updateProfile, changePassword, deleteAccount, linkEmail, linkEmailVerify, linkTelegram, linkTelegramWidget } from '../../api/auth'
+import TelegramLoginWidget from '../../components/TelegramLoginWidget'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { getMySubscription } from '../../api/subscriptions'
-import { useEffect } from 'react'
+
+function getEffectiveTheme() {
+  const saved = localStorage.getItem('eifavpn_theme')
+  if (saved === 'light' || saved === 'dark') return saved
+  return 'auto'
+}
+
+function applyTheme(choice) {
+  localStorage.setItem('eifavpn_theme', choice)
+  let resolved = choice
+  if (choice === 'auto') {
+    const tg = window.Telegram?.WebApp
+    if (tg?.colorScheme) {
+      resolved = tg.colorScheme
+    } else {
+      resolved = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
+    }
+  }
+  document.documentElement.setAttribute('data-theme', resolved)
+}
 
 export default function Settings() {
   const { user, fetchMe, logout, loginWithTokens } = useAuthStore()
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
+
+  // Theme
+  const [theme, setThemeState] = useState(getEffectiveTheme)
+
+  function setTheme(t) {
+    setThemeState(t)
+    applyTheme(t)
+  }
 
   // Profile editing
   const [editingProfile, setEditingProfile] = useState(false)
@@ -94,11 +122,14 @@ export default function Settings() {
   }, [user])
 
   // Detection helpers
-  const isTelegramUser = user?.email?.startsWith('tg_') && user?.telegram_id
-  const isGoogleUser = !!user?.google_id
-  const canLinkEmail = isTelegramUser && !isGoogleUser
-  const canLinkGoogle = !isGoogleUser
+  const hasPlaceholderEmail = user?.email?.startsWith('tg_') && user?.email?.endsWith('@eifavpn.ru')
+  const hasRealEmail = !hasPlaceholderEmail
+  const canLinkEmail = hasPlaceholderEmail
+  const canLinkGoogle = !user?.google_id
   const canLinkTelegram = !user?.telegram_id
+
+  // Telegram widget state
+  const [showTelegramWidget, setShowTelegramWidget] = useState(false)
 
   async function handleLinkEmailSend() {
     setLinkEmailLoading(true)
@@ -137,9 +168,9 @@ export default function Settings() {
   }
 
   async function handleLinkTelegram() {
-    // Try Telegram WebApp initData if available (Mini App)
     const tg = window.Telegram?.WebApp
     if (tg?.initData) {
+      // Mini App context — use initData directly
       try {
         await linkTelegram(tg.initData)
         await fetchMe()
@@ -148,10 +179,19 @@ export default function Settings() {
         setLinkMsg({ type: 'error', text: err.message || 'Ошибка привязки Telegram' })
       }
     } else {
-      // Not in Mini App — open bot with deep link to trigger Mini App
-      const linkUrl = `https://t.me/EIFA_VPNbot?startapp=link_${user?.id}`
-      window.open(linkUrl, '_blank')
-      setLinkMsg({ type: 'success', text: 'Откройте Telegram и нажмите "Запустить" в боте EIFAVPN. После этого вернитесь и обновите страницу.' })
+      // Web context — show Telegram Login Widget
+      setShowTelegramWidget(true)
+    }
+  }
+
+  async function handleTelegramWidgetAuth(widgetData) {
+    try {
+      await linkTelegramWidget(widgetData)
+      await fetchMe()
+      setShowTelegramWidget(false)
+      setLinkMsg({ type: 'success', text: 'Telegram успешно привязан' })
+    } catch (err) {
+      setLinkMsg({ type: 'error', text: err.message || 'Ошибка привязки Telegram' })
     }
   }
 
@@ -207,11 +247,43 @@ export default function Settings() {
     <div className="mx-auto max-w-3xl w-full space-y-3 overflow-hidden md:space-y-5">
       <h1 className="font-heading text-2xl font-bold text-foreground">Настройки</h1>
 
+      {/* Theme selector */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="theme-card rounded-2xl border border-border bg-surface/40 p-4 md:p-5"
+      >
+        <p className="mb-3 text-sm font-semibold text-foreground">Тема оформления</p>
+        <div className="flex gap-2">
+          <Button
+            size="sm"
+            variant={theme === 'light' ? undefined : 'outline'}
+            onPress={() => setTheme('light')}
+          >
+            Светлая
+          </Button>
+          <Button
+            size="sm"
+            variant={theme === 'dark' ? undefined : 'outline'}
+            onPress={() => setTheme('dark')}
+          >
+            Тёмная
+          </Button>
+          <Button
+            size="sm"
+            variant={theme === 'auto' ? undefined : 'outline'}
+            onPress={() => setTheme('auto')}
+          >
+            Авто
+          </Button>
+        </div>
+      </motion.div>
+
       {/* Profile section */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        className="glass-card rounded-2xl border border-white/[0.06] bg-surface/40 p-4 md:p-5"
+        className="theme-card rounded-2xl border border-border bg-surface/40 p-4 md:p-5"
       >
         <div className="flex items-center justify-between">
           <p className="text-sm font-semibold text-foreground">Профиль</p>
@@ -254,7 +326,7 @@ export default function Settings() {
                   value={avatarUrl}
                   onValueChange={setAvatarUrl}
                   size="sm"
-                  classNames={{ inputWrapper: 'border-white/[0.06] bg-surface/40' }}
+                  classNames={{ inputWrapper: 'border-border bg-surface/40' }}
                 />
               ) : (
                 <p className="text-xs text-muted">
@@ -273,7 +345,7 @@ export default function Settings() {
                 value={firstName}
                 onValueChange={setFirstName}
                 size="sm"
-                classNames={{ inputWrapper: 'border-white/[0.06] bg-surface/40' }}
+                classNames={{ inputWrapper: 'border-border bg-surface/40' }}
               />
             ) : (
               <p className="text-sm text-foreground">{user?.first_name || 'Не указано'}</p>
@@ -324,7 +396,7 @@ export default function Settings() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.05 }}
-        className="glass-card rounded-2xl border border-white/[0.06] bg-surface/40 p-4 md:p-5"
+        className="theme-card rounded-2xl border border-border bg-surface/40 p-4 md:p-5"
       >
         <p className="mb-3 text-sm font-semibold text-foreground">Привязанные аккаунты</p>
 
@@ -336,7 +408,7 @@ export default function Settings() {
 
         <div className="space-y-3">
           {/* Email */}
-          <div className="rounded-xl border border-white/[0.04] bg-black/10 px-4 py-3">
+          <div className="rounded-xl border border-border theme-subtle-bg px-4 py-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <span className="text-xl">
@@ -348,11 +420,11 @@ export default function Settings() {
                 <div>
                   <p className="text-sm font-medium text-foreground">Email</p>
                   <p className="text-[11px] text-muted">
-                    {!isTelegramUser ? user?.email : 'Не привязан'}
+                    {hasRealEmail ? user?.email : 'Не привязан'}
                   </p>
                 </div>
               </div>
-              {!isTelegramUser ? (
+              {hasRealEmail ? (
                 <Chip size="sm" className="bg-accent/15 text-[10px] font-semibold text-accent">
                   Привязан
                 </Chip>
@@ -378,7 +450,7 @@ export default function Settings() {
                   value={linkEmailValue}
                   onValueChange={setLinkEmailValue}
                   size="sm"
-                  classNames={{ inputWrapper: 'border-white/[0.06] bg-surface/40' }}
+                  classNames={{ inputWrapper: 'border-border bg-surface/40' }}
                 />
                 <div className="flex gap-2">
                   <Button
@@ -413,7 +485,7 @@ export default function Settings() {
                   value={linkEmailCode}
                   onValueChange={setLinkEmailCode}
                   size="sm"
-                  classNames={{ inputWrapper: 'border-white/[0.06] bg-surface/40' }}
+                  classNames={{ inputWrapper: 'border-border bg-surface/40' }}
                 />
                 <div className="flex gap-2">
                   <Button
@@ -443,7 +515,7 @@ export default function Settings() {
           </div>
 
           {/* Google */}
-          <div className="flex items-center justify-between rounded-xl border border-white/[0.04] bg-black/10 px-4 py-3">
+          <div className="flex items-center justify-between rounded-xl border border-border theme-subtle-bg px-4 py-3">
             <div className="flex items-center gap-3">
               <span className="text-xl">
                 <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
@@ -474,7 +546,7 @@ export default function Settings() {
           </div>
 
           {/* Telegram */}
-          <div className="flex items-center justify-between rounded-xl border border-white/[0.04] bg-black/10 px-4 py-3">
+          <div className="flex items-center justify-between rounded-xl border border-border theme-subtle-bg px-4 py-3">
             <div className="flex items-center gap-3">
               <span className="text-xl">
                 <svg viewBox="0 0 24 24" className="h-5 w-5 text-[#26A5E4]" fill="currentColor">
@@ -500,6 +572,15 @@ export default function Settings() {
               <Chip size="sm" className="bg-default text-[10px] text-muted">Нет</Chip>
             )}
           </div>
+          {showTelegramWidget && canLinkTelegram && (
+            <div className="mt-3 flex flex-col items-center gap-2">
+              <p className="text-xs text-muted">Войдите через Telegram для привязки:</p>
+              <TelegramLoginWidget
+                botUsername="EIFA_VPNbot"
+                onAuth={handleTelegramWidgetAuth}
+              />
+            </div>
+          )}
         </div>
       </motion.div>
 
@@ -509,13 +590,13 @@ export default function Settings() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="glass-card rounded-2xl border border-white/[0.06] bg-surface/40 p-4 md:p-5"
+          className="theme-card rounded-2xl border border-border bg-surface/40 p-4 md:p-5"
         >
           <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted md:text-[11px]">
             URL подписки
           </p>
           <div className="flex items-center gap-2">
-            <code className="flex-1 truncate rounded-lg bg-black/20 px-3 py-2 font-mono text-xs text-accent">
+            <code className="flex-1 truncate rounded-lg theme-code-bg px-3 py-2 font-mono text-xs text-accent">
               {subUrl}
             </code>
             <Button
@@ -537,13 +618,13 @@ export default function Settings() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.12 }}
-          className="glass-card rounded-2xl border border-white/[0.06] bg-surface/40 p-4 md:p-5"
+          className="theme-card rounded-2xl border border-border bg-surface/40 p-4 md:p-5"
         >
           <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted md:text-[11px]">
             Реферальный код
           </p>
           <div className="flex items-center gap-2">
-            <code className="flex-1 rounded-lg bg-black/20 px-3 py-2 font-mono text-sm font-bold tracking-widest text-accent">
+            <code className="flex-1 rounded-lg theme-code-bg px-3 py-2 font-mono text-sm font-bold tracking-widest text-accent">
               {user.referral_code}
             </code>
             <Button
@@ -569,7 +650,7 @@ export default function Settings() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15 }}
-        className="glass-card rounded-2xl border border-white/[0.06] bg-surface/40 p-4 md:p-5"
+        className="theme-card rounded-2xl border border-border bg-surface/40 p-4 md:p-5"
       >
         <p className="mb-4 text-sm font-semibold text-foreground">Сменить пароль</p>
         <div className="space-y-3">
@@ -580,7 +661,7 @@ export default function Settings() {
             value={oldPassword}
             onValueChange={setOldPassword}
             size="sm"
-            classNames={{ inputWrapper: 'border-white/[0.06] bg-surface/40' }}
+            classNames={{ inputWrapper: 'border-border bg-surface/40' }}
           />
           <Input
             type="password"
@@ -589,7 +670,7 @@ export default function Settings() {
             value={newPassword}
             onValueChange={setNewPassword}
             size="sm"
-            classNames={{ inputWrapper: 'border-white/[0.06] bg-surface/40' }}
+            classNames={{ inputWrapper: 'border-border bg-surface/40' }}
           />
           <Input
             type="password"
@@ -598,7 +679,7 @@ export default function Settings() {
             value={confirmPassword}
             onValueChange={setConfirmPassword}
             size="sm"
-            classNames={{ inputWrapper: 'border-white/[0.06] bg-surface/40' }}
+            classNames={{ inputWrapper: 'border-border bg-surface/40' }}
           />
           <Button
             size="sm"

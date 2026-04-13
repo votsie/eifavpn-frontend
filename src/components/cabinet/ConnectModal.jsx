@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'motion/react'
 
 /* ── SVG line icons (Bootstrap-style, stroke only, accent neon) ── */
 const Icon = ({ d, size = 24 }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="text-accent drop-shadow-[0_0_6px_oklch(0.80_0.155_180/50%)]">
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="text-accent">
     <path d={d} />
   </svg>
 )
@@ -111,14 +111,14 @@ export default function ConnectModal({ isOpen, onClose, subscriptionUrl }) {
 
   return createPortal(
     <>
-      <div className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm" onClick={close} />
+      <div className="fixed inset-0 z-[100] bg-backdrop backdrop-blur-sm" onClick={close} />
 
       <div className="fixed inset-0 z-[101] flex items-end justify-center pb-[56px] md:items-center md:pb-0">
         <motion.div
           initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 40 }}
           transition={{ type: 'spring', damping: 30, stiffness: 350 }}
           style={{ maxWidth: '400px', width: 'calc(100% - 1.5rem)' }}
-          className="max-h-[70vh] overflow-y-auto rounded-[28px] border border-accent/10 bg-[oklch(0.11_0.015_192/97%)] px-5 pt-4 pb-5 backdrop-blur-2xl"
+          className="max-h-[70vh] overflow-y-auto rounded-[28px] border border-accent/10 bg-overlay/97 px-5 pt-4 pb-5 backdrop-blur-2xl"
         >
         <div className="mx-auto mb-3 h-1 w-8 rounded-full bg-accent/20 md:hidden" />
 
@@ -130,7 +130,7 @@ export default function ConnectModal({ isOpen, onClose, subscriptionUrl }) {
             {step === 'links' && PLATFORM_MAP[platform]?.label}
             {step === 'connect' && 'Подключиться'}
           </h2>
-          <button onClick={close} className="flex h-7 w-7 items-center justify-center rounded-full text-muted/60 transition-colors hover:text-foreground">
+          <button onClick={close} className="flex h-7 w-7 items-center justify-center rounded-full text-muted transition-colors hover:text-foreground">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12" /></svg>
           </button>
         </div>
@@ -145,8 +145,8 @@ export default function ConnectModal({ isOpen, onClose, subscriptionUrl }) {
                 <div><p className="text-sm font-semibold text-foreground">Установить HAPP</p><p className="text-[11px] text-muted">Скачать для вашего устройства</p></div>
               </button>
               <button onClick={() => setStep('connect')}
-                className="flex w-full items-center gap-3.5 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-3.5 text-left transition-all active:scale-[0.98]">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/[0.05]"><CheckIcon /></div>
+                className="flex w-full items-center gap-3.5 rounded-2xl border border-border bg-default p-3.5 text-left transition-all active:scale-[0.98]">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-default"><CheckIcon /></div>
                 <div><p className="text-sm font-semibold text-foreground">У меня есть HAPP</p><p className="text-[11px] text-muted">Добавить подписку</p></div>
               </button>
             </motion.div>
@@ -157,7 +157,7 @@ export default function ConnectModal({ isOpen, onClose, subscriptionUrl }) {
               <div className="grid grid-cols-3 gap-2.5">
                 {DEVICES.map((d) => (
                   <button key={d.key} onClick={() => { setDevice(d.key); setStep('platform') }}
-                    className="flex flex-col items-center gap-2 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4 transition-all active:scale-[0.97] hover:border-accent/15 hover:bg-accent/[0.04]">
+                    className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-default p-4 transition-all active:scale-[0.97] hover:border-accent/15 hover:bg-accent/[0.04]">
                     <d.Icon /><span className="text-[11px] font-medium text-foreground">{d.label}</span>
                   </button>
                 ))}
@@ -173,7 +173,7 @@ export default function ConnectModal({ isOpen, onClose, subscriptionUrl }) {
                   const pm = PLATFORM_MAP[p]
                   return (
                     <button key={p} onClick={() => { setPlatform(p); setStep('links') }}
-                      className="flex items-center gap-2.5 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-3.5 transition-all active:scale-[0.97] hover:border-accent/15 hover:bg-accent/[0.04]">
+                      className="flex items-center gap-2.5 rounded-2xl border border-border bg-default p-3.5 transition-all active:scale-[0.97] hover:border-accent/15 hover:bg-accent/[0.04]">
                       <pm.Icon /><span className="text-[13px] font-medium text-foreground">{pm.label}</span>
                     </button>
                   )
@@ -187,8 +187,8 @@ export default function ConnectModal({ isOpen, onClose, subscriptionUrl }) {
             <motion.div key="l" {...slide} className="space-y-2.5">
               {(HAPP_LINKS[device]?.[platform] || []).map((link, i) => (
                 <button key={i} onClick={() => extLink(link.url, link.external)}
-                  className="flex w-full items-center gap-3 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-3.5 text-left transition-all active:scale-[0.98] hover:border-accent/15">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/[0.04]"><link.Icon /></div>
+                  className="flex w-full items-center gap-3 rounded-2xl border border-border bg-default p-3.5 text-left transition-all active:scale-[0.98] hover:border-accent/15">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-surface"><link.Icon /></div>
                   <span className="text-[13px] font-medium text-foreground">{link.label}</span>
                 </button>
               ))}
@@ -205,7 +205,7 @@ export default function ConnectModal({ isOpen, onClose, subscriptionUrl }) {
               <Button fullWidth size="lg" className="glow-cyan h-12 gap-2 text-[14px] font-bold" onPress={connect}>
                 <RocketIcon /> Подключиться
               </Button>
-              <div className="rounded-xl border border-white/[0.05] bg-black/15 p-3">
+              <div className="theme-code-bg rounded-xl border border-border p-3">
                 <code className="block truncate text-[11px] text-accent/80">{subscriptionUrl}</code>
               </div>
               <button onClick={() => setStep('device')} className="flex items-center gap-1 text-[12px] text-muted hover:text-foreground"><BackIcon /> Скачать HAPP</button>

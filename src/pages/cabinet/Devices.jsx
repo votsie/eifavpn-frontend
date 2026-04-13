@@ -82,7 +82,7 @@ export default function Devices() {
       <h1 className="font-heading text-2xl font-bold text-foreground">Устройства</h1>
 
       {!sub ? (
-        <div className="glass-card rounded-2xl border border-white/[0.06] bg-surface/40 p-5 text-center md:p-6">
+        <div className="theme-card rounded-2xl border border-border bg-surface/40 p-5 text-center md:p-6">
           <p className="text-muted">У вас нет активной подписки</p>
           <Button
             className="glow-cyan mt-4 font-semibold"
@@ -97,7 +97,7 @@ export default function Devices() {
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            className="glass-card rounded-2xl border border-white/[0.06] bg-surface/40 p-5 md:p-6"
+            className="theme-card rounded-2xl border border-border bg-surface/40 p-5 md:p-6"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -160,7 +160,7 @@ export default function Devices() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="glass-card rounded-2xl border border-white/[0.06] bg-surface/40 p-4 md:p-5"
+            className="theme-card rounded-2xl border border-border bg-surface/40 p-4 md:p-5"
           >
             <p className="mb-3 text-sm font-semibold text-foreground">
               Подключённые устройства
@@ -182,7 +182,7 @@ export default function Devices() {
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.05 }}
-                    className="flex items-center justify-between rounded-xl border border-white/[0.04] bg-black/10 px-4 py-3"
+                    className="flex items-center justify-between rounded-xl border border-border theme-subtle-bg px-4 py-3"
                   >
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-medium text-foreground">
@@ -208,7 +208,7 @@ export default function Devices() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="glass-card rounded-2xl border border-white/[0.06] bg-surface/40 p-4 md:p-5"
+            className="theme-card rounded-2xl border border-border bg-surface/40 p-4 md:p-5"
           >
             <p className="mb-3 text-sm font-semibold text-foreground">Лимиты по тарифам</p>
             <div className="grid gap-3 sm:grid-cols-3">
@@ -222,7 +222,7 @@ export default function Devices() {
                   className={`rounded-xl border p-3 ${
                     sub.plan_name === plan.name
                       ? 'border-accent/30 bg-accent/[0.06]'
-                      : 'border-white/[0.04] bg-black/10'
+                      : 'border-border theme-subtle-bg'
                   }`}
                 >
                   <p className="text-xs font-semibold text-foreground">{plan.name}</p>
@@ -238,7 +238,7 @@ export default function Devices() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="glass-card-accent rounded-2xl border border-accent/10 bg-accent/[0.04] p-4 md:p-5"
+            className="theme-card-accent rounded-2xl border border-accent/10 bg-accent/[0.04] p-4 md:p-5"
           >
             <p className="mb-2 text-sm font-semibold text-foreground">
               Как работает лимит устройств?

@@ -11,7 +11,7 @@ export default function Terms() {
           ← На главную
         </Button>
 
-        <div className="rounded-2xl border border-white/[0.06] bg-surface/60 p-8 backdrop-blur-xl">
+        <div className="rounded-2xl border border-border bg-surface/60 p-8 backdrop-blur-xl">
           <h1 className="font-heading mb-6 text-3xl font-bold text-foreground">Условия использования</h1>
 
           <div className="space-y-5 text-sm leading-relaxed text-muted">
@@ -46,7 +46,7 @@ export default function Terms() {
             </section>
           </div>
 
-          <p className="mt-8 text-xs text-muted/40">Последнее обновление: апрель 2026</p>
+          <p className="mt-8 text-xs text-muted">Последнее обновление: апрель 2026</p>
         </div>
       </div>
     </div>

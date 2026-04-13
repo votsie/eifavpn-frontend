@@ -70,19 +70,19 @@ export default function Features() {
               className={`group relative overflow-hidden rounded-2xl border p-5 transition-all duration-300 hover:bg-surface/70 md:p-6 ${
                 f.accent
                   ? 'border-accent/12 bg-accent/[0.04]'
-                  : 'border-white/[0.05] bg-surface/30'
+                  : 'border-border bg-surface/30'
               }`}
             >
               {f.accent && (
                 <div
                   className="pointer-events-none absolute -top-10 -right-10 h-28 w-28 rounded-full"
-                  style={{ background: 'radial-gradient(circle, oklch(0.80 0.155 180 / 10%) 0%, transparent 70%)' }}
+                  style={{ background: 'radial-gradient(circle, var(--accent) 0%, transparent 70%)', opacity: 0.1 }}
                 />
               )}
               <div className={`mb-3 flex h-10 w-10 items-center justify-center rounded-xl transition-shadow duration-300 ${
                 f.accent
-                  ? 'bg-accent/12 text-accent group-hover:shadow-[0_0_16px_oklch(0.80_0.155_180/20%)]'
-                  : 'bg-default/80 text-foreground/80'
+                  ? 'bg-accent/12 text-accent'
+                  : 'bg-default text-foreground/80'
               }`}>
                 <f.icon className="h-[18px] w-[18px]" />
               </div>

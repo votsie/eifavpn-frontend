@@ -14,7 +14,7 @@ export default function Topbar() {
   }
 
   return (
-    <header className="relative z-10 flex items-center justify-between border-b border-white/[0.06] bg-surface/30 px-4 py-3 backdrop-blur-md md:px-8">
+    <header className="relative z-10 flex items-center justify-between border-b border-border bg-surface/30 px-4 py-3 backdrop-blur-md md:px-8">
       <div className="flex items-center gap-3">
         {/* Mobile logo */}
         <div className="flex items-center gap-2 md:hidden">

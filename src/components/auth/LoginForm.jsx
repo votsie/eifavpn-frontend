@@ -121,7 +121,7 @@ export default function LoginForm() {
 
       <div className="flex items-center gap-4 py-1">
         <Separator className="flex-1" />
-        <span className="text-[11px] font-medium uppercase tracking-wider text-muted/60">или по email</span>
+        <span className="text-[11px] font-medium uppercase tracking-wider text-muted">или по email</span>
         <Separator className="flex-1" />
       </div>
 

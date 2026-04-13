@@ -74,13 +74,13 @@ export default function Register() {
         className="relative z-10 w-full"
         style={{ maxWidth: '400px' }}
       >
-        <div className="pointer-events-none absolute -inset-8 -z-10 rounded-full opacity-40"
-          style={{ background: 'radial-gradient(circle, oklch(0.80 0.155 180 / 10%) 0%, transparent 70%)', filter: 'blur(40px)' }} />
+        <div className="pointer-events-none absolute -inset-8 -z-10 rounded-full"
+          style={{ background: 'radial-gradient(circle, var(--accent) 0%, transparent 70%)', opacity: 0.1, filter: 'blur(40px)' }} />
 
-        <div className="rounded-[28px] border border-white/[0.07] bg-surface/65 px-8 py-10 shadow-2xl backdrop-blur-2xl">
+        <div className="rounded-[28px] border border-border bg-surface/65 px-8 py-10 shadow-2xl backdrop-blur-2xl">
           <div className="mb-8 flex flex-col items-center">
             <motion.img src="/logo.png" alt="EIFAVPN"
-              className="mb-4 h-16 w-16 object-contain drop-shadow-[0_0_12px_oklch(0.80_0.155_180/30%)]"
+              className="mb-4 h-16 w-16 object-contain"
               initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.15, duration: 0.5 }} />
             <h1 className="font-heading text-[22px] font-bold tracking-tight text-foreground">
               Создать аккаунт
@@ -119,7 +119,7 @@ export default function Register() {
 
               <div className="flex items-center gap-4 py-1">
                 <Separator className="flex-1" />
-                <span className="text-[11px] font-medium uppercase tracking-wider text-muted/60">или по email</span>
+                <span className="text-[11px] font-medium uppercase tracking-wider text-muted">или по email</span>
                 <Separator className="flex-1" />
               </div>
 
@@ -169,9 +169,9 @@ export default function Register() {
             </form>
           )}
 
-          <p className="mt-6 text-center text-[11px] leading-relaxed text-muted/50">
+          <p className="mt-6 text-center text-[11px] leading-relaxed text-muted">
             Нажимая «Создать аккаунт», вы соглашаетесь с{' '}
-            <a href="/terms" className="text-muted/70 underline decoration-muted/30 underline-offset-2 transition-colors hover:text-foreground">
+            <a href="/terms" className="text-muted underline decoration-muted/30 underline-offset-2 transition-colors hover:text-foreground">
               условиями использования
             </a>
           </p>

@@ -7,7 +7,7 @@ import { getReferralInfo, getReferralList, prepareShare } from '../../api/referr
 
 function StatCard({ label, value, sub, accent }) {
   return (
-    <div className="glass-card rounded-xl border border-white/[0.05] bg-surface/30 p-4">
+    <div className="theme-card rounded-xl border border-border bg-surface/30 p-4">
       <p className="text-xs font-medium uppercase tracking-wider text-muted md:text-[11px]">{label}</p>
       <p className={`font-heading mt-1 text-2xl font-bold md:text-xl ${accent ? 'text-accent' : 'text-foreground'}`}>
         {value}
@@ -64,14 +64,12 @@ export default function Referral() {
     const version = getTgVersion()
 
     if (isTg && version >= 8.0) {
-      // Use savePreparedInlineMessage + shareMessage
       setShareLoading(true)
       try {
         const result = await prepareShare()
         if (result?.id) {
           window.Telegram.WebApp.shareMessage(result.id, (ok) => {
             if (!ok) {
-              // Fallback to switchInlineQuery
               try {
                 window.Telegram.WebApp.switchInlineQuery('ref_' + referralCode, ['users', 'groups'])
               } catch {
@@ -80,7 +78,6 @@ export default function Referral() {
             }
           })
         } else {
-          // Fallback
           try {
             window.Telegram.WebApp.switchInlineQuery('ref_' + referralCode, ['users', 'groups'])
           } catch {
@@ -88,7 +85,6 @@ export default function Referral() {
           }
         }
       } catch {
-        // Fallback to switchInlineQuery
         try {
           window.Telegram.WebApp.switchInlineQuery('ref_' + referralCode, ['users', 'groups'])
         } catch {
@@ -98,14 +94,12 @@ export default function Referral() {
         setShareLoading(false)
       }
     } else if (isTg) {
-      // Older Telegram version — use switchInlineQuery
       try {
         window.Telegram.WebApp.switchInlineQuery('ref_' + referralCode, ['users', 'groups'])
       } catch {
         handleCopy()
       }
     } else {
-      // Not in Telegram — just copy
       handleCopy()
     }
   }
@@ -126,7 +120,7 @@ export default function Referral() {
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        className="glass-card-accent rounded-2xl border border-accent/20 bg-gradient-to-r from-accent/[0.08] to-surface/60 p-5 md:p-6"
+        className="theme-card-accent rounded-2xl border border-accent/20 bg-gradient-to-r from-accent/[0.08] to-surface/60 p-5 md:p-6"
       >
         <p className="text-lg font-bold text-foreground">Приглашайте друзей</p>
         <p className="mt-1 text-sm text-muted">
@@ -137,7 +131,7 @@ export default function Referral() {
           <p className="mb-1.5 text-[11px] font-medium uppercase tracking-wider text-muted">
             Ваш реферальный код
           </p>
-          <div className="inline-block rounded-lg bg-black/20 px-4 py-2">
+          <div className="inline-block rounded-lg theme-code-bg px-4 py-2">
             <span className="font-mono text-lg font-bold tracking-widest text-accent">
               {referralCode}
             </span>
@@ -149,7 +143,7 @@ export default function Referral() {
             Реферальная ссылка
           </p>
           <div className="flex items-center gap-2">
-            <code className="flex-1 truncate rounded-lg bg-black/20 px-3 py-2 font-mono text-xs text-accent">
+            <code className="flex-1 truncate rounded-lg theme-code-bg px-3 py-2 font-mono text-xs text-accent">
               {referralLink}
             </code>
             <Button
@@ -199,7 +193,7 @@ export default function Referral() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15 }}
-        className="glass-card rounded-2xl border border-white/[0.06] bg-surface/40 p-4 md:p-5"
+        className="theme-card rounded-2xl border border-border bg-surface/40 p-4 md:p-5"
       >
         <p className="mb-3 text-sm font-semibold text-foreground">Как это работает?</p>
         <div className="space-y-3">
@@ -238,7 +232,7 @@ export default function Referral() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="glass-card rounded-2xl border border-white/[0.06] bg-surface/40 p-4 md:p-5"
+        className="theme-card rounded-2xl border border-border bg-surface/40 p-4 md:p-5"
       >
         <p className="mb-3 text-sm font-semibold text-foreground">Приглашённые пользователи</p>
 
@@ -251,7 +245,7 @@ export default function Referral() {
             {list.map((ref, i) => (
               <div
                 key={i}
-                className="glass-card flex min-h-11 items-center justify-between rounded-xl border border-white/[0.04] bg-black/10 px-4 py-3"
+                className="theme-card flex min-h-11 items-center justify-between rounded-xl border border-border theme-subtle-bg px-4 py-3"
               >
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium text-foreground">{ref.email}</p>

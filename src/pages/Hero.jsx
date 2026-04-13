@@ -20,7 +20,7 @@ export default function Hero() {
             <img
               src="/logo.png"
               alt="EIFAVPN"
-              className="h-14 w-14 object-contain drop-shadow-[0_0_16px_oklch(0.80_0.155_180/30%)] md:h-16 md:w-16"
+              className="h-14 w-14 object-contain md:h-16 md:w-16"
             />
           </div>
         </motion.div>
@@ -82,7 +82,7 @@ export default function Hero() {
           transition={{ duration: 0.7, delay: 0.55, ease: [0.32, 0.72, 0, 1] }}
           className="mt-14 w-full max-w-xl md:mt-16"
         >
-          <div className="grid grid-cols-3 divide-x divide-white/[0.05] rounded-2xl border border-white/[0.06] bg-surface/40 px-2 py-4 text-center backdrop-blur-xl md:px-6 md:py-5">
+          <div className="grid grid-cols-3 divide-x divide-separator rounded-2xl border border-border bg-surface/40 px-2 py-4 text-center backdrop-blur-xl md:px-6 md:py-5">
             <div>
               <p className="font-heading text-xl font-bold text-accent md:text-2xl">14</p>
               <p className="mt-0.5 text-[11px] text-muted md:text-xs">Серверов</p>
@@ -106,7 +106,7 @@ export default function Hero() {
         transition={{ delay: 1.2, duration: 0.6 }}
         className="float absolute bottom-6"
       >
-        <ArrowDown className="h-4 w-4 text-muted/40" />
+        <ArrowDown className="h-4 w-4 text-muted" />
       </motion.div>
     </section>
   )

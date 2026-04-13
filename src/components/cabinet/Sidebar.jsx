@@ -27,7 +27,7 @@ function SidebarLink({ to, icon: Icon, label }) {
         `flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-200 ${
           isActive
             ? 'bg-accent/12 text-accent shadow-[inset_3px_0_0_0_var(--accent)]'
-            : 'text-muted hover:bg-white/[0.04] hover:text-foreground'
+            : 'text-muted hover:bg-default hover:text-foreground'
         }`
       }
     >
@@ -40,7 +40,7 @@ function SidebarLink({ to, icon: Icon, label }) {
 export default function Sidebar({ mobile = false }) {
   if (mobile) {
     return (
-      <nav className="fixed bottom-0 left-0 right-0 z-50 flex rounded-t-2xl border-t border-white/[0.08] bg-surface/85 backdrop-blur-2xl md:hidden"
+      <nav className="fixed bottom-0 left-0 right-0 z-50 flex rounded-t-2xl border-t border-border bg-surface/85 backdrop-blur-2xl md:hidden"
         style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
         {links.slice(0, 5).map((link) => (
           <NavLink
@@ -48,14 +48,14 @@ export default function Sidebar({ mobile = false }) {
             to={link.to}
             className={({ isActive }) =>
               `flex flex-1 flex-col items-center gap-0.5 pb-1.5 pt-2.5 text-[10px] font-medium transition-all duration-200 ${
-                isActive ? 'text-accent' : 'text-muted/70'
+                isActive ? 'text-accent' : 'text-muted'
               }`
             }
           >
             {({ isActive }) => (
               <>
                 <div className={`flex h-7 w-7 items-center justify-center rounded-xl transition-all duration-200 ${
-                  isActive ? 'bg-accent/12 shadow-[0_0_12px_oklch(0.80_0.155_180/15%)]' : ''
+                  isActive ? 'bg-accent/12' : ''
                 }`}>
                   <link.icon className="h-[18px] w-[18px]" />
                 </div>
@@ -69,7 +69,7 @@ export default function Sidebar({ mobile = false }) {
   }
 
   return (
-    <aside className="fixed left-0 top-0 z-40 hidden h-full w-60 flex-col border-r border-white/[0.06] bg-surface/50 backdrop-blur-xl md:flex">
+    <aside className="fixed left-0 top-0 z-40 hidden h-full w-60 flex-col border-r border-border bg-surface/50 backdrop-blur-xl md:flex">
       {/* Logo */}
       <div className="flex items-center gap-2.5 px-5 py-5">
         <img src="/logo.png" alt="EIFAVPN" className="h-8 w-8 object-contain" />
@@ -86,7 +86,7 @@ export default function Sidebar({ mobile = false }) {
       </nav>
 
       {/* Back to landing */}
-      <div className="border-t border-white/[0.06] px-3 py-4">
+      <div className="border-t border-border px-3 py-4">
         <NavLink
           to="/"
           className="flex items-center gap-2 rounded-xl px-4 py-2 text-sm text-muted transition-colors hover:text-foreground"

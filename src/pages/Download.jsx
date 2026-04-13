@@ -44,7 +44,7 @@ export default function Download() {
     <div className="relative flex min-h-screen items-center justify-center">
       <Background />
       <div className="relative z-10 mx-auto max-w-md w-full px-4">
-        <div className="glass-card rounded-2xl border border-white/[0.06] bg-surface/40 p-8 text-center">
+        <div className="theme-card rounded-2xl border border-border bg-surface/40 p-8 text-center">
           {/* Logo */}
           <div className="mb-6">
             <h1 className="font-heading text-3xl font-bold text-accent">EIFAVPN</h1>

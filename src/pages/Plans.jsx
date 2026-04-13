@@ -92,14 +92,14 @@ export default function Plans() {
           transition={{ duration: 0.4, delay: 0.1 }}
           className="mb-10 flex justify-center"
         >
-          <div className="inline-flex items-center gap-1 rounded-xl border border-white/[0.05] bg-surface/40 p-1">
+          <div className="inline-flex items-center gap-1 rounded-xl border border-border bg-surface/40 p-1">
             {periods.map((p) => (
               <button
                 key={p.id}
                 onClick={() => setPeriod(p.id)}
                 className={`relative rounded-lg px-4 py-2 text-[13px] font-medium transition-all duration-200 ${
                   period === p.id
-                    ? 'bg-accent text-accent-foreground shadow-[0_0_14px_oklch(0.80_0.155_180/16%)]'
+                    ? 'bg-accent text-accent-foreground glow-cyan'
                     : 'text-muted hover:text-foreground'
                 }`}
               >
@@ -134,12 +134,12 @@ export default function Plans() {
               >
                 <div className={`relative flex flex-col overflow-hidden rounded-2xl border p-6 transition-all duration-300 md:p-7 ${
                   plan.popular
-                    ? 'border-accent/20 bg-gradient-to-b from-accent/[0.06] to-surface/50 shadow-[0_0_32px_oklch(0.80_0.155_180/12%)]'
-                    : 'border-white/[0.05] bg-surface/30 hover:border-white/[0.08]'
+                    ? 'border-accent/20 bg-gradient-to-b from-accent/[0.06] to-surface/50 glow-cyan'
+                    : 'border-border bg-surface/30 hover:border-accent/10'
                 }`}>
                   {plan.popular && (
                     <div className="pointer-events-none absolute -top-12 -right-12 h-32 w-32 rounded-full"
-                      style={{ background: 'radial-gradient(circle, oklch(0.80 0.155 180 / 10%) 0%, transparent 70%)' }} />
+                      style={{ background: 'radial-gradient(circle, var(--accent) 0%, transparent 70%)', opacity: 0.1 }} />
                   )}
 
                   {/* Name */}
@@ -203,7 +203,7 @@ export default function Plans() {
                     fullWidth
                     size="lg"
                     variant={plan.popular ? undefined : 'outline'}
-                    className={`text-[14px] font-semibold ${plan.popular ? 'shadow-[0_0_16px_oklch(0.80_0.155_180/16%)]' : ''}`}
+                    className={`text-[14px] font-semibold ${plan.popular ? 'glow-cyan' : ''}`}
                     onPress={() => navigate(`/register?plan=${plan.id}`)}
                   >
                     {plan.popular ? 'Подключить Pro' : `Выбрать ${plan.name}`}
@@ -220,7 +220,7 @@ export default function Plans() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.3, duration: 0.5 }}
-          className="mt-8 text-center text-[12px] text-muted/50"
+          className="mt-8 text-center text-[12px] text-muted"
         >
           7 дней бесплатного пробного периода. Возврат средств в течение 30 дней.
         </motion.p>

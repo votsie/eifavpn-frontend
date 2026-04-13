@@ -143,7 +143,7 @@ export default function Servers() {
         onValueChange={setSearch}
         startContent={<Magnifier className="h-4 w-4 text-muted" />}
         classNames={{
-          inputWrapper: 'glass-card border-white/[0.06] bg-surface/40',
+          inputWrapper: 'theme-card border-border bg-surface/40',
         }}
       />
 
@@ -165,8 +165,8 @@ export default function Servers() {
               transition={{ delay: i * 0.04 }}
               className={`relative rounded-2xl border p-4 transition-all ${
                 server.isCurrentNode
-                  ? 'glass-card-accent border-accent/30 bg-accent/[0.06] shadow-[0_0_20px_oklch(0.80_0.155_180/12%)]'
-                  : 'glass-card border-white/[0.06] bg-surface/40'
+                  ? 'theme-card-accent border-accent/30 bg-accent/[0.06]'
+                  : 'theme-card border-border bg-surface/40'
               }`}
             >
               {server.isCurrentNode && (
@@ -190,7 +190,7 @@ export default function Servers() {
                 <div className="flex items-center gap-1.5">
                   <span
                     className={`inline-block h-2 w-2 rounded-full ${
-                      server.isConnected ? 'bg-accent shadow-[0_0_6px_oklch(0.80_0.155_180/50%)]' : 'bg-danger/60'
+                      server.isConnected ? 'bg-accent' : 'bg-danger/60'
                     }`}
                   />
                   <span className="text-xs text-muted">
@@ -210,7 +210,7 @@ export default function Servers() {
 
       {/* Empty state */}
       {!isLoading && filtered.length === 0 && (
-        <div className="glass-card rounded-2xl border border-white/[0.06] bg-surface/40 p-8 text-center">
+        <div className="theme-card rounded-2xl border border-border bg-surface/40 p-8 text-center">
           <p className="text-muted">
             {search ? 'Серверы не найдены по вашему запросу' : 'Нет доступных серверов'}
           </p>

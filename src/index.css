@@ -1,15 +1,15 @@
 @import "tailwindcss";
 @import "@heroui/styles";
 
-/* ── EIFAVPN Dark Cyan/Teal Theme ─────────────────────── */
+/* ── EIFAVPN Dual Theme (Light + Dark) ─────────────────── */
 @layer base {
-  [data-theme="glassvpn-dark"] {
-    color-scheme: dark;
-
+  /* Light theme */
+  [data-theme="light"] {
+    color-scheme: light;
     --white: oklch(100% 0 0);
     --black: oklch(0% 0 0);
-    --snow: oklch(0.9911 0 0);
-    --eclipse: oklch(0.2103 0.0059 285.89);
+    --snow: oklch(0.99 0 0);
+    --eclipse: oklch(0.15 0.01 200);
 
     --spacing: 0.25rem;
     --border-width: 1px;
@@ -22,54 +22,90 @@
     --radius: 1rem;
     --field-radius: calc(var(--radius) * 1.5);
 
-    /* Base — deep dark with teal undertone */
-    --background: oklch(0.09 0.012 195);
-    --foreground: oklch(0.93 0.006 190);
-
-    /* Surface — dark teal */
-    --surface: oklch(0.14 0.020 192);
+    --background: oklch(0.985 0.003 200);
+    --foreground: oklch(0.13 0.01 200);
+    --surface: oklch(0.98 0.002 200);
     --surface-foreground: var(--foreground);
-
-    /* Overlay */
-    --overlay: oklch(0.12 0.016 195);
+    --overlay: oklch(1.0 0 0);
     --overlay-foreground: var(--foreground);
-
-    --muted: oklch(0.55 0.035 190);
-    --scrollbar: oklch(0.32 0.028 190);
-
-    --default: oklch(0.19 0.020 192);
-    --default-foreground: var(--snow);
-
-    /* Bright cyan accent — matches logo glow */
-    --accent: oklch(0.80 0.155 180);
-    --accent-foreground: oklch(0.08 0.018 195);
-
-    /* Fields */
-    --field-background: oklch(0.15 0.016 192);
+    --muted: oklch(0.45 0.02 200);
+    --scrollbar: oklch(0.80 0.01 200);
+    --default: oklch(0.94 0.003 200);
+    --default-foreground: var(--foreground);
+    --accent: oklch(0.42 0.18 180);
+    --accent-foreground: oklch(0.99 0 0);
+    --field-background: oklch(1.0 0 0);
     --field-foreground: var(--foreground);
-    --field-placeholder: var(--muted);
-    --field-border: oklch(0.26 0.038 190);
+    --field-placeholder: oklch(0.60 0.02 200);
+    --field-border: oklch(0.85 0.01 200);
+    --success: oklch(0.55 0.18 155);
+    --success-foreground: oklch(0.99 0 0);
+    --warning: oklch(0.70 0.16 76);
+    --warning-foreground: var(--eclipse);
+    --danger: oklch(0.55 0.22 25);
+    --danger-foreground: oklch(0.99 0 0);
+    --segment: oklch(0.96 0.002 200);
+    --segment-foreground: var(--foreground);
+    --border: oklch(0.88 0.008 200);
+    --separator: oklch(0.92 0.005 200);
+    --focus: var(--accent);
+    --link: var(--accent);
+    --backdrop: oklch(0 0 0 / 30%);
+    --surface-shadow: 0 1px 3px 0 rgba(0,0,0,0.06), 0 1px 2px -1px rgba(0,0,0,0.06);
+    --overlay-shadow: 0 4px 16px 0 rgba(0,0,0,0.08);
+    --field-shadow: 0 1px 2px 0 rgba(0,0,0,0.04);
 
-    /* Status */
-    --success: oklch(0.80 0.155 180);
+    --skeleton-animation: shimmer;
+  }
+
+  /* Dark theme */
+  [data-theme="dark"] {
+    color-scheme: dark;
+    --white: oklch(100% 0 0);
+    --black: oklch(0% 0 0);
+    --snow: oklch(0.99 0 0);
+    --eclipse: oklch(0.15 0.01 200);
+
+    --spacing: 0.25rem;
+    --border-width: 1px;
+    --field-border-width: 1px;
+    --disabled-opacity: 0.4;
+    --ring-offset-width: 2px;
+    --cursor-interactive: pointer;
+    --cursor-disabled: not-allowed;
+
+    --radius: 1rem;
+    --field-radius: calc(var(--radius) * 1.5);
+
+    --background: oklch(0.11 0.012 200);
+    --foreground: oklch(0.95 0.004 200);
+    --surface: oklch(0.16 0.015 200);
+    --surface-foreground: var(--foreground);
+    --overlay: oklch(0.14 0.012 200);
+    --overlay-foreground: var(--foreground);
+    --muted: oklch(0.68 0.02 200);
+    --scrollbar: oklch(0.35 0.02 200);
+    --default: oklch(0.21 0.015 200);
+    --default-foreground: var(--snow);
+    --accent: oklch(0.78 0.17 180);
+    --accent-foreground: oklch(0.10 0.015 200);
+    --field-background: oklch(0.17 0.012 200);
+    --field-foreground: var(--foreground);
+    --field-placeholder: oklch(0.52 0.02 200);
+    --field-border: oklch(0.30 0.02 200);
+    --success: oklch(0.78 0.17 180);
     --success-foreground: var(--eclipse);
     --warning: oklch(0.82 0.14 76);
     --warning-foreground: var(--eclipse);
     --danger: oklch(0.62 0.22 25);
     --danger-foreground: var(--snow);
-
-    /* Segment */
-    --segment: oklch(0.17 0.016 192);
+    --segment: oklch(0.19 0.012 200);
     --segment-foreground: var(--foreground);
-
-    /* Misc */
-    --border: oklch(0.28 0.04 190 / 30%);
-    --separator: oklch(0.20 0.028 192);
+    --border: oklch(0.26 0.015 200 / 35%);
+    --separator: oklch(0.22 0.012 200);
     --focus: var(--accent);
     --link: var(--accent);
-    --backdrop: oklch(0 0 0 / 70%);
-
-    /* Shadows — cyan glow */
+    --backdrop: oklch(0 0 0 / 60%);
     --surface-shadow: 0 0 0 0 transparent;
     --overlay-shadow: 0 4px 32px 0 oklch(0.5 0.12 180 / 8%);
     --field-shadow: 0 0 0 0 transparent;
@@ -107,49 +143,90 @@ body {
 }
 
 /* ── Glow utilities ───────────────────────────────────── */
-.glow-cyan {
+[data-theme="dark"] .glow-cyan {
   box-shadow:
-    0 0 24px oklch(0.80 0.155 180 / 20%),
-    0 0 64px oklch(0.80 0.155 180 / 7%);
+    0 0 24px oklch(0.78 0.17 180 / 20%),
+    0 0 64px oklch(0.78 0.17 180 / 7%);
 }
-
-.glow-cyan-lg {
+[data-theme="light"] .glow-cyan {
   box-shadow:
-    0 0 40px oklch(0.80 0.155 180 / 28%),
-    0 0 100px oklch(0.80 0.155 180 / 12%),
-    0 0 160px oklch(0.80 0.155 180 / 5%);
+    0 0 16px oklch(0.42 0.18 180 / 16%),
+    0 0 40px oklch(0.42 0.18 180 / 6%);
 }
 
-.text-glow {
-  text-shadow: 0 0 24px oklch(0.80 0.155 180 / 40%);
+[data-theme="dark"] .glow-cyan-lg {
+  box-shadow:
+    0 0 40px oklch(0.78 0.17 180 / 28%),
+    0 0 100px oklch(0.78 0.17 180 / 12%),
+    0 0 160px oklch(0.78 0.17 180 / 5%);
+}
+[data-theme="light"] .glow-cyan-lg {
+  box-shadow:
+    0 0 24px oklch(0.42 0.18 180 / 18%),
+    0 0 60px oklch(0.42 0.18 180 / 8%);
 }
 
-/* ── Mobile glass card (only below md breakpoint) ────── */
-@media (max-width: 767px) {
-  .glass-card {
-    background: oklch(0.13 0.018 192 / 72%);
-    backdrop-filter: blur(24px) saturate(1.4);
-    border: 1px solid oklch(0.80 0.155 180 / 8%);
-    border-radius: 1.25rem;
-  }
+[data-theme="dark"] .text-glow {
+  text-shadow: 0 0 24px oklch(0.78 0.17 180 / 40%);
+}
+[data-theme="light"] .text-glow {
+  text-shadow: 0 0 16px oklch(0.42 0.18 180 / 25%);
+}
 
-  .glass-card-accent {
-    background: linear-gradient(135deg, oklch(0.80 0.155 180 / 8%) 0%, oklch(0.13 0.018 192 / 70%) 100%);
-    backdrop-filter: blur(28px) saturate(1.5);
-    border: 1px solid oklch(0.80 0.155 180 / 14%);
-    border-radius: 1.25rem;
-  }
+/* ── Theme-aware card styles ─────────────────────────── */
+[data-theme="light"] .theme-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  box-shadow: var(--surface-shadow);
+}
+[data-theme="dark"] .theme-card {
+  background: var(--surface);
+  border: 1px solid oklch(0.78 0.17 180 / 8%);
+  border-radius: 1rem;
+  backdrop-filter: blur(12px);
+}
+
+/* ── Theme-aware accent card ─────────────────────────── */
+[data-theme="light"] .theme-card-accent {
+  background: linear-gradient(135deg, oklch(0.42 0.18 180 / 5%) 0%, oklch(0.98 0.002 200) 100%);
+  border: 1px solid oklch(0.42 0.18 180 / 15%);
+  border-radius: 1.25rem;
+  box-shadow: var(--surface-shadow);
+}
+[data-theme="dark"] .theme-card-accent {
+  background: linear-gradient(135deg, oklch(0.78 0.17 180 / 8%) 0%, oklch(0.14 0.015 200 / 70%) 100%);
+  backdrop-filter: blur(28px) saturate(1.5);
+  border: 1px solid oklch(0.78 0.17 180 / 14%);
+  border-radius: 1.25rem;
+}
+
+/* ── Theme-aware code/code-block background ──────────── */
+[data-theme="light"] .theme-code-bg {
+  background: oklch(0.96 0.003 200);
+}
+[data-theme="dark"] .theme-code-bg {
+  background: oklch(0 0 0 / 15%);
+}
+
+/* ── Theme-aware subtle backgrounds ──────────────────── */
+[data-theme="light"] .theme-subtle-bg {
+  background: oklch(0.96 0.003 200);
+}
+[data-theme="dark"] .theme-subtle-bg {
+  background: oklch(0 0 0 / 10%);
 }
 
 /* ── Scrollbar ────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: oklch(0.32 0.04 190 / 40%);
+  background: var(--scrollbar);
   border-radius: 3px;
+  opacity: 0.4;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: oklch(0.42 0.06 185 / 60%);
+  opacity: 0.6;
 }
 
 /* ── Animations ───────────────────────────────────────── */
