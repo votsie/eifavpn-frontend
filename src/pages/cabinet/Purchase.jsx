@@ -87,11 +87,6 @@ export default function Purchase() {
                   : 'border-border bg-surface hover:border-accent/20'
               }`}
             >
-              {plan.id === 'pro' && (
-                <span className="absolute -top-2 right-3 rounded-full bg-accent/15 px-2 py-0.5 text-[10px] font-bold text-accent">
-                  Popular
-                </span>
-              )}
               <p className="font-heading text-base font-bold text-foreground">{plan.name}</p>
               <div className="mt-1 flex items-baseline gap-1">
                 <span className="font-heading text-2xl font-extrabold text-accent">{price}₽</span>
