@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import LandingLayout from './layouts/LandingLayout'
 import CabinetLayout from './layouts/CabinetLayout'
 import AdminLayout from './layouts/AdminLayout'
@@ -36,6 +36,18 @@ import AdminExport from './pages/admin/Export'
 import AdminSettings from './pages/admin/Settings'
 import AdminPricing from './pages/admin/Pricing'
 
+function MaintenancePage() {
+  return (
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background px-6 text-center">
+      <img src="/logo.png" alt="EIFAVPN" className="mb-6 h-16 w-16 object-contain" />
+      <h1 className="font-heading text-2xl font-bold text-foreground">Ведутся технические работы</h1>
+      <p className="mt-3 max-w-md text-sm text-muted">
+        Сайт временно недоступен. Мы проводим обновление для улучшения сервиса. Пожалуйста, попробуйте позже.
+      </p>
+    </div>
+  )
+}
+
 function useAnalyticsPageview() {
   const location = useLocation()
   useEffect(() => {
@@ -47,6 +59,22 @@ function useAnalyticsPageview() {
 
 export default function App() {
   useAnalyticsPageview()
+  const [maintenance, setMaintenance] = useState(false)
+  const [mChecked, setMChecked] = useState(false)
+  const location = useLocation()
+
+  useEffect(() => {
+    fetch('/api/maintenance/')
+      .then(r => r.json())
+      .then(d => { setMaintenance(d.maintenance); setMChecked(true) })
+      .catch(() => setMChecked(true))
+  }, [])
+
+  // Show maintenance page for non-admin routes
+  if (mChecked && maintenance && !location.pathname.startsWith('/admin')) {
+    return <MaintenancePage />
+  }
+
   return (
     <Routes>
       {/* Landing */}
