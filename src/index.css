@@ -1,6 +1,14 @@
 @import "tailwindcss";
 @import "@heroui/styles";
 
+/* Force dark scheme on html to prevent Tailwind/HeroUI auto-light */
+html {
+  color-scheme: dark;
+}
+html[data-theme="light"] {
+  color-scheme: light;
+}
+
 /* ── EIFAVPN Dual Theme (Light + Dark) ─────────────────── */
 @layer base {
   /* Light theme */
