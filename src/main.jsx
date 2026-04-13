@@ -20,6 +20,7 @@ import App from './App.jsx'
   }
 
   document.documentElement.setAttribute('data-theme', theme)
+  document.documentElement.style.colorScheme = theme
 })()
 
 createRoot(document.getElementById('root')).render(

@@ -27,6 +27,7 @@ function applyTheme(choice) {
     }
   }
   document.documentElement.setAttribute('data-theme', resolved)
+  document.documentElement.style.colorScheme = resolved
 }
 
 export default function Settings() {

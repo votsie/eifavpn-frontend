@@ -11,6 +11,7 @@ function ThemeToggle() {
     setTheme(next)
     localStorage.setItem('eifavpn_theme', next)
     document.documentElement.setAttribute('data-theme', next)
+    document.documentElement.style.colorScheme = next
   }
 
   return (
