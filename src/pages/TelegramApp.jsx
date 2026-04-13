@@ -24,15 +24,28 @@ function TelegramAppInner() {
     authStarted.current = true
 
     async function auth() {
+      // Check for deep link: startapp=link_{user_id}
+      const startParam = window.Telegram?.WebApp?.initDataUnsafe?.start_param || ''
+      const isLinkRequest = startParam.startsWith('link_')
+
       // Step 1: Check if we already have valid tokens in localStorage
       const hasTokens = !!localStorage.getItem('eifavpn_access')
       if (hasTokens) {
         const ok = await fetchMe()
         if (ok) {
+          // If this is a link request, try to link Telegram to the account
+          if (isLinkRequest) {
+            try {
+              const { linkTelegram } = await import('../api/auth')
+              const tgInitData = initData || window.Telegram?.WebApp?.initData
+              if (tgInitData) {
+                await linkTelegram(tgInitData)
+              }
+            } catch {}
+          }
           navigate('/cabinet/overview', { replace: true })
           return
         }
-        // Tokens expired — continue to Telegram auth
       }
 
       // Step 2: Authenticate via Telegram initData

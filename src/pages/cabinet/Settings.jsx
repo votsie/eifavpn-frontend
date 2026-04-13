@@ -137,7 +137,7 @@ export default function Settings() {
   }
 
   async function handleLinkTelegram() {
-    // Try Telegram WebApp initData if available
+    // Try Telegram WebApp initData if available (Mini App)
     const tg = window.Telegram?.WebApp
     if (tg?.initData) {
       try {
@@ -148,7 +148,10 @@ export default function Settings() {
         setLinkMsg({ type: 'error', text: err.message || 'Ошибка привязки Telegram' })
       }
     } else {
-      setLinkMsg({ type: 'error', text: 'Привязка Telegram доступна только из Telegram Mini App' })
+      // Not in Mini App — open bot with deep link to trigger Mini App
+      const linkUrl = `https://t.me/EIFA_VPNbot?startapp=link_${user?.id}`
+      window.open(linkUrl, '_blank')
+      setLinkMsg({ type: 'success', text: 'Откройте Telegram и нажмите "Запустить" в боте EIFAVPN. После этого вернитесь и обновите страницу.' })
     }
   }
 
