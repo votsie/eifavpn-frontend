@@ -369,27 +369,17 @@ export default function Settings() {
             </div>
           </div>
 
-          {/* Name */}
-          <div>
-            <p className="mb-1 text-[11px] font-medium uppercase tracking-wider text-muted">Имя</p>
-            {editingProfile ? (
-              <Input
-                placeholder="Ваше имя"
-                value={firstName}
-                onValueChange={setFirstName}
-                size="sm"
-                classNames={{ inputWrapper: 'border-border bg-surface' }}
-              />
-            ) : (
-              <p className="text-sm text-foreground">{user?.first_name || 'Не указано'}</p>
-            )}
-          </div>
-
-          {/* Email (read-only) */}
-          <div>
-            <p className="mb-1 text-[11px] font-medium uppercase tracking-wider text-muted">Email</p>
-            <p className="text-sm text-foreground">{user?.email}</p>
-          </div>
+          {/* Name (only in edit mode) */}
+          {editingProfile && (
+            <Input
+              label="Имя"
+              placeholder="Ваше имя"
+              value={firstName}
+              onValueChange={setFirstName}
+              size="sm"
+              classNames={{ inputWrapper: 'border-border bg-surface' }}
+            />
+          )}
 
           {/* Save/Cancel buttons */}
           {editingProfile && (
