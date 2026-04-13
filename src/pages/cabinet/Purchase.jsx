@@ -119,8 +119,8 @@ export default function Purchase() {
         })}
       </div>
 
-      {/* Period + Payment in one row */}
-      <div className="flex flex-wrap items-start gap-4">
+      {/* Period + Payment */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
         {/* Period */}
         <div className="flex-1">
           <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted">Период</p>
