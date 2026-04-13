@@ -1,8 +1,7 @@
 import { Button } from '@heroui/react'
-import { ArrowRightFromSquare } from '@gravity-ui/icons'
+import { ArrowRightFromSquare, Gear } from '@gravity-ui/icons'
 import { useAuthStore } from '../../stores/authStore'
-import { useNavigate } from 'react-router-dom'
-import StatusBadge from './StatusBadge'
+import { useNavigate, Link } from 'react-router-dom'
 
 export default function Topbar() {
   const { user, logout } = useAuthStore()
@@ -14,7 +13,7 @@ export default function Topbar() {
   }
 
   return (
-    <header className="relative z-10 flex items-center justify-between border-b border-border bg-surface/30 px-4 py-3 backdrop-blur-md md:px-8">
+    <header className="relative z-10 flex items-center justify-between border-b border-border bg-surface px-4 py-3 md:px-8">
       <div className="flex items-center gap-3">
         {/* Mobile logo */}
         <div className="flex items-center gap-2 md:hidden">
@@ -24,14 +23,20 @@ export default function Topbar() {
         {/* Desktop user info */}
         <div className="hidden md:block">
           <p className="text-sm font-medium text-foreground">
-            {user?.username || 'Пользователь'}
+            {user?.first_name || user?.email?.split('@')[0] || 'Пользователь'}
           </p>
           <p className="text-xs text-muted">{user?.email || ''}</p>
         </div>
       </div>
 
-      <div className="flex items-center gap-3">
-        {user && <StatusBadge status={user.status} />}
+      <div className="flex items-center gap-2">
+        {/* Settings gear — mobile only */}
+        <Link
+          to="/cabinet/settings"
+          className="flex h-9 w-9 items-center justify-center rounded-lg text-muted transition-colors hover:bg-default hover:text-foreground md:hidden"
+        >
+          <Gear className="h-[18px] w-[18px]" />
+        </Link>
         <Button
           size="sm"
           variant="tertiary"

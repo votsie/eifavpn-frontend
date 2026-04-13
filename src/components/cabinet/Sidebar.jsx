@@ -17,6 +17,14 @@ const links = [
   { to: '/cabinet/guide', icon: CircleQuestion, label: 'Инструкция' },
 ]
 
+// Mobile bottom nav: 4 main + guide (settings accessible via topbar gear)
+const mobileLinks = [
+  { to: '/cabinet/overview', icon: LayoutList, label: 'Обзор' },
+  { to: '/cabinet/purchase', icon: ShoppingCart, label: 'Тарифы' },
+  { to: '/cabinet/devices', icon: Smartphone, label: 'Устройства' },
+  { to: '/cabinet/referral', icon: Persons, label: 'Рефералы' },
+]
+
 function SidebarLink({ to, icon: Icon, label }) {
   return (
     <NavLink
@@ -38,9 +46,9 @@ function SidebarLink({ to, icon: Icon, label }) {
 export default function Sidebar({ mobile = false }) {
   if (mobile) {
     return (
-      <nav className="fixed bottom-0 left-0 right-0 z-50 flex rounded-t-2xl border-t border-border bg-surface/85 backdrop-blur-2xl md:hidden"
+      <nav className="fixed bottom-0 left-0 right-0 z-50 flex border-t border-border bg-surface md:hidden"
         style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
-        {links.slice(0, 5).map((link) => (
+        {mobileLinks.map((link) => (
           <NavLink
             key={link.to}
             to={link.to}
@@ -67,7 +75,7 @@ export default function Sidebar({ mobile = false }) {
   }
 
   return (
-    <aside className="fixed left-0 top-0 z-40 hidden h-full w-60 flex-col border-r border-border bg-surface/50 backdrop-blur-xl md:flex">
+    <aside className="fixed left-0 top-0 z-40 hidden h-full w-60 flex-col border-r border-border bg-surface md:flex">
       {/* Logo */}
       <div className="flex items-center gap-2.5 px-5 py-5">
         <img src="/logo.png" alt="EIFAVPN" className="h-8 w-8 object-contain" />
