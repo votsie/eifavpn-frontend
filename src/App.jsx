@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import LandingLayout from './layouts/LandingLayout'
 import CabinetLayout from './layouts/CabinetLayout'
+import AdminLayout from './layouts/AdminLayout'
 import ProtectedRoute from './components/auth/ProtectedRoute'
 import Landing from './pages/Landing'
 import Login from './pages/Login'
@@ -18,6 +19,10 @@ import Referral from './pages/cabinet/Referral'
 import Settings from './pages/cabinet/Settings'
 import Guide from './pages/cabinet/Guide'
 import Purchase from './pages/cabinet/Purchase'
+
+import AdminDashboard from './pages/admin/Dashboard'
+import AdminUsers from './pages/admin/Users'
+import AdminUserDetail from './pages/admin/UserDetail'
 
 export default function App() {
   return (
@@ -52,6 +57,13 @@ export default function App() {
         <Route path="purchase" element={<Purchase />} />
         <Route path="settings" element={<Settings />} />
         <Route path="guide" element={<Guide />} />
+      </Route>
+
+      {/* Admin */}
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<AdminDashboard />} />
+        <Route path="users" element={<AdminUsers />} />
+        <Route path="users/:id" element={<AdminUserDetail />} />
       </Route>
 
       {/* 404 */}
