@@ -21,6 +21,8 @@ import App from './App.jsx'
 
   document.documentElement.setAttribute('data-theme', theme)
   document.documentElement.style.colorScheme = theme
+  document.documentElement.classList.toggle('dark', theme === 'dark')
+  document.documentElement.classList.toggle('light', theme === 'light')
 })()
 
 createRoot(document.getElementById('root')).render(

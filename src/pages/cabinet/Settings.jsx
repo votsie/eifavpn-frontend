@@ -28,6 +28,8 @@ function applyTheme(choice) {
   }
   document.documentElement.setAttribute('data-theme', resolved)
   document.documentElement.style.colorScheme = resolved
+  document.documentElement.classList.toggle('dark', resolved === 'dark')
+  document.documentElement.classList.toggle('light', resolved === 'light')
 }
 
 export default function Settings() {
