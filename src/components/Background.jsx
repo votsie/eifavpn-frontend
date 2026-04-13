@@ -9,6 +9,7 @@ export default function Background() {
       aria-hidden="true"
       style={{
         background: `
+          radial-gradient(ellipse 60% 25% at 50% 0%, var(--accent) / 0.07, transparent 70%),
           radial-gradient(ellipse 80% 60% at 50% 40%, var(--surface) 0%, var(--background) 100%)
         `,
       }}
