@@ -3,6 +3,7 @@ import { WebAppProvider, useInitData, useWebApp } from '@vkruglikov/react-telegr
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../stores/authStore'
 import { telegramWebAppAuth } from '../api/telegram'
+import { linkTelegram } from '../api/auth'
 import { Spinner } from '@heroui/react'
 
 function TelegramAppInner() {
@@ -36,7 +37,6 @@ function TelegramAppInner() {
           // If this is a link request, try to link Telegram to the account
           if (isLinkRequest) {
             try {
-              const { linkTelegram } = await import('../api/auth')
               const tgInitData = initData || window.Telegram?.WebApp?.initData
               if (tgInitData) {
                 await linkTelegram(tgInitData)
