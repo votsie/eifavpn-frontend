@@ -11,7 +11,8 @@ export default function Login() {
         initial={{ opacity: 0, y: 24, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.6, ease: [0.32, 0.72, 0, 1] }}
-        className="relative z-10 w-full max-w-[400px]"
+        className="relative z-10 w-full"
+        style={{ maxWidth: '400px' }}
       >
         {/* Ambient glow behind card */}
         <div

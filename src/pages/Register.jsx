@@ -71,7 +71,8 @@ export default function Register() {
         initial={{ opacity: 0, y: 24, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.6, ease: [0.32, 0.72, 0, 1] }}
-        className="relative z-10 w-full max-w-[400px]"
+        className="relative z-10 w-full"
+        style={{ maxWidth: '400px' }}
       >
         <div className="pointer-events-none absolute -inset-8 -z-10 rounded-full opacity-40"
           style={{ background: 'radial-gradient(circle, oklch(0.80 0.155 180 / 10%) 0%, transparent 70%)', filter: 'blur(40px)' }} />
