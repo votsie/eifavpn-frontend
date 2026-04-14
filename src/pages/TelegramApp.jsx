@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../stores/authStore'
 import { telegramWebAppAuth } from '../api/telegram'
 import { linkTelegram } from '../api/auth'
+import { applyPendingPromo } from '../api/subscriptions'
 import { Spinner } from '@heroui/react'
 
 function TelegramAppInner() {
@@ -24,26 +25,49 @@ function TelegramAppInner() {
     if (authStarted.current) return
     authStarted.current = true
 
-    async function auth() {
-      // Check for deep link: startapp=link_{user_id}
-      const startParam = window.Telegram?.WebApp?.initDataUnsafe?.start_param || ''
-      const isLinkRequest = startParam.startsWith('link_')
+    // Check for deep link: startapp=link_{user_id} or startapp=promo_{CODE}
+    const startParam = window.Telegram?.WebApp?.initDataUnsafe?.start_param || ''
+    const isLinkRequest = startParam.startsWith('link_')
+    const isPromoRequest = startParam.startsWith('promo_')
+    const promoCode = isPromoRequest ? startParam.slice(6) : ''
 
+    async function handlePromoAndNavigate() {
+      if (promoCode) {
+        try { await applyPendingPromo(promoCode) } catch {}
+        localStorage.setItem('eifavpn_promo', promoCode)
+        navigate(`/cabinet/purchase?promo=${promoCode}`, { replace: true })
+      } else {
+        navigate('/cabinet/overview', { replace: true })
+      }
+    }
+
+    async function doTelegramAuth(data) {
+      try {
+        const result = await telegramWebAppAuth(data)
+        if (result.tokens && result.user) {
+          loginWithData(result.user, result.tokens)
+          await handlePromoAndNavigate()
+        } else {
+          setError('Не удалось авторизоваться')
+        }
+      } catch (err) {
+        setError(err.message || 'Ошибка авторизации')
+      }
+    }
+
+    async function auth() {
       // Step 1: Check if we already have valid tokens in localStorage
       const hasTokens = !!localStorage.getItem('eifavpn_access')
       if (hasTokens) {
         const ok = await fetchMe()
         if (ok) {
-          // If this is a link request, try to link Telegram to the account
           if (isLinkRequest) {
             try {
               const tgInitData = initData || window.Telegram?.WebApp?.initData
-              if (tgInitData) {
-                await linkTelegram(tgInitData)
-              }
+              if (tgInitData) await linkTelegram(tgInitData)
             } catch {}
           }
-          navigate('/cabinet/overview', { replace: true })
+          await handlePromoAndNavigate()
           return
         }
       }
@@ -61,20 +85,6 @@ function TelegramAppInner() {
         await doTelegramAuth(retry)
       } else {
         await doTelegramAuth(rawInitData)
-      }
-    }
-
-    async function doTelegramAuth(data) {
-      try {
-        const result = await telegramWebAppAuth(data)
-        if (result.tokens && result.user) {
-          loginWithData(result.user, result.tokens)
-          navigate('/cabinet/overview', { replace: true })
-        } else {
-          setError('Не удалось авторизоваться')
-        }
-      } catch (err) {
-        setError(err.message || 'Ошибка авторизации')
       }
     }
 
