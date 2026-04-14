@@ -3,7 +3,7 @@ import { Button, Input, Separator } from '@heroui/react'
 import { useAuthStore } from '../stores/authStore'
 import { useNavigate, useSearchParams, Link } from 'react-router-dom'
 import { sendCode, verifyCode } from '../api/auth'
-import { telegramOidcAuth } from '../api/telegram'
+import { telegramWidgetAuth } from '../api/telegram'
 import { useTelegramLogin } from '../components/TelegramLoginWidget'
 import Background from '../components/Background'
 import { motion } from 'motion/react'
@@ -23,11 +23,11 @@ export default function Register() {
   const referralCode = searchParams.get('ref') || ''
   const preselectedPlan = searchParams.get('plan') || ''
   const { openTelegramLogin, sdkReady: tgReady, loading: tgLoading, error: tgError } = useTelegramLogin(
-    async ({ id_token }) => {
+    async ({ widgetData }) => {
       setLoading(true)
       setError(null)
       try {
-        const data = await telegramOidcAuth(id_token)
+        const data = await telegramWidgetAuth(widgetData)
         if (data.tokens && data.user) {
           loginWithData(data.user, data.tokens)
           const redirect = preselectedPlan

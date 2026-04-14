@@ -3,7 +3,7 @@ import { Button, Input, Chip } from '@heroui/react'
 import { Copy, Pencil } from '@gravity-ui/icons'
 import { motion } from 'motion/react'
 import { useAuthStore } from '../../stores/authStore'
-import { updateProfile, changePassword, deleteAccount, linkEmail, linkEmailVerify, linkTelegram, linkTelegramOidc, mergeAccountPreview, mergeAccountConfirm } from '../../api/auth'
+import { updateProfile, changePassword, deleteAccount, linkEmail, linkEmailVerify, linkTelegram, linkTelegramWidget, mergeAccountPreview, mergeAccountConfirm } from '../../api/auth'
 import { useTelegramLogin } from '../../components/TelegramLoginWidget'
 import MergeAccountModal from '../../components/cabinet/MergeAccountModal'
 import { useNavigate, useSearchParams } from 'react-router-dom'
@@ -146,7 +146,7 @@ export default function Settings() {
   const canLinkTelegram = !user?.telegram_id
 
   // Telegram OIDC login hook
-  const { openTelegramLogin, sdkReady: tgReady, loading: tgLinkLoading } = useTelegramLogin(handleTelegramOidcAuth)
+  const { openTelegramLogin, sdkReady: tgReady, loading: tgLinkLoading } = useTelegramLogin(handleTelegramWidgetAuth)
 
   async function handleLinkEmailSend() {
     setLinkEmailLoading(true)
@@ -221,10 +221,10 @@ export default function Settings() {
     }
   }
 
-  async function handleTelegramOidcAuth({ id_token }) {
+  async function handleTelegramWidgetAuth({ widgetData }) {
     setLinkMsg(null)
     try {
-      await linkTelegramOidc(id_token)
+      await linkTelegramWidget(widgetData)
       await fetchMe()
       setLinkMsg({ type: 'success', text: 'Telegram успешно привязан' })
     } catch (err) {

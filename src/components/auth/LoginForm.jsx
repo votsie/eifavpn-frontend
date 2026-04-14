@@ -3,7 +3,7 @@ import { Button, Input, Separator } from '@heroui/react'
 import { useAuthStore } from '../../stores/authStore'
 import { useNavigate, useLocation, useSearchParams, Link } from 'react-router-dom'
 import { sendCode, verifyCode } from '../../api/auth'
-import { telegramOidcAuth } from '../../api/telegram'
+import { telegramWidgetAuth } from '../../api/telegram'
 import { useTelegramLogin } from '../TelegramLoginWidget'
 
 export default function LoginForm() {
@@ -21,11 +21,11 @@ export default function LoginForm() {
   const from = location.state?.from?.pathname || '/cabinet/overview'
 
   const { openTelegramLogin, sdkReady: tgReady, loading: tgLoading, error: tgError } = useTelegramLogin(
-    async ({ id_token }) => {
+    async ({ widgetData }) => {
       setLoading(true)
       setError(null)
       try {
-        const data = await telegramOidcAuth(id_token)
+        const data = await telegramWidgetAuth(widgetData)
         if (data.tokens && data.user) {
           loginWithData(data.user, data.tokens)
           navigate(from, { replace: true })

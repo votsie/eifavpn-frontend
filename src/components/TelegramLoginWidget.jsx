@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 
-const TELEGRAM_LOGIN_JS = 'https://oauth.telegram.org/js/telegram-login.js?3'
-const TELEGRAM_CLIENT_ID = '8631762754'
+const TELEGRAM_LOGIN_JS = 'https://telegram.org/js/telegram-widget.js?22'
+const TELEGRAM_BOT_ID = '8549019404'
 
 /**
- * Hook that loads telegram-login.js and provides openTelegramLogin().
- * Returns { openTelegramLogin, sdkReady, loading, error }.
+ * Hook for Telegram Web Login Widget (hash-based, not OAuth 2.0).
+ *
+ * Returns widgetData: {id, first_name, last_name, username, photo_url, auth_date, hash}
+ * Backend verifies the hash with bot token.
  */
 export function useTelegramLogin(onAuth) {
   const callbackRef = useRef(onAuth)
@@ -19,7 +21,7 @@ export function useTelegramLogin(onAuth) {
       setSdkReady(true)
       return
     }
-    const existing = document.querySelector(`script[src^="${TELEGRAM_LOGIN_JS}"]`)
+    const existing = document.querySelector(`script[src^="https://telegram.org/js/telegram-widget"]`)
     if (existing) {
       existing.addEventListener('load', () => setSdkReady(true))
       return
@@ -41,16 +43,16 @@ export function useTelegramLogin(onAuth) {
     setError(null)
 
     window.Telegram.Login.auth(
-      { client_id: TELEGRAM_CLIENT_ID, request_access: ['write'] },
+      { bot_id: TELEGRAM_BOT_ID, request_access: 'write' },
       (data) => {
         setLoading(false)
-        if (!data) return
-        if (data.error) {
-          setError(data.error)
+        if (!data) {
+          setError('Вход отменён')
           return
         }
-        if (data.id_token) {
-          callbackRef.current?.({ id_token: data.id_token, user: data.user })
+        // Web Login returns: {id, first_name, last_name, username, photo_url, auth_date, hash}
+        if (data.id) {
+          callbackRef.current?.({ widgetData: data })
         }
       }
     )

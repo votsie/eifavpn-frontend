@@ -80,6 +80,10 @@ export function linkTelegramOidc(idToken) {
   return apiFetch('/auth/link-telegram/', { method: 'POST', body: JSON.stringify({ idToken }) })
 }
 
+export function linkTelegramWidget(widgetData) {
+  return apiFetch('/auth/link-telegram/', { method: 'POST', body: JSON.stringify({ widgetData }) })
+}
+
 export function mergeAccountPreview(secondaryUserId) {
   return apiFetch('/auth/merge-account/', {
     method: 'POST',
