@@ -6,24 +6,9 @@ import { linkTelegram } from '../api/auth'
 import { applyPendingPromo } from '../api/subscriptions'
 import { Spinner } from '@heroui/react'
 
-function waitForTelegramWebApp(timeout = 3000) {
-  return new Promise((resolve) => {
-    if (window.Telegram?.WebApp?.initData) {
-      resolve(window.Telegram.WebApp)
-      return
-    }
-    const start = Date.now()
-    const check = () => {
-      if (window.Telegram?.WebApp?.initData) {
-        resolve(window.Telegram.WebApp)
-      } else if (Date.now() - start > timeout) {
-        resolve(null)
-      } else {
-        setTimeout(check, 100)
-      }
-    }
-    check()
-  })
+function getTelegramWebApp() {
+  const tg = window.Telegram?.WebApp
+  return tg?.initData ? tg : null
 }
 
 export default function TelegramApp() {
@@ -37,8 +22,8 @@ export default function TelegramApp() {
     authStarted.current = true
 
     async function run() {
-      // Wait for Telegram WebApp SDK
-      const tg = await waitForTelegramWebApp()
+      // Telegram SDK is loaded synchronously in index.html before React
+      const tg = getTelegramWebApp()
 
       // Expand + ready
       if (tg) {
