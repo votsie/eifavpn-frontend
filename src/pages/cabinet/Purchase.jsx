@@ -1,9 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { Button, Spinner } from '@heroui/react'
 import { CircleCheck, CircleXmark } from '@gravity-ui/icons'
 import { motion, AnimatePresence } from 'motion/react'
-import { getPlans, purchase } from '../../api/subscriptions'
+import { useSearchParams } from 'react-router-dom'
+import { getPlans, purchase, activateGift, getMySubscription, getExchangeRates } from '../../api/subscriptions'
 import { useAuthStore } from '../../stores/authStore'
+import PromoInput from '../../components/PromoInput'
+import { openPaymentUrl } from '../../utils/openPayment'
 
 const PERIODS = [
   { id: 1, label: '1 мес' },
@@ -35,13 +38,27 @@ export default function Purchase() {
   const [error, setError] = useState(null)
   const [plansLoading, setPlansLoading] = useState(true)
   const [plansError, setPlansError] = useState(null)
+  const [promoData, setPromoData] = useState(null)
+  const [giftLoading, setGiftLoading] = useState(false)
+  const [awaitingPayment, setAwaitingPayment] = useState(false)
+  const [cryptoAsset, setCryptoAsset] = useState('USDT')
+  const [rates, setRates] = useState(null)
+  const pollingRef = useRef(null)
   const { user } = useAuthStore()
+  const [searchParams] = useSearchParams()
+
+  // Resolve initial promo code from URL > localStorage > user.pending
+  const initialPromo = searchParams.get('promo')
+    || localStorage.getItem('eifavpn_promo')
+    || user?.pending_promo_code
+    || ''
 
   useEffect(() => {
     getPlans()
       .then(setPlans)
       .catch((err) => setPlansError(err.message || 'Ошибка загрузки тарифов'))
       .finally(() => setPlansLoading(false))
+    getExchangeRates().then(setRates).catch(() => {})
   }, [])
 
   const currentPlan = plans.find((p) => p.id === selectedPlan)
@@ -49,19 +66,111 @@ export default function Purchase() {
   const monthPrice = currentPlan?.pricing?.[period] || 0
   const totalPrice = monthPrice * period
   const hasReferral = !!user?.referred_by
-  const discount = hasReferral ? Math.round(totalPrice * 0.1) : 0
-  const finalPrice = totalPrice - discount
+  const referralDiscount = hasReferral ? Math.round(totalPrice * 0.1) : 0
+  const afterReferral = totalPrice - referralDiscount
+
+  // Promo discount
+  const promoDiscount = promoData?.promo_type === 'percent'
+    ? Math.round(afterReferral * promoData.value / 100) : 0
+  const bonusDays = promoData?.promo_type === 'days' ? promoData.value : 0
+  const isGift = promoData?.promo_type === 'gift'
+  const finalPrice = Math.max(afterReferral - promoDiscount, 1)
+
+  // Crypto price calculation (3% markup built into backend rates)
+  const isCrypto = paymentMethod === 'crypto'
+  const isStars = paymentMethod === 'stars'
+  const cryptoRate = rates?.rates?.[cryptoAsset] || 0
+  const cryptoAmount = cryptoRate > 0 ? ((finalPrice * 1.03) / cryptoRate).toFixed(cryptoAsset === 'BTC' ? 6 : 2) : '...'
+
+  // Stars calculation: 50 stars = 0.75$ × USDT_RUB + 15% markup, ceil
+  const starPriceRub = rates?.star_price_rub || 1.13
+  const starsAmount = starPriceRub > 0 ? Math.ceil((finalPrice / starPriceRub) * 1.15) : '...'
+
+  const handlePromoApplied = useCallback((data) => {
+    setPromoData(data)
+  }, [])
+
+  // Cleanup polling on unmount
+  useEffect(() => () => { if (pollingRef.current) clearInterval(pollingRef.current) }, [])
+
+  function startPaymentPolling() {
+    setAwaitingPayment(true)
+    if (pollingRef.current) clearInterval(pollingRef.current)
+    pollingRef.current = setInterval(async () => {
+      try {
+        const data = await getMySubscription()
+        if (data?.subscription?.status === 'paid') {
+          clearInterval(pollingRef.current)
+          pollingRef.current = null
+          setAwaitingPayment(false)
+          window.location.href = '/cabinet/overview'
+        }
+      } catch { /* ignore */ }
+    }, 3000)
+    // Stop polling after 5 minutes
+    setTimeout(() => {
+      if (pollingRef.current) {
+        clearInterval(pollingRef.current)
+        pollingRef.current = null
+        setAwaitingPayment(false)
+      }
+    }, 300000)
+  }
 
   async function handlePurchase() {
     setLoading(true)
     setError(null)
+
+    // Open blank window BEFORE await — browsers block popups after async calls
+    const isMiniApp = !!window.Telegram?.WebApp?.initData
+    const payWindow = isMiniApp ? null : window.open('about:blank', '_blank')
+
     try {
-      const result = await purchase({ plan: selectedPlan, period, payment_method: paymentMethod })
-      if (result.payment_url) window.location.href = result.payment_url
+      const result = await purchase({
+        plan: selectedPlan,
+        period,
+        payment_method: paymentMethod,
+        promo_code: promoData?.code || '',
+        crypto_asset: isCrypto ? cryptoAsset : undefined,
+      })
+      if (result.payment_url) {
+        localStorage.removeItem('eifavpn_promo')
+        if (isMiniApp) {
+          window.Telegram.WebApp.openLink(result.payment_url)
+        } else if (payWindow) {
+          payWindow.location.href = result.payment_url
+        } else {
+          // Fallback if popup was blocked anyway
+          window.location.href = result.payment_url
+        }
+        startPaymentPolling()
+      } else {
+        if (payWindow) payWindow.close()
+      }
     } catch (err) {
+      if (payWindow) payWindow.close()
       setError(err.message || 'Ошибка при создании платежа')
     } finally {
       setLoading(false)
+    }
+  }
+
+  async function handleActivateGift() {
+    if (!promoData?.code) return
+    setGiftLoading(true)
+    setError(null)
+    try {
+      const result = await activateGift(promoData.code)
+      if (result.success) {
+        localStorage.removeItem('eifavpn_promo')
+        setPromoData(null)
+        setError(null)
+        window.location.href = '/cabinet/overview'
+      }
+    } catch (err) {
+      setError(err.message || 'Ошибка активации подарочных дней')
+    } finally {
+      setGiftLoading(false)
     }
   }
 
@@ -165,6 +274,35 @@ export default function Purchase() {
         </div>
       </div>
 
+      {/* Promo code */}
+      <div>
+        <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted">Промокод</p>
+        <PromoInput
+          plan={selectedPlan}
+          period={period}
+          onPromoApplied={handlePromoApplied}
+          initialCode={initialPromo}
+        />
+      </div>
+
+      {/* Gift promo activation */}
+      {isGift && (
+        <div className="rounded-xl border border-green-500/20 bg-green-500/5 p-4">
+          <p className="text-sm font-semibold text-foreground">
+            Подарочный промокод: +{promoData.value} дней бесплатно
+          </p>
+          <p className="mt-1 text-xs text-muted">{promoData.description || 'Активируйте без покупки'}</p>
+          <Button
+            size="sm"
+            className="mt-3 bg-green-600 text-white font-semibold"
+            onPress={handleActivateGift}
+            isPending={giftLoading}
+          >
+            Активировать {promoData.value} дней
+          </Button>
+        </div>
+      )}
+
       {/* EIFASTORE promo — only when Telegram Stars selected */}
       {paymentMethod === 'stars' && (
         <a
@@ -182,46 +320,100 @@ export default function Purchase() {
         </a>
       )}
 
-      {/* Summary */}
-      <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-border bg-surface p-4">
-        <div>
-          <div className="flex items-baseline gap-2">
-            <AnimatePresence mode="wait">
-              <motion.span
-                key={`${selectedPlan}-${period}`}
-                initial={{ opacity: 0, y: -6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 6 }}
-                transition={{ duration: 0.15 }}
-                className="font-heading text-2xl font-extrabold text-foreground"
+      {/* Crypto asset selector — only when crypto selected */}
+      {isCrypto && (
+        <div className="rounded-xl border border-accent/20 bg-accent/[0.04] p-3 space-y-2">
+          <p className="text-xs font-medium uppercase tracking-wider text-muted">Криптовалюта</p>
+          <div className="flex gap-1 rounded-xl border border-border bg-surface p-1">
+            {['USDT', 'TON'].map((asset) => (
+              <button
+                key={asset}
+                onClick={() => setCryptoAsset(asset)}
+                aria-pressed={cryptoAsset === asset}
+                className={`flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-150 ${
+                  cryptoAsset === asset
+                    ? 'bg-accent text-accent-foreground'
+                    : 'text-muted hover:text-foreground'
+                }`}
               >
-                {finalPrice}₽
-              </motion.span>
-            </AnimatePresence>
-            <span className="text-sm text-muted">
-              {period > 1 ? `за ${period} мес (${monthPrice}₽/мес)` : 'за 1 мес'}
-            </span>
+                {asset}
+              </button>
+            ))}
           </div>
-          {period > 1 && basePrice !== monthPrice && (
-            <p className="mt-0.5 text-xs text-muted">
-              <span className="line-through">{basePrice * period}₽</span>
-              <span className="ml-1.5 text-accent font-medium">-{Math.round((1 - monthPrice / basePrice) * 100)}%</span>
+          {cryptoRate > 0 && (
+            <p className="text-[11px] text-muted">
+              Курс: 1 {cryptoAsset} = {cryptoRate.toFixed(2)}₽ (+ 3% комиссия)
             </p>
           )}
-          {hasReferral && discount > 0 && (
-            <p className="mt-0.5 text-xs text-accent">Реферальная скидка: -{discount}₽</p>
-          )}
         </div>
+      )}
 
-        <Button
-          size="md"
-          className="glow-cyan px-8 font-semibold"
-          onPress={handlePurchase}
-          isPending={loading}
-        >
-          Оплатить
-        </Button>
-      </div>
+      {/* Summary */}
+      {!isGift && (
+        <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-border bg-surface p-4">
+          <div>
+            <div className="flex items-baseline gap-2">
+              <AnimatePresence mode="wait">
+                <motion.span
+                  key={`${selectedPlan}-${period}-${promoData?.code || ''}-${cryptoAsset}-${paymentMethod}`}
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 6 }}
+                  transition={{ duration: 0.15 }}
+                  className="font-heading text-2xl font-extrabold text-foreground"
+                >
+                  {isCrypto ? `${cryptoAmount} ${cryptoAsset}`
+                    : isStars ? `${starsAmount} ⭐`
+                    : `${finalPrice}₽`}
+                </motion.span>
+              </AnimatePresence>
+              <span className="text-sm text-muted">
+                {isCrypto
+                  ? `≈ ${finalPrice}₽ за ${period > 1 ? `${period} мес` : '1 мес'}`
+                  : isStars
+                  ? `≈ ${finalPrice}₽ за ${period > 1 ? `${period} мес` : '1 мес'}`
+                  : period > 1 ? `за ${period} мес (${monthPrice}₽/мес)` : 'за 1 мес'
+                }
+              </span>
+            </div>
+            {period > 1 && basePrice !== monthPrice && (
+              <p className="mt-0.5 text-xs text-muted">
+                <span className="line-through">{basePrice * period}₽</span>
+                <span className="ml-1.5 text-accent font-medium">-{Math.round((1 - monthPrice / basePrice) * 100)}%</span>
+              </p>
+            )}
+            {hasReferral && referralDiscount > 0 && (
+              <p className="mt-0.5 text-xs text-accent">Реферальная скидка: -{referralDiscount}₽</p>
+            )}
+            {promoDiscount > 0 && (
+              <p className="mt-0.5 text-xs text-green-500">Промокод {promoData.code}: -{promoDiscount}₽</p>
+            )}
+            {bonusDays > 0 && (
+              <p className="mt-0.5 text-xs text-green-500">Промокод {promoData.code}: +{bonusDays} дней</p>
+            )}
+          </div>
+
+          <Button
+            size="md"
+            className="glow-cyan px-8 font-semibold"
+            onPress={handlePurchase}
+            isPending={loading}
+          >
+            Оплатить
+          </Button>
+        </div>
+      )}
+
+      {/* Awaiting payment banner */}
+      {awaitingPayment && (
+        <div className="flex items-center gap-3 rounded-xl border border-accent/20 bg-accent/[0.04] p-4 animate-pulse">
+          <div className="h-5 w-5 animate-spin rounded-full border-2 border-accent border-t-transparent shrink-0" />
+          <div>
+            <p className="text-sm font-semibold text-foreground">Ожидание оплаты...</p>
+            <p className="text-xs text-muted">Завершите оплату в открывшемся окне. Страница обновится автоматически.</p>
+          </div>
+        </div>
+      )}
 
       {error && <p className="text-sm text-danger">{error}</p>}
     </div>
