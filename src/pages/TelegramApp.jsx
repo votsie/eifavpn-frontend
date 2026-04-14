@@ -11,7 +11,7 @@ function TelegramAppInner() {
   const [initDataUnsafe, initData] = useInitData()
   const webApp = useWebApp()
   const navigate = useNavigate()
-  const { loginWithData, fetchMe } = useAuthStore()
+  const { loginWithData, loginWithTokens, isAuthenticated, fetchMe } = useAuthStore()
   const [error, setError] = useState(null)
   const authStarted = useRef(false)
 
@@ -25,14 +25,14 @@ function TelegramAppInner() {
     if (authStarted.current) return
     authStarted.current = true
 
-    // Parse deep link
+    // Check for deep link: startapp=link_{user_id} or startapp=promo_{CODE}
     const startParam = window.Telegram?.WebApp?.initDataUnsafe?.start_param || ''
     const isLinkRequest = startParam.startsWith('link_')
     const promoCode = startParam.startsWith('promo_') ? startParam.slice(6) : ''
 
-    async function goNext() {
+    function goNext() {
       if (promoCode) {
-        try { await applyPendingPromo(promoCode) } catch {}
+        applyPendingPromo(promoCode).catch(() => {})
         localStorage.setItem('eifavpn_promo', promoCode)
         navigate(`/cabinet/purchase?promo=${promoCode}`, { replace: true })
       } else {
@@ -40,58 +40,51 @@ function TelegramAppInner() {
       }
     }
 
-    async function doAuth(rawInitData) {
+    async function auth() {
+      // Step 1: Check if we already have valid tokens in localStorage
+      const hasTokens = !!localStorage.getItem('eifavpn_access')
+      if (hasTokens) {
+        const ok = await fetchMe()
+        if (ok) {
+          if (isLinkRequest) {
+            try {
+              const tgInitData = initData || window.Telegram?.WebApp?.initData
+              if (tgInitData) await linkTelegram(tgInitData)
+            } catch {}
+          }
+          goNext()
+          return
+        }
+      }
+
+      // Step 2: Authenticate via Telegram initData
+      const rawInitData = initData || window.Telegram?.WebApp?.initData
+      if (!rawInitData) {
+        // Wait for SDK
+        await new Promise(r => setTimeout(r, 1500))
+        const retry = window.Telegram?.WebApp?.initData
+        if (!retry) {
+          navigate('/cabinet/login', { replace: true })
+          return
+        }
+        await doTelegramAuth(retry)
+      } else {
+        await doTelegramAuth(rawInitData)
+      }
+    }
+
+    async function doTelegramAuth(data) {
       try {
-        const result = await telegramWebAppAuth(rawInitData)
+        const result = await telegramWebAppAuth(data)
         if (result.tokens && result.user) {
           loginWithData(result.user, result.tokens)
-          await goNext()
+          goNext()
         } else {
           setError('Не удалось авторизоваться')
         }
       } catch (err) {
         setError(err.message || 'Ошибка авторизации')
       }
-    }
-
-    async function getInitData() {
-      // Try immediately
-      const raw = initData || window.Telegram?.WebApp?.initData
-      if (raw) return raw
-      // Poll every 100ms for up to 5s (SDK loads async)
-      return new Promise((resolve) => {
-        const start = Date.now()
-        const iv = setInterval(() => {
-          const d = window.Telegram?.WebApp?.initData
-          if (d) { clearInterval(iv); resolve(d) }
-          else if (Date.now() - start > 5000) { clearInterval(iv); resolve(null) }
-        }, 100)
-      })
-    }
-
-    async function auth() {
-      // Step 1: Already have tokens?
-      if (localStorage.getItem('eifavpn_access')) {
-        const ok = await fetchMe()
-        if (ok) {
-          if (isLinkRequest) {
-            try {
-              const d = await getInitData()
-              if (d) await linkTelegram(d)
-            } catch {}
-          }
-          await goNext()
-          return
-        }
-      }
-
-      // Step 2: Auth with initData
-      const rawInitData = await getInitData()
-      if (!rawInitData) {
-        navigate('/cabinet/login', { replace: true })
-        return
-      }
-      await doAuth(rawInitData)
     }
 
     auth()
