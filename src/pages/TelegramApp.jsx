@@ -63,7 +63,7 @@ function TelegramAppInner() {
         if (ok) {
           if (isLinkRequest) {
             try {
-              const tgInitData = initData || window.Telegram?.WebApp?.initData
+              const tgInitData = window.Telegram?.WebApp?.initData
               if (tgInitData) await linkTelegram(tgInitData)
             } catch {}
           }
@@ -72,10 +72,10 @@ function TelegramAppInner() {
         }
       }
 
-      // Step 2: Authenticate via Telegram initData
-      const rawInitData = initData || window.Telegram?.WebApp?.initData
+      // Step 2: Authenticate via Telegram initData (always use raw string)
+      const rawInitData = window.Telegram?.WebApp?.initData
       if (!rawInitData) {
-        // Wait for SDK
+        // Wait for SDK to populate initData
         await new Promise(r => setTimeout(r, 1500))
         const retry = window.Telegram?.WebApp?.initData
         if (!retry) {
