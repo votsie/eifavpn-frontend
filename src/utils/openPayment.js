@@ -1,13 +1,9 @@
 /**
- * Open payment URL in external browser (Mini App) or new tab (web).
- * Never navigates away from the current page.
+ * Open payment URL in external system browser.
+ * In Telegram Mini App: window.open opens in external browser.
+ * openLink() opens in-app browser which breaks payment forms.
  */
 export function openPaymentUrl(url) {
   if (!url) return
-  if (window.Telegram?.WebApp?.openLink) {
-    // Open in external browser, not in-app webview
-    window.Telegram.WebApp.openLink(url, { try_instant_view: false })
-  } else {
-    window.open(url, '_blank')
-  }
+  window.open(url, '_blank')
 }
