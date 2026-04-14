@@ -4,10 +4,39 @@ export function getPlans() {
   return apiFetch('/subscriptions/plans/', { skipAuth: true })
 }
 
-export function purchase({ plan, period, payment_method }) {
+export function purchase({ plan, period, payment_method, promo_code, crypto_asset }) {
   return apiFetch('/subscriptions/purchase/', {
     method: 'POST',
-    body: JSON.stringify({ plan, period, payment_method }),
+    body: JSON.stringify({ plan, period, payment_method, promo_code, crypto_asset }),
+  })
+}
+
+export function getExchangeRates(amount = 0) {
+  return apiFetch(`/subscriptions/rates/?amount=${amount}`, { skipAuth: true })
+}
+
+export function validatePromo({ code, plan, period }) {
+  return apiFetch('/subscriptions/validate-promo/', {
+    method: 'POST',
+    body: JSON.stringify({ code, plan, period }),
+  })
+}
+
+export function activateGift(code) {
+  return apiFetch('/subscriptions/activate-gift/', {
+    method: 'POST',
+    body: JSON.stringify({ code }),
+  })
+}
+
+export function getPromoInfo(code) {
+  return apiFetch(`/subscriptions/promo-info/?code=${encodeURIComponent(code)}`, { skipAuth: true })
+}
+
+export function applyPendingPromo(code) {
+  return apiFetch('/auth/apply-pending-promo/', {
+    method: 'POST',
+    body: JSON.stringify({ code }),
   })
 }
 
@@ -26,8 +55,15 @@ export function purchaseTrialUpgrade(payment_method = 'stars') {
   })
 }
 
-export function getHwidDevices(uuid) {
-  return apiFetch(`/proxy/api/hwid-user-devices/by-user/${uuid}`)
+export function getHwidDevices() {
+  return apiFetch('/subscriptions/devices/')
+}
+
+export function deleteHwidDevice(hwid) {
+  return apiFetch('/subscriptions/devices/', {
+    method: 'DELETE',
+    body: JSON.stringify({ hwid }),
+  })
 }
 
 export function getAccessibleNodes(uuid) {
