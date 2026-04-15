@@ -1,0 +1,37 @@
+{
+  "sources": {
+    "full-project-scan-2026-04-16": {
+      "hash": "multi-agent-scan",
+      "ingested_at": "2026-04-16",
+      "pages_created": [
+        "wiki/overview.md",
+        "wiki/hot.md",
+        "wiki/log.md",
+        "wiki/index.md",
+        "wiki/sources/API Client Architecture.md",
+        "wiki/sources/API Auth Module.md",
+        "wiki/sources/API Subscriptions Module.md",
+        "wiki/sources/API Referrals Module.md",
+        "wiki/sources/API Admin Module.md",
+        "wiki/sources/Landing Pages.md",
+        "wiki/sources/Cabinet Pages.md",
+        "wiki/sources/Admin Panel Frontend.md",
+        "wiki/entities/Auth Store.md",
+        "wiki/entities/Component Tree.md",
+        "wiki/entities/Layouts Architecture.md",
+        "wiki/entities/Remnawave Frontend.md",
+        "wiki/entities/EIFAVPN Backend.md",
+        "wiki/concepts/Authentication Flow Frontend.md",
+        "wiki/concepts/Subscription Purchase Flow.md",
+        "wiki/concepts/Telegram Mini App Integration.md",
+        "wiki/concepts/Theming System.md",
+        "wiki/concepts/VPN Connection Flow.md",
+        "wiki/concepts/Referral System Frontend.md",
+        "wiki/domains/CI CD Frontend.md",
+        "wiki/domains/Environment Variables Frontend.md",
+        "wiki/domains/API Endpoints Reference Frontend.md"
+      ],
+      "pages_updated": []
+    }
+  }
+}
