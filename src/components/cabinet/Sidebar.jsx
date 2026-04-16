@@ -5,6 +5,7 @@ import {
   Persons,
   Gear,
   ShoppingCart,
+  Clock,
 } from '@gravity-ui/icons'
 
 const links = [
@@ -12,6 +13,7 @@ const links = [
   { to: '/cabinet/purchase', icon: ShoppingCart, label: 'Тарифы' },
   { to: '/cabinet/devices', icon: Smartphone, label: 'Устройства' },
   { to: '/cabinet/referral', icon: Persons, label: 'Рефералы' },
+  { to: '/cabinet/history', icon: Clock, label: 'Платежи' },
   { to: '/cabinet/settings', icon: Gear, label: 'Настройки' },
 ]
 

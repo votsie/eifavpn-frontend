@@ -30,6 +30,7 @@ const Referral = lazy(() => import('./pages/cabinet/Referral'))
 const Settings = lazy(() => import('./pages/cabinet/Settings'))
 const Guide = lazy(() => import('./pages/cabinet/Guide'))
 const Purchase = lazy(() => import('./pages/cabinet/Purchase'))
+const History = lazy(() => import('./pages/cabinet/History'))
 
 // Lazy: admin pages
 const AdminDashboard = lazy(() => import('./pages/admin/Dashboard'))
@@ -129,6 +130,7 @@ export default function App() {
             <Route path="purchase" element={<Purchase />} />
             <Route path="settings" element={<Settings />} />
             <Route path="guide" element={<Guide />} />
+            <Route path="history" element={<History />} />
           </Route>
 
           {/* Admin (staff only) */}

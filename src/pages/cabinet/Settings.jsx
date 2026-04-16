@@ -723,6 +723,83 @@ export default function Settings() {
         </div>
       </motion.div>
 
+      {/* Auto-renewal */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.25 }}
+        className="theme-card rounded-2xl border border-border bg-surface p-4 md:p-5"
+      >
+        <p className="mb-3 text-sm font-semibold text-foreground">Авто-продление</p>
+        <p className="mb-3 text-xs text-muted">При включении вы получите ссылку на оплату в Telegram за 1 день до истечения подписки.</p>
+        <div className="flex items-center justify-between">
+          <span className="text-sm text-foreground">Включить авто-продление</span>
+          <button
+            onClick={async () => {
+              const newVal = !user?.auto_renew
+              await updateProfile({ auto_renew: newVal })
+              fetchMe()
+            }}
+            className={`relative h-6 w-11 rounded-full transition-colors ${user?.auto_renew ? 'bg-accent' : 'bg-default'}`}
+          >
+            <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${user?.auto_renew ? 'translate-x-5' : 'translate-x-0.5'}`} />
+          </button>
+        </div>
+        {user?.auto_renew && (
+          <div className="mt-3 space-y-2">
+            <p className="text-xs text-muted">Метод оплаты:</p>
+            <div className="flex gap-2">
+              {['stars', 'crypto', 'wata'].map(m => (
+                <Button key={m} size="sm"
+                  variant={(user?.preferred_payment_method || 'stars') === m ? undefined : 'outline'}
+                  onPress={async () => {
+                    await updateProfile({ preferred_payment_method: m })
+                    fetchMe()
+                  }}
+                >
+                  {m === 'stars' ? 'Stars' : m === 'crypto' ? 'Crypto' : 'Карта'}
+                </Button>
+              ))}
+            </div>
+          </div>
+        )}
+      </motion.div>
+
+      {/* Notification preferences */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        className="theme-card rounded-2xl border border-border bg-surface p-4 md:p-5"
+      >
+        <p className="mb-3 text-sm font-semibold text-foreground">Уведомления</p>
+        {[
+          { key: 'purchase', label: 'Покупки и оплата' },
+          { key: 'expiring', label: 'Истечение подписки' },
+          { key: 'expired', label: 'Подписка истекла' },
+          { key: 'promo', label: 'Промоакции' },
+          { key: 'renewal', label: 'Авто-продление' },
+        ].map(({ key, label }) => {
+          const prefs = user?.notification_prefs || {}
+          const enabled = prefs[key] !== false
+          return (
+            <div key={key} className="flex items-center justify-between py-2">
+              <span className="text-sm text-foreground">{label}</span>
+              <button
+                onClick={async () => {
+                  const newPrefs = { ...(user?.notification_prefs || {}), [key]: !enabled }
+                  await updateProfile({ notification_prefs: newPrefs })
+                  fetchMe()
+                }}
+                className={`relative h-6 w-11 rounded-full transition-colors ${enabled ? 'bg-accent' : 'bg-default'}`}
+              >
+                <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${enabled ? 'translate-x-5' : 'translate-x-0.5'}`} />
+              </button>
+            </div>
+          )
+        })}
+      </motion.div>
+
       <MergeAccountModal
         isOpen={showMergeModal}
         onClose={() => { setShowMergeModal(false); setMergePreview(null); setMergeError(null) }}

@@ -69,3 +69,18 @@ export function deleteHwidDevice(hwid) {
 export function getAccessibleNodes(uuid) {
   return apiFetch(`/proxy/users/${uuid}/accessible-nodes`)
 }
+
+export function getPaymentHistory() {
+  return apiFetch('/subscriptions/history/')
+}
+
+export function getUpgradePreview({ plan, period }) {
+  return apiFetch(`/subscriptions/upgrade-preview/?plan=${plan}&period=${period}`)
+}
+
+export function purchaseUpgrade({ plan, period, payment_method, crypto_asset }) {
+  return apiFetch('/subscriptions/upgrade/', {
+    method: 'POST',
+    body: JSON.stringify({ plan, period, payment_method, crypto_asset }),
+  })
+}
