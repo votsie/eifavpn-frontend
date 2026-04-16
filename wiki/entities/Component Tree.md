@@ -26,16 +26,19 @@ updated: 2026-04-16
     │   │   └── <Download>
     │   └── <Footer />
     │
+    ├── <ErrorBoundary>             ← ловит все React-ошибки
+    │   └── <Suspense>              ← fallback для lazy loading
+    │
     ├── <ProtectedRoute>
     │   └── <CabinetLayout>
     │       ├── <Background />
     │       ├── <Sidebar> (desktop: fixed w-60 | mobile: bottom nav)
     │       ├── <Topbar> (desktop only)
-    │       └── <Outlet /> →
+    │       └── <Outlet /> → (lazy-loaded)
     │           ├── <Overview>
     │           │   └── <ConnectModal> (hiddify:// deep link)
     │           ├── <Purchase>
-    │           │   └── PromoInput
+    │           │   └── <PromoInput>  ← валидация промокодов
     │           ├── <Servers>
     │           ├── <Devices>
     │           ├── <Referral>
@@ -43,9 +46,10 @@ updated: 2026-04-16
     │           │   └── <MergeAccountModal>
     │           └── <Guide>
     │
-    ├── <AdminLayout>
-    │   ├── Admin Sidebar (14 маршрутов)
-    │   └── <Outlet /> → Admin Pages
+    ├── <AdminRoute>                 ← is_staff check
+    │   └── <AdminLayout>
+    │       ├── Admin Sidebar (14 маршрутов)
+    │       └── <Outlet /> → Admin Pages (lazy-loaded)
     │
     ├── <TelegramApp> (Mini App entry)
     ├── <Connect> (deep link handler)
