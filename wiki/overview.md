@@ -117,9 +117,11 @@ src/
 
 1. **[[Authentication Flow Frontend]]** — Email code, Google OAuth, Telegram Widget/Mini App
 2. **[[Subscription Purchase Flow]]** — Выбор плана → оплата (Stars/Crypto/Card) → polling
-3. **[[Telegram Mini App Integration]]** — Определение окружения, тема, deep links
-4. **[[Theming System]]** — Light/Dark/Auto, oklch tokens, TG SDK sync
-5. **[[VPN Connection Flow]]** — ConnectModal → hiddify:// deep link → fallback
+3. **[[Route Protection Architecture]]** — ProtectedRoute (auth) + AdminRoute (staff)
+4. **[[Lazy Loading Architecture]]** — React.lazy() code splitting по маршрутам
+5. **[[Telegram Mini App Integration]]** — Определение окружения, тема, deep links
+6. **[[Theming System]]** — Light/Dark/Auto, oklch tokens, TG SDK sync
+7. **[[VPN Connection Flow]]** — ConnectModal → hiddify:// deep link → fallback
 
 ## См. также
 
