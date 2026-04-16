@@ -130,3 +130,25 @@ export function manageSubscription(subId, data) {
 export function getUserRemnawave(userId) {
   return apiFetch(`/admin/users/${userId}/remnawave/`)
 }
+
+// Support tickets
+export function getTickets(params = {}) {
+  const query = new URLSearchParams(params).toString()
+  return apiFetch(`/admin/tickets/?${query}`)
+}
+
+export function getTicketStats() {
+  return apiFetch('/admin/tickets/stats/')
+}
+
+export function getTicket(id) {
+  return apiFetch(`/admin/tickets/${id}/`)
+}
+
+export function updateTicket(id, data) {
+  return apiFetch(`/admin/tickets/${id}/`, { method: 'PATCH', body: JSON.stringify(data) })
+}
+
+export function replyToTicket(id, data) {
+  return apiFetch(`/admin/tickets/${id}/reply/`, { method: 'POST', body: JSON.stringify(data) })
+}

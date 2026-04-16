@@ -13,6 +13,7 @@ import {
   Gear,
   Bell,
   Tag,
+  CommentFill,
 } from '@gravity-ui/icons'
 import Background from '../components/Background'
 
@@ -25,6 +26,7 @@ const adminLinks = [
   { to: '/admin/analytics', icon: ChartLine, label: 'Аналитика' },
   { to: '/admin/notifications', icon: Bell, label: 'Рассылки' },
   { to: '/admin/promo', icon: Tag, label: 'Промокоды' },
+  { to: '/admin/support', icon: CommentFill, label: 'Поддержка' },
   { to: '/admin/audit', icon: Clock, label: 'Журнал' },
   { to: '/admin/system', icon: Cpu, label: 'Система' },
   { to: '/admin/export', icon: ArrowDownToSquare, label: 'Экспорт' },
