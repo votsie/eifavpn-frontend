@@ -3,7 +3,7 @@ import { Button, Chip, Spinner } from '@heroui/react'
 import { Copy } from '@gravity-ui/icons'
 import { motion } from 'motion/react'
 import { useAuthStore } from '../../stores/authStore'
-import { getReferralInfo, getReferralList, prepareShare } from '../../api/referrals'
+import { getReferralInfo, getReferralList, getReferralStats, prepareShare } from '../../api/referrals'
 import { isTelegramWebApp } from '../../utils/telegram'
 
 function StatCard({ label, value, sub, accent }) {
@@ -30,6 +30,7 @@ export default function Referral() {
   const { user } = useAuthStore()
   const [info, setInfo] = useState(null)
   const [list, setList] = useState([])
+  const [monthlyStats, setMonthlyStats] = useState([])
   const [loading, setLoading] = useState(true)
   const [copied, setCopied] = useState(false)
   const [shareLoading, setShareLoading] = useState(false)
@@ -38,10 +39,12 @@ export default function Referral() {
     Promise.all([
       getReferralInfo().catch(() => null),
       getReferralList().catch(() => []),
+      getReferralStats().catch(() => []),
     ])
-      .then(([infoData, listData]) => {
+      .then(([infoData, listData, statsData]) => {
         setInfo(infoData)
         setList(Array.isArray(listData) ? listData : [])
+        setMonthlyStats(Array.isArray(statsData) ? statsData : [])
       })
       .finally(() => setLoading(false))
   }, [])
@@ -169,21 +172,47 @@ export default function Referral() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="md:col-span-2 grid gap-3 sm:grid-cols-2"
+        className="md:col-span-2 grid gap-3 sm:grid-cols-4"
       >
-        <StatCard
-          label="Приглашено"
-          value={info?.total_referrals ?? 0}
-          sub="пользователей"
-          accent
-        />
-        <StatCard
-          label="Бонусных дней"
-          value={`+${info?.bonus_days_earned ?? 0}`}
-          sub="дней к подписке"
-          accent
-        />
+        <StatCard label="Приглашено" value={info?.total_referrals ?? 0} sub="всего" accent />
+        <StatCard label="Оплатили" value={info?.paid_referrals ?? 0} sub={`конверсия ${info?.conversion_rate ?? 0}%`} accent />
+        <StatCard label="За месяц" value={info?.referrals_this_month ?? 0} sub="новых" />
+        <StatCard label="Бонус-дни" value={`+${info?.bonus_days_earned ?? 0}`} sub={info?.total_savings_rub ? `≈${info.total_savings_rub}₽ экономия` : 'дней к подписке'} accent />
       </motion.div>
+
+      {/* Monthly chart */}
+      {monthlyStats.length > 1 && (
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.12 }}
+          className="md:col-span-2 theme-card rounded-2xl border border-border bg-surface p-4 md:p-5"
+        >
+          <p className="mb-3 text-sm font-semibold text-foreground">Рефералы по месяцам</p>
+          <div className="flex items-end gap-1" style={{ height: 120 }}>
+            {monthlyStats.slice(-12).map((m) => {
+              const maxVal = Math.max(...monthlyStats.slice(-12).map(s => s.total), 1)
+              const h = Math.max(m.total / maxVal * 100, 4)
+              return (
+                <div key={m.month} className="flex flex-1 flex-col items-center gap-1">
+                  <span className="text-[10px] font-medium text-foreground">{m.total}</span>
+                  <div className="w-full flex flex-col items-stretch gap-0.5" style={{ height: 80 }}>
+                    <div className="mt-auto rounded-t bg-accent/60" style={{ height: `${h * 0.8}%` }} />
+                    {m.paid > 0 && (
+                      <div className="rounded-b bg-accent" style={{ height: `${(m.paid / maxVal) * 80}%`, minHeight: 2 }} />
+                    )}
+                  </div>
+                  <span className="text-[9px] text-muted">{m.month.slice(5)}</span>
+                </div>
+              )
+            })}
+          </div>
+          <div className="mt-2 flex gap-4 text-[10px] text-muted">
+            <span className="flex items-center gap-1"><span className="h-2 w-2 rounded bg-accent/60" /> Приглашённые</span>
+            <span className="flex items-center gap-1"><span className="h-2 w-2 rounded bg-accent" /> Оплатившие</span>
+          </div>
+        </motion.div>
+      )}
 
       {/* How it works */}
       <motion.div

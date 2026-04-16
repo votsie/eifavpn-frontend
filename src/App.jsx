@@ -32,6 +32,7 @@ const Guide = lazy(() => import('./pages/cabinet/Guide'))
 const Purchase = lazy(() => import('./pages/cabinet/Purchase'))
 const History = lazy(() => import('./pages/cabinet/History'))
 const FAQ = lazy(() => import('./pages/cabinet/FAQ'))
+const PromoLanding = lazy(() => import('./pages/PromoLanding'))
 
 // Lazy: admin pages
 const AdminDashboard = lazy(() => import('./pages/admin/Dashboard'))
@@ -110,6 +111,7 @@ export default function App() {
           <Route path="/cabinet/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/terms" element={<Terms />} />
+          <Route path="/promo/:code" element={<PromoLanding />} />
           <Route path="/app" element={<TelegramApp />} />
           <Route path="/download/:platform" element={<Download />} />
           <Route path="/connect" element={<ConnectPage />} />
