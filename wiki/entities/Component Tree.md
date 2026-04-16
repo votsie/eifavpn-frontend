@@ -67,6 +67,9 @@ updated: 2026-04-16
 | `ConnectModal` | components/cabinet/ConnectModal.jsx | 5-шаговый wizard подключения VPN |
 | `MergeAccountModal` | components/cabinet/MergeAccountModal.jsx | Подтверждение merge аккаунтов |
 | `ProtectedRoute` | components/auth/ProtectedRoute.jsx | Guard для cabinet routes |
+| `AdminRoute` | components/auth/AdminRoute.jsx | Guard для admin routes (is_staff) |
+| `ErrorBoundary` | components/ErrorBoundary.jsx | Перехват ошибок рендеринга |
+| `PromoInput` | components/PromoInput.jsx | Ввод/валидация промокодов |
 | `LoginForm` | components/auth/LoginForm.jsx | Google + Telegram + Email auth |
 | `TelegramLoginWidget` | components/TelegramLoginWidget.jsx | Hook useTelegramLogin() |
 
