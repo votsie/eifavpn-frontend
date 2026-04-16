@@ -37,7 +37,17 @@ file: src/layouts/AdminLayout.jsx + src/pages/admin/*
 
 Все функции в [[API Admin Module]] (`src/api/admin.js`).
 
+## Защита маршрутов
+
+Админ-маршруты защищены [[AdminRoute]] — проверяет `isAuthenticated` + `user.is_staff`. Не-staff пользователи перенаправляются в `/cabinet/overview`. Подробнее: [[Route Protection Architecture]].
+
+## Загрузка
+
+Все admin-страницы загружаются через `React.lazy()` — код админки (~80 KB) не попадает в bundle обычных пользователей. См. [[Lazy Loading Architecture]].
+
 ## См. также
 
 - [[API Admin Module]] — 30+ API-функций
 - [[Layouts Architecture]] — AdminLayout
+- [[Route Protection Architecture]] — AdminRoute guard
+- [[Lazy Loading Architecture]] — Code splitting
