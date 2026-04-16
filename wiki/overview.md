@@ -88,7 +88,11 @@ src/
 ├── components/
 │   ├── Navbar.jsx, Footer.jsx, Background.jsx
 │   ├── TelegramLoginWidget.jsx
-│   ├── auth/ProtectedRoute.jsx, LoginForm.jsx
+│   ├── ErrorBoundary.jsx            — Error boundary
+│   ├── PromoInput.jsx               — Ввод промокодов
+│   ├── auth/ProtectedRoute.jsx      — Auth guard
+│   ├── auth/AdminRoute.jsx          — Staff guard
+│   ├── auth/LoginForm.jsx           — Форма логина
 │   └── cabinet/Sidebar.jsx, Topbar.jsx, StatusBadge.jsx,
 │         ConnectModal.jsx, MergeAccountModal.jsx
 └── pages/
