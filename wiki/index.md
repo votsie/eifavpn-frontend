@@ -28,6 +28,8 @@ updated: 2026-04-16
 - [[Auth Store]] — Zustand store (user, tokens, auth flow)
 - [[Component Tree]] — Полное дерево React-компонентов
 - [[Layouts Architecture]] — LandingLayout, CabinetLayout, AdminLayout
+- [[ErrorBoundary]] — Перехват ошибок рендеринга, fallback UI
+- [[PromoInput]] — Ввод/валидация промокодов (percent, days, gift)
 - [[Remnawave Frontend]] — Интеграция с VPN-панелью через proxy
 - [[EIFAVPN Backend]] — Кросс-ссылка на бэкенд (Django REST API)
 
@@ -35,6 +37,8 @@ updated: 2026-04-16
 
 - [[Authentication Flow Frontend]] — Email code, Google, Telegram (4 варианта)
 - [[Subscription Purchase Flow]] — Выбор плана → оплата → polling → активация
+- [[Route Protection Architecture]] — ProtectedRoute (auth) + AdminRoute (staff)
+- [[Lazy Loading Architecture]] — React.lazy() code splitting по маршрутам
 - [[Telegram Mini App Integration]] — Среда, тема, auth, layout, share
 - [[Theming System]] — Light/Dark/Auto, oklch tokens, MutationObserver
 - [[VPN Connection Flow]] — ConnectModal → hiddify:// deep link → fallback
