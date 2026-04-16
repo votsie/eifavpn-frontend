@@ -68,4 +68,5 @@ purpose: Quick-load context for future sessions
 - Max: 6 devices, unlimited, 14 servers, adblock, P2P | 149-99₽/мес
 
 ## Latest Ingest
+- 2026-04-16: Code review — AdminRoute, lazy loading, ErrorBoundary, PromoInput
 - 2026-04-16: Full project scan — all modules documented
