@@ -663,10 +663,10 @@ export default function Settings() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15 }}
-        className="theme-card rounded-2xl border border-border bg-surface p-4 md:p-5"
+        className="md:col-span-2 theme-card rounded-2xl border border-border bg-surface p-4 md:p-5"
       >
         <p className="mb-4 text-sm font-semibold text-foreground">Сменить пароль</p>
-        <div className="space-y-3">
+        <div className="grid gap-3 sm:grid-cols-3">
           <Input
             type="password"
             label="Текущий пароль"
@@ -742,7 +742,7 @@ export default function Settings() {
               await updateProfile({ auto_renew: newVal }).catch(() => {})
               await fetchMe()
             }}
-            className={`relative h-6 w-11 rounded-full transition-colors ${user?.auto_renew ? 'bg-accent' : 'bg-default'}`}
+            className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${user?.auto_renew ? 'bg-accent' : 'bg-muted/30'}`}
           >
             <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${user?.auto_renew ? 'translate-x-5' : 'translate-x-0.5'}`} />
           </button>
@@ -772,36 +772,38 @@ export default function Settings() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="theme-card rounded-2xl border border-border bg-surface p-4 md:p-5"
+        className="md:col-span-2 theme-card rounded-2xl border border-border bg-surface p-4 md:p-5"
       >
         <p className="mb-3 text-sm font-semibold text-foreground">Уведомления</p>
-        {[
-          { key: 'purchase', label: 'Покупки и оплата' },
-          { key: 'expiring', label: 'Истечение подписки' },
-          { key: 'expired', label: 'Подписка истекла' },
-          { key: 'promo', label: 'Промоакции' },
-          { key: 'renewal', label: 'Авто-продление' },
-        ].map(({ key, label }) => {
-          const prefs = user?.notification_prefs || {}
-          const enabled = prefs[key] !== false
-          return (
-            <div key={key} className="flex items-center justify-between py-2">
-              <span className="text-sm text-foreground">{label}</span>
-              <button
-                role="switch"
-                aria-checked={enabled}
-                onClick={async () => {
-                  const newPrefs = { ...(user?.notification_prefs || {}), [key]: !enabled }
-                  await updateProfile({ notification_prefs: newPrefs }).catch(() => {})
-                  await fetchMe()
-                }}
-                className={`relative h-6 w-11 rounded-full transition-colors ${enabled ? 'bg-accent' : 'bg-default'}`}
-              >
-                <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${enabled ? 'translate-x-5' : 'translate-x-0.5'}`} />
-              </button>
-            </div>
-          )
-        })}
+        <div className="grid gap-x-6 gap-y-1 sm:grid-cols-2">
+          {[
+            { key: 'purchase', label: 'Покупки и оплата' },
+            { key: 'expiring', label: 'Истечение подписки' },
+            { key: 'expired', label: 'Подписка истекла' },
+            { key: 'promo', label: 'Промоакции' },
+            { key: 'renewal', label: 'Авто-продление' },
+          ].map(({ key, label }) => {
+            const prefs = user?.notification_prefs || {}
+            const enabled = prefs[key] !== false
+            return (
+              <div key={key} className="flex items-center justify-between py-2.5 border-b border-border/30 last:border-0">
+                <span className="text-sm text-foreground">{label}</span>
+                <button
+                  role="switch"
+                  aria-checked={enabled}
+                  onClick={async () => {
+                    const newPrefs = { ...(user?.notification_prefs || {}), [key]: !enabled }
+                    await updateProfile({ notification_prefs: newPrefs }).catch(() => {})
+                    await fetchMe()
+                  }}
+                  className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${enabled ? 'bg-accent' : 'bg-muted/30'}`}
+                >
+                  <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${enabled ? 'translate-x-5' : 'translate-x-0.5'}`} />
+                </button>
+              </div>
+            )
+          })}
+        </div>
       </motion.div>
 
       <MergeAccountModal
