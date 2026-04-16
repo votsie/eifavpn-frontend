@@ -81,8 +81,20 @@ files: src/layouts/LandingLayout.jsx, CabinetLayout.jsx, AdminLayout.jsx
 - Mobile: горизонтальная nav bar
 - Ссылка "← Кабинет" внизу sidebar
 
+## Защита маршрутов
+
+| Layout | Guard | Проверка |
+|--------|-------|----------|
+| LandingLayout | Нет | Публичный |
+| CabinetLayout | [[ProtectedRoute]] | isAuthenticated |
+| AdminLayout | [[AdminRoute]] | isAuthenticated + is_staff |
+
+Подробнее: [[Route Protection Architecture]]
+
 ## См. также
 
 - [[Component Tree]] — Полная иерархия
 - [[Telegram Mini App Integration]] — TG-адаптация layout
+- [[Route Protection Architecture]] — Гарды маршрутов
+- [[Lazy Loading Architecture]] — Страницы загружаются lazy
 - [[Cabinet Pages]], [[Landing Pages]], [[Admin Panel Frontend]]
