@@ -76,7 +76,9 @@ updated: 2026-04-16
 ## Паттерны
 
 - **Layout pattern**: `<Layout>` → `<Outlet>` для вложенных маршрутов
-- **Protected routes**: `<ProtectedRoute>` оборачивает весь CabinetLayout
+- **Route guards**: `<ProtectedRoute>` (auth) + `<AdminRoute>` (auth + is_staff) — см. [[Route Protection Architecture]]
+- **Lazy loading**: Все страницы кроме entry points — через `React.lazy()` — см. [[Lazy Loading Architecture]]
+- **Error boundary**: `<ErrorBoundary>` ловит крэши и показывает fallback — см. [[ErrorBoundary]]
 - **Modal pattern**: Модалки внутри страниц (ConnectModal в Overview, MergeAccountModal в Settings)
 - **Responsive**: Desktop sidebar ↔ Mobile bottom nav (определяется isTelegramWebApp())
 - **Hook extraction**: `useTelegramLogin()` выделен в отдельный hook
