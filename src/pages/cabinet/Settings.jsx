@@ -744,7 +744,7 @@ export default function Settings() {
             }}
             className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${user?.auto_renew ? 'bg-accent' : 'bg-muted/30'}`}
           >
-            <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${user?.auto_renew ? 'translate-x-5' : 'translate-x-0.5'}`} />
+            <span className={`absolute inset-y-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform ${user?.auto_renew ? 'translate-x-[1.125rem]' : 'translate-x-0'}`} />
           </button>
         </div>
         {user?.auto_renew && (
@@ -798,7 +798,7 @@ export default function Settings() {
                   }}
                   className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${enabled ? 'bg-accent' : 'bg-muted/30'}`}
                 >
-                  <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${enabled ? 'translate-x-5' : 'translate-x-0.5'}`} />
+                  <span className={`absolute inset-y-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform ${enabled ? 'translate-x-[1.125rem]' : 'translate-x-0'}`} />
                 </button>
               </div>
             )
