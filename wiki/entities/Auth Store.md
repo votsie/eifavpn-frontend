@@ -70,6 +70,7 @@ authStore ←→ api/client.js
 ## Использование в компонентах
 
 - [[ProtectedRoute]] — проверяет `isAuthenticated` и `initialized`
+- [[AdminRoute]] — расширяет проверку `is_staff` (см. [[Route Protection Architecture]])
 - [[LoginForm]] — вызывает `login()`, `loginWithTokens()`, `loginWithData()`
 - [[Topbar]] — вызывает `logout()`
 - [[Settings]] — использует `user` для отображения профиля
