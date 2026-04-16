@@ -39,6 +39,7 @@ export default function Devices() {
   const [devices, setDevices] = useState([])
   const [loading, setLoading] = useState(true)
   const [devicesLoading, setDevicesLoading] = useState(false)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     getMySubscription()
@@ -60,7 +61,7 @@ export default function Devices() {
           }
         }
       })
-      .catch(() => {})
+      .catch(err => setError(err.message || 'Ошибка загрузки'))
       .finally(() => setLoading(false))
   }, [])
 
@@ -81,7 +82,11 @@ export default function Devices() {
     <div className="mx-auto max-w-4xl w-full grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
       <h1 className="font-heading text-2xl font-bold text-foreground md:col-span-2">Устройства</h1>
 
-      {!sub ? (
+      {error ? (
+        <div className="md:col-span-2 theme-card rounded-2xl border border-danger/20 bg-danger/5 p-8 text-center">
+          <p className="text-sm text-danger">{error}</p>
+        </div>
+      ) : !sub ? (
         <div className="md:col-span-2 theme-card rounded-2xl border border-border bg-surface p-5 text-center md:p-6">
           <p className="text-muted">У вас нет активной подписки</p>
           <Button

@@ -38,12 +38,21 @@ export default function LoginForm() {
     }
   )
 
-  // Handle OAuth callback
+  // Handle OAuth callback — tokens come in URL fragment (#access=...&refresh=...)
   useEffect(() => {
     const auth = searchParams.get('auth')
-    const access = searchParams.get('access')
-    const refresh = searchParams.get('refresh')
-    if (auth && access && refresh) {
+    if (!auth) return
+
+    // Parse tokens from hash fragment (backend sends #access=...&refresh=...)
+    const hash = window.location.hash.slice(1) // remove #
+    const hashParams = new URLSearchParams(hash)
+    const access = hashParams.get('access') || searchParams.get('access')
+    const refresh = hashParams.get('refresh') || searchParams.get('refresh')
+
+    if (access && refresh) {
+      // Clear fragment from URL to prevent token leaking in history
+      window.history.replaceState(null, '', window.location.pathname + window.location.search)
+
       const state = searchParams.get('state')
       const savedState = sessionStorage.getItem('oauth_state')
       if (state && savedState && state !== savedState) {

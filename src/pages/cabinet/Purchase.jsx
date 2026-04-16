@@ -47,6 +47,7 @@ export default function Purchase() {
   const [upgradePreview, setUpgradePreview] = useState(null)
   const [upgradeLoading, setUpgradeLoading] = useState(false)
   const pollingRef = useRef(null)
+  const pollingTimeoutRef = useRef(null)
   const { user } = useAuthStore()
   const [searchParams] = useSearchParams()
 
@@ -150,8 +151,11 @@ export default function Purchase() {
     setPromoData(data)
   }, [])
 
-  // Cleanup polling on unmount
-  useEffect(() => () => { if (pollingRef.current) clearInterval(pollingRef.current) }, [])
+  // Cleanup polling + timeout on unmount
+  useEffect(() => () => {
+    if (pollingRef.current) clearInterval(pollingRef.current)
+    if (pollingTimeoutRef.current) clearTimeout(pollingTimeoutRef.current)
+  }, [])
 
   function startPaymentPolling() {
     setAwaitingPayment(true)
@@ -168,7 +172,7 @@ export default function Purchase() {
       } catch { /* ignore */ }
     }, 3000)
     // Stop polling after 5 minutes
-    setTimeout(() => {
+    pollingTimeoutRef.current = setTimeout(() => {
       if (pollingRef.current) {
         clearInterval(pollingRef.current)
         pollingRef.current = null

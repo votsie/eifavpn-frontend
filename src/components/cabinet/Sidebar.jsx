@@ -19,12 +19,13 @@ const links = [
   { to: '/cabinet/settings', icon: Gear, label: 'Настройки' },
 ]
 
-// Mobile bottom nav: 4 main + guide (settings accessible via topbar gear)
+// Mobile bottom nav: 5 main (settings accessible via topbar gear)
 const mobileLinks = [
   { to: '/cabinet/overview', icon: LayoutList, label: 'Обзор' },
   { to: '/cabinet/purchase', icon: ShoppingCart, label: 'Тарифы' },
   { to: '/cabinet/devices', icon: Smartphone, label: 'Устройства' },
   { to: '/cabinet/referral', icon: Persons, label: 'Рефералы' },
+  { to: '/cabinet/faq', icon: CircleQuestion, label: 'FAQ' },
 ]
 
 function SidebarLink({ to, icon: Icon, label }) {

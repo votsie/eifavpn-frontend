@@ -54,7 +54,12 @@ export async function apiFetch(endpoint, options = {}) {
 
   const text = await res.text()
   if (!text) return null
-  const data = JSON.parse(text)
+  let data
+  try {
+    data = JSON.parse(text)
+  } catch {
+    throw new ApiError('Invalid JSON response', res.status, { raw: text.slice(0, 200) })
+  }
   return data.response !== undefined ? data.response : data
 }
 
