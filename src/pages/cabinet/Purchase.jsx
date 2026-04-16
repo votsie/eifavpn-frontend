@@ -101,7 +101,7 @@ export default function Purchase() {
     }
     setUpgradeLoading(true)
     getUpgradePreview({ plan: selectedPlan, period })
-      .then(setUpgradePreview)
+      .then(data => setUpgradePreview(data?.is_upgrade ? data : null))
       .catch(() => setUpgradePreview(null))
       .finally(() => setUpgradeLoading(false))
   }, [activeSub, selectedPlan, period])
@@ -130,18 +130,6 @@ export default function Purchase() {
         } else { if (payWindow) payWindow.close() }
       } catch (err) {
         if (payWindow) payWindow.close()
-        setError(err.message || 'Ошибка при смене тарифа')
-      } finally { setLoading(false) }
-    } else {
-      // Free downgrade
-      try {
-        await purchaseUpgrade({
-          plan: selectedPlan,
-          period,
-          payment_method: 'downgrade',
-        })
-        window.location.href = '/cabinet/overview'
-      } catch (err) {
         setError(err.message || 'Ошибка при смене тарифа')
       } finally { setLoading(false) }
     }
@@ -415,14 +403,11 @@ export default function Purchase() {
       {/* Upgrade banner — shown when user has active subscription and selects different plan */}
       {activeSub && upgradePreview && (
         <div className="rounded-xl border border-accent/30 bg-accent/[0.04] p-4 space-y-2">
-          <p className="text-sm font-semibold text-foreground">
-            {upgradePreview.is_upgrade ? '⬆ Повышение тарифа' : '⬇ Понижение тарифа'}
-          </p>
+          <p className="text-sm font-semibold text-foreground">⬆ Повышение тарифа</p>
           <p className="text-xs text-muted">
             Текущий тариф: <span className="text-foreground font-medium">{activeSub.plan_name || activeSub.plan}</span>
             {' · '}Осталось {upgradePreview.remaining_days} дн.
           </p>
-          {upgradePreview.is_upgrade ? (
             <>
               <p className="text-xs text-muted">
                 Зачёт остатка: <span className="text-accent">{upgradePreview.current_credit}₽</span>
@@ -438,21 +423,6 @@ export default function Purchase() {
                 Перейти на {selectedPlan.charAt(0).toUpperCase() + selectedPlan.slice(1)} — {upgradePreview.charge_amount}₽
               </Button>
             </>
-          ) : (
-            <>
-              <p className="text-xs text-muted">
-                Кредит: +{upgradePreview.credit_days} бонусных дней
-              </p>
-              <Button
-                size="sm"
-                variant="outline"
-                onPress={handleUpgrade}
-                isPending={loading}
-              >
-                Перейти на {selectedPlan.charAt(0).toUpperCase() + selectedPlan.slice(1)}
-              </Button>
-            </>
-          )}
         </div>
       )}
 
