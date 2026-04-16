@@ -74,6 +74,7 @@ export default function Servers() {
   const [isLoading, setIsLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [lastNodeUuid, setLastNodeUuid] = useState(null)
+  const [sortBy, setSortBy] = useState('load') // 'load' | 'country' | 'status'
 
   useEffect(() => {
     async function load() {
@@ -124,28 +125,80 @@ export default function Servers() {
     })
   }, [nodes, lastNodeUuid])
 
+  // Find recommended server (online, lowest load)
+  const recommendedUuid = useMemo(() => {
+    const online = servers.filter(s => s.isConnected)
+    if (online.length === 0) return null
+    online.sort((a, b) => a.usersOnline - b.usersOnline)
+    return online[0].uuid
+  }, [servers])
+
+  // Stats
+  const onlineCount = useMemo(() => servers.filter(s => s.isConnected).length, [servers])
+  const totalUsers = useMemo(() => servers.reduce((sum, s) => sum + s.usersOnline, 0), [servers])
+
   const filtered = useMemo(() => {
-    if (!search.trim()) return servers
-    const q = search.toLowerCase()
-    return servers.filter(
-      (s) => s.country.toLowerCase().includes(q) || s.name.toLowerCase().includes(q),
-    )
-  }, [servers, search])
+    let list = servers
+    if (search.trim()) {
+      const q = search.toLowerCase()
+      list = list.filter(
+        (s) => s.country.toLowerCase().includes(q) || s.name.toLowerCase().includes(q),
+      )
+    }
+    // Sort
+    if (sortBy === 'load') {
+      list = [...list].sort((a, b) => {
+        if (a.isConnected !== b.isConnected) return b.isConnected - a.isConnected
+        return a.usersOnline - b.usersOnline
+      })
+    } else if (sortBy === 'country') {
+      list = [...list].sort((a, b) => a.country.localeCompare(b.country, 'ru'))
+    } else if (sortBy === 'status') {
+      list = [...list].sort((a, b) => b.isConnected - a.isConnected)
+    }
+    return list
+  }, [servers, search, sortBy])
 
   return (
     <div className="mx-auto max-w-3xl w-full space-y-3 overflow-hidden md:space-y-5">
-      <h1 className="font-heading text-2xl font-bold text-foreground">Серверы</h1>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <h1 className="font-heading text-2xl font-bold text-foreground">Серверы</h1>
+        {!isLoading && servers.length > 0 && (
+          <div className="flex gap-3 text-xs text-muted">
+            <span><span className="font-semibold text-accent">{onlineCount}</span> онлайн</span>
+            <span><span className="font-semibold text-foreground">{totalUsers}</span> польз.</span>
+          </div>
+        )}
+      </div>
 
-      {/* Search */}
-      <Input
-        placeholder="Поиск по стране или имени..."
-        value={search}
-        onValueChange={setSearch}
-        startContent={<Magnifier className="h-4 w-4 text-muted" />}
-        classNames={{
-          inputWrapper: 'theme-card border-border bg-surface',
-        }}
-      />
+      {/* Search + Sort */}
+      <div className="flex gap-2">
+        <Input
+          placeholder="Поиск..."
+          value={search}
+          onValueChange={setSearch}
+          startContent={<Magnifier className="h-4 w-4 text-muted" />}
+          classNames={{
+            inputWrapper: 'theme-card border-border bg-surface',
+          }}
+          className="flex-1"
+          size="sm"
+        />
+        <div className="flex gap-1 rounded-xl border border-border bg-surface p-1">
+          {[
+            { id: 'load', label: 'Нагрузка' },
+            { id: 'country', label: 'Страна' },
+          ].map(s => (
+            <button
+              key={s.id}
+              onClick={() => setSortBy(s.id)}
+              className={`rounded-md px-2.5 py-1 text-[11px] font-medium transition-all ${
+                sortBy === s.id ? 'bg-accent text-accent-foreground' : 'text-muted hover:text-foreground'
+              }`}
+            >{s.label}</button>
+          ))}
+        </div>
+      </div>
 
       {/* Loading */}
       {isLoading && servers.length === 0 && (
@@ -169,6 +222,14 @@ export default function Servers() {
                   : 'theme-card border-border bg-surface'
               }`}
             >
+              {server.uuid === recommendedUuid && !server.isCurrentNode && (
+                <Chip
+                  size="sm"
+                  className="absolute -top-2 right-3 bg-green-500/15 text-[10px] font-bold text-green-500"
+                >
+                  Рекомендуемый
+                </Chip>
+              )}
               {server.isCurrentNode && (
                 <Chip
                   size="sm"
@@ -198,9 +259,16 @@ export default function Servers() {
                   </span>
                 </div>
                 {server.usersOnline > 0 && (
-                  <span className="text-xs text-muted">
+                  <span className={`text-xs font-medium ${
+                    server.usersOnline < 30 ? 'text-green-500'
+                    : server.usersOnline < 70 ? 'text-yellow-500'
+                    : 'text-red-400'
+                  }`}>
                     {server.usersOnline} польз.
                   </span>
+                )}
+                {server.isConnected && server.usersOnline === 0 && (
+                  <span className="text-xs text-green-500 font-medium">Свободен</span>
                 )}
               </div>
             </motion.div>

@@ -31,6 +31,7 @@ const Settings = lazy(() => import('./pages/cabinet/Settings'))
 const Guide = lazy(() => import('./pages/cabinet/Guide'))
 const Purchase = lazy(() => import('./pages/cabinet/Purchase'))
 const History = lazy(() => import('./pages/cabinet/History'))
+const FAQ = lazy(() => import('./pages/cabinet/FAQ'))
 
 // Lazy: admin pages
 const AdminDashboard = lazy(() => import('./pages/admin/Dashboard'))
@@ -131,6 +132,7 @@ export default function App() {
             <Route path="settings" element={<Settings />} />
             <Route path="guide" element={<Guide />} />
             <Route path="history" element={<History />} />
+            <Route path="faq" element={<FAQ />} />
           </Route>
 
           {/* Admin (staff only) */}
