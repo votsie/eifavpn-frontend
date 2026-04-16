@@ -78,12 +78,17 @@ TelegramApp.jsx (маршрут /app)
 
 ## Защита маршрутов
 
+Подробнее: [[Route Protection Architecture]]
+
 ```jsx
-<ProtectedRoute>
-  ├─ !initialized → <Spinner /> (ожидание fetchMe)
-  ├─ !isAuthenticated → Navigate to /cabinet/login
-  └─ isAuthenticated → <Outlet /> (контент кабинета)
-</ProtectedRoute>
+<ProtectedRoute>           — для /cabinet/*
+  ├─ !initialized → <Spinner />
+  ├─ !isAuthenticated → Navigate /cabinet/login
+  └─ isAuthenticated → children
+
+<AdminRoute>               — для /admin/*
+  ├─ (все проверки ProtectedRoute)
+  └─ !user.is_staff → Navigate /cabinet/overview
 ```
 
 ## Token Storage
