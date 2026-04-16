@@ -21,10 +21,13 @@ purpose: Quick-load context for future sessions
 
 ## Key Files
 - `src/main.jsx` — Entry, theme detection, MutationObserver against TG SDK overrides
-- `src/App.jsx` — Routes, maintenance check, analytics
+- `src/App.jsx` — Routes (React.lazy), ErrorBoundary, Suspense, maintenance check
 - `src/api/client.js` — apiFetch() with auto Bearer + 401 refresh
 - `src/stores/authStore.js` — Zustand: user, tokens, login/logout/fetchMe
 - `src/index.css` — oklch design tokens, dual theme, custom fonts
+- `src/components/auth/AdminRoute.jsx` — Staff-only guard (is_staff)
+- `src/components/ErrorBoundary.jsx` — Catch render errors, show fallback
+- `src/components/PromoInput.jsx` — Promo code input + validation
 
 ## API Modules
 - `api/auth.js` — 15+ functions: login, register, verify, link accounts, merge
