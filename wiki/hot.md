@@ -40,10 +40,11 @@ purpose: Quick-load context for future sessions
 - Cabinet (auth): `/cabinet`, `/cabinet/purchase`, `/cabinet/servers`, `/cabinet/devices`, `/cabinet/referral`, `/cabinet/settings`, `/cabinet/guide`
 - Admin (staff): `/admin/*` (14 admin routes)
 
-## Layouts
-- `LandingLayout` — Navbar + Footer + Background
-- `CabinetLayout` — Sidebar (desktop) / BottomNav (mobile/TG) + Topbar
-- `AdminLayout` — Admin sidebar + 14 routes
+## Layouts & Route Guards
+- `LandingLayout` — Navbar + Footer + Background (public)
+- `CabinetLayout` — Sidebar/BottomNav + Topbar (ProtectedRoute: auth required)
+- `AdminLayout` — Admin sidebar + 14 routes (AdminRoute: is_staff required)
+- All pages lazy-loaded except Landing, Login, Register, NotFound
 
 ## Auth Methods (Frontend)
 1. Email + 6-digit code (2-step)
