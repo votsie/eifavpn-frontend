@@ -735,10 +735,12 @@ export default function Settings() {
         <div className="flex items-center justify-between">
           <span className="text-sm text-foreground">Включить авто-продление</span>
           <button
+            role="switch"
+            aria-checked={!!user?.auto_renew}
             onClick={async () => {
               const newVal = !user?.auto_renew
-              await updateProfile({ auto_renew: newVal })
-              fetchMe()
+              await updateProfile({ auto_renew: newVal }).catch(() => {})
+              await fetchMe()
             }}
             className={`relative h-6 w-11 rounded-full transition-colors ${user?.auto_renew ? 'bg-accent' : 'bg-default'}`}
           >
@@ -786,10 +788,12 @@ export default function Settings() {
             <div key={key} className="flex items-center justify-between py-2">
               <span className="text-sm text-foreground">{label}</span>
               <button
+                role="switch"
+                aria-checked={enabled}
                 onClick={async () => {
                   const newPrefs = { ...(user?.notification_prefs || {}), [key]: !enabled }
-                  await updateProfile({ notification_prefs: newPrefs })
-                  fetchMe()
+                  await updateProfile({ notification_prefs: newPrefs }).catch(() => {})
+                  await fetchMe()
                 }}
                 className={`relative h-6 w-11 rounded-full transition-colors ${enabled ? 'bg-accent' : 'bg-default'}`}
               >

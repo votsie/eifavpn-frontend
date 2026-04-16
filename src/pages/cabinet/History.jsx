@@ -21,11 +21,12 @@ const STATUS_COLORS = {
 export default function History() {
   const [payments, setPayments] = useState([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     getPaymentHistory()
       .then(setPayments)
-      .catch(() => {})
+      .catch(err => setError(err.message || 'Ошибка загрузки'))
       .finally(() => setLoading(false))
   }, [])
 
@@ -41,7 +42,11 @@ export default function History() {
     <div className="mx-auto max-w-3xl space-y-4">
       <h1 className="font-heading text-2xl font-bold text-foreground">История платежей</h1>
 
-      {payments.length === 0 ? (
+      {error ? (
+        <div className="theme-card rounded-2xl border border-danger/20 bg-danger/5 p-8 text-center">
+          <p className="text-sm text-danger">{error}</p>
+        </div>
+      ) : payments.length === 0 ? (
         <div className="theme-card rounded-2xl border border-border bg-surface p-8 text-center">
           <p className="text-sm text-muted">Платежей пока нет</p>
         </div>

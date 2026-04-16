@@ -180,6 +180,7 @@ export default function FAQ() {
               <div key={id} className="rounded-xl border border-border bg-surface overflow-hidden">
                 <button
                   onClick={() => setOpenId(isOpen ? null : id)}
+                  aria-expanded={isOpen}
                   className="flex w-full items-center justify-between px-4 py-3 text-left"
                 >
                   <span className="text-sm font-medium text-foreground pr-4">{item.q}</span>
