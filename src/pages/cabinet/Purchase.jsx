@@ -3,7 +3,7 @@ import { Button, Spinner } from '@heroui/react'
 import { CircleCheck, CircleXmark } from '@gravity-ui/icons'
 import { motion, AnimatePresence } from 'motion/react'
 import { useSearchParams } from 'react-router-dom'
-import { getPlans, purchase, activateGift, getMySubscription, getExchangeRates } from '../../api/subscriptions'
+import { getPlans, purchase, activateGift, getMySubscription, getExchangeRates, getUpgradePreview, purchaseUpgrade } from '../../api/subscriptions'
 import { useAuthStore } from '../../stores/authStore'
 import PromoInput from '../../components/PromoInput'
 import { openPaymentUrl } from '../../utils/openPayment'
@@ -43,6 +43,9 @@ export default function Purchase() {
   const [awaitingPayment, setAwaitingPayment] = useState(false)
   const [cryptoAsset, setCryptoAsset] = useState('USDT')
   const [rates, setRates] = useState(null)
+  const [activeSub, setActiveSub] = useState(null)
+  const [upgradePreview, setUpgradePreview] = useState(null)
+  const [upgradeLoading, setUpgradeLoading] = useState(false)
   const pollingRef = useRef(null)
   const { user } = useAuthStore()
   const [searchParams] = useSearchParams()
@@ -59,6 +62,9 @@ export default function Purchase() {
       .catch((err) => setPlansError(err.message || 'Ошибка загрузки тарифов'))
       .finally(() => setPlansLoading(false))
     getExchangeRates().then(setRates).catch(() => {})
+    getMySubscription().then(data => {
+      if (data?.subscription?.status === 'paid') setActiveSub(data.subscription)
+    }).catch(() => {})
   }, [])
 
   const currentPlan = plans.find((p) => p.id === selectedPlan)
@@ -85,6 +91,60 @@ export default function Purchase() {
   // Stars calculation: 50 stars = 0.75$ × USDT_RUB + 15% markup, ceil
   const starPriceRub = rates?.star_price_rub || 1.13
   const starsAmount = starPriceRub > 0 ? Math.ceil((finalPrice / starPriceRub) * 1.15) : '...'
+
+  // Fetch upgrade preview when user has active sub and changes plan/period
+  useEffect(() => {
+    if (!activeSub) { setUpgradePreview(null); return }
+    if (selectedPlan === activeSub.plan && period === activeSub.period_months) {
+      setUpgradePreview(null); return
+    }
+    setUpgradeLoading(true)
+    getUpgradePreview({ plan: selectedPlan, period })
+      .then(setUpgradePreview)
+      .catch(() => setUpgradePreview(null))
+      .finally(() => setUpgradeLoading(false))
+  }, [activeSub, selectedPlan, period])
+
+  async function handleUpgrade() {
+    if (!upgradePreview) return
+    setLoading(true)
+    setError(null)
+
+    if (upgradePreview.charge_amount > 0) {
+      // Paid upgrade — open payment
+      const isMiniApp = !!window.Telegram?.WebApp?.initData
+      const payWindow = isMiniApp ? null : window.open('about:blank', '_blank')
+      try {
+        const result = await purchaseUpgrade({
+          plan: selectedPlan,
+          period,
+          payment_method: paymentMethod,
+          crypto_asset: isCrypto ? cryptoAsset : undefined,
+        })
+        if (result.payment_url) {
+          if (isMiniApp) window.Telegram.WebApp.openLink(result.payment_url)
+          else if (payWindow) payWindow.location.href = result.payment_url
+          else window.location.href = result.payment_url
+          startPaymentPolling()
+        } else { if (payWindow) payWindow.close() }
+      } catch (err) {
+        if (payWindow) payWindow.close()
+        setError(err.message || 'Ошибка при смене тарифа')
+      } finally { setLoading(false) }
+    } else {
+      // Free downgrade
+      try {
+        await purchaseUpgrade({
+          plan: selectedPlan,
+          period,
+          payment_method: 'downgrade',
+        })
+        window.location.href = '/cabinet/overview'
+      } catch (err) {
+        setError(err.message || 'Ошибка при смене тарифа')
+      } finally { setLoading(false) }
+    }
+  }
 
   const handlePromoApplied = useCallback((data) => {
     setPromoData(data)
@@ -348,8 +408,59 @@ export default function Purchase() {
         </div>
       )}
 
-      {/* Summary */}
-      {!isGift && (
+      {/* Upgrade banner — shown when user has active subscription and selects different plan */}
+      {activeSub && upgradePreview && (
+        <div className="rounded-xl border border-accent/30 bg-accent/[0.04] p-4 space-y-2">
+          <p className="text-sm font-semibold text-foreground">
+            {upgradePreview.is_upgrade ? '⬆ Повышение тарифа' : '⬇ Понижение тарифа'}
+          </p>
+          <p className="text-xs text-muted">
+            Текущий тариф: <span className="text-foreground font-medium">{activeSub.plan_name || activeSub.plan}</span>
+            {' · '}Осталось {upgradePreview.remaining_days} дн.
+          </p>
+          {upgradePreview.is_upgrade ? (
+            <>
+              <p className="text-xs text-muted">
+                Зачёт остатка: <span className="text-accent">{upgradePreview.current_credit}₽</span>
+                {' · '}Новый тариф: {upgradePreview.new_total}₽
+                {' · '}К оплате: <span className="font-bold text-foreground">{upgradePreview.charge_amount}₽</span>
+              </p>
+              <Button
+                size="sm"
+                className="glow-cyan font-semibold"
+                onPress={handleUpgrade}
+                isPending={loading}
+              >
+                Перейти на {selectedPlan.charAt(0).toUpperCase() + selectedPlan.slice(1)} — {upgradePreview.charge_amount}₽
+              </Button>
+            </>
+          ) : (
+            <>
+              <p className="text-xs text-muted">
+                Кредит: +{upgradePreview.credit_days} бонусных дней
+              </p>
+              <Button
+                size="sm"
+                variant="outline"
+                onPress={handleUpgrade}
+                isPending={loading}
+              >
+                Перейти на {selectedPlan.charAt(0).toUpperCase() + selectedPlan.slice(1)}
+              </Button>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* Current plan indicator */}
+      {activeSub && !upgradePreview && !upgradeLoading && (
+        <div className="rounded-xl border border-border bg-surface/50 p-3 text-center">
+          <p className="text-xs text-muted">Вы уже на тарифе <span className="font-medium text-foreground">{activeSub.plan_name || activeSub.plan}</span></p>
+        </div>
+      )}
+
+      {/* Summary — show when no active sub OR no upgrade available */}
+      {!isGift && !(activeSub && upgradePreview) && (
         <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-border bg-surface p-4">
           <div>
             <div className="flex items-baseline gap-2">
