@@ -22,7 +22,7 @@ file: .env.example
 | `GOOGLE_CLIENT_ID` | Google OAuth client ID |
 | `GOOGLE_CLIENT_SECRET` | Google OAuth secret |
 | `TELEGRAM_BOT_TOKEN` | Telegram bot token |
-| `NEXT_PUBLIC_APP_URL` | Frontend URL для OAuth redirects |
+| `VITE_APP_URL` | Frontend URL для OAuth redirects |
 
 > [!note] Несоответствие
 > `.env.example` содержит серверные переменные (GOOGLE_CLIENT_SECRET, REMNAWAVE_BEARER_TOKEN), которые не должны попадать в клиентский код. Вероятно, этот файл предназначен для общего пользования с бэкендом или для локальной разработки.
