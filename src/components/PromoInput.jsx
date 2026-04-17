@@ -16,6 +16,9 @@ export default function PromoInput({ plan, period, onPromoApplied, initialCode =
     setError(null)
     try {
       const data = await validatePromo({ code: trimmed, plan, period })
+      if (!data?.valid) {
+        throw new Error(data?.error || 'Промокод недействителен')
+      }
       setApplied(true)
       onPromoApplied({ ...data, code: trimmed })
     } catch (err) {
