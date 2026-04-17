@@ -164,7 +164,7 @@ export default function Dashboard() {
           <BarChart data={regChart.map(d => ({ label: d.date?.slice(5) || '', value: d.count || d.amount || 0 }))} label="Регистрации (30 дней)" />
         )}
         {revChart && Array.isArray(revChart) && (
-          <BarChart data={revChart.map(d => ({ label: d.date?.slice(5) || '', value: d.amount || d.count || 0 }))} label="Выручка (30 дней)" />
+          <BarChart data={revChart.map(d => ({ label: d.date?.slice(5) || '', value: parseFloat(d.total) || d.amount || d.count || 0 }))} label="Выручка (30 дней)" />
         )}
       </div>
 
@@ -210,8 +210,8 @@ export default function Dashboard() {
                     transition={{ delay: 0.25 + i * 0.03 }}
                   >
                     <span className="mt-0.5 h-2 w-2 shrink-0 rounded-full bg-accent/70" />
-                    <span className="flex-1 text-foreground">{event.detail ? `${event.detail}${event.user_email ? ': ' + event.user_email : ''}` : event.description ?? event.message ?? '—'}</span>
-                    <span className="shrink-0 text-xs text-muted whitespace-nowrap">{event.date ? new Date(event.date).toLocaleDateString('ru-RU') : event.time_ago ?? ''}</span>
+                    <span className="flex-1 text-foreground">{event.description || event.detail || event.message || '—'}</span>
+                    <span className="shrink-0 text-xs text-muted whitespace-nowrap">{event.timestamp ? new Date(event.timestamp).toLocaleDateString('ru-RU') : event.date ? new Date(event.date).toLocaleDateString('ru-RU') : ''}</span>
                   </motion.li>
                 ))}
               </ul>
@@ -247,14 +247,14 @@ export default function Dashboard() {
                   <tbody>
                     {list.slice(0, 10).map((u, i) => (
                       <motion.tr
-                        key={u.id ?? i}
+                        key={u.subscription_id ?? u.id ?? i}
                         className="border-b border-border/50 cursor-pointer hover:bg-surface/50"
                         onClick={() => u.user_id && navigate(`/admin/users/${u.user_id}`)}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.35 + i * 0.03 }}
                       >
-                        <td className="py-2 pr-3 text-foreground text-xs">{u.user_email ?? u.email ?? u.user ?? '—'}</td>
+                        <td className="py-2 pr-3 text-foreground text-xs">{u.user_email ?? u.email ?? '—'}</td>
                         <td className="py-2 pr-3 text-muted text-xs">{u.plan ?? '—'}</td>
                         <td className="py-2 text-right font-heading font-bold text-warning text-xs">{u.days_left ?? '—'}</td>
                       </motion.tr>

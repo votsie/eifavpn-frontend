@@ -57,7 +57,9 @@ export default function Overview() {
     try {
       const data = await getMySubscription()
       setSub(data.subscription)
-    } catch {} finally {
+    } catch (err) {
+      setError(err.message || 'Не удалось загрузить подписку')
+    } finally {
       setLoading(false)
     }
   }

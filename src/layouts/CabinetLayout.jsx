@@ -2,10 +2,7 @@ import { Outlet } from 'react-router-dom'
 import Sidebar from '../components/cabinet/Sidebar'
 import Topbar from '../components/cabinet/Topbar'
 import Background from '../components/Background'
-
-function isTelegramWebApp() {
-  return !!(window.Telegram?.WebApp?.initData)
-}
+import { isTelegramWebApp } from '../utils/telegram'
 
 export default function CabinetLayout() {
   const isTg = isTelegramWebApp()
